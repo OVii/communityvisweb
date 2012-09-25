@@ -1,0 +1,61 @@
+
+{% extends "base.html" %}
+{% block title %}View Taxonomy Item{% endblock %}
+
+{% block content %}
+
+<h1>Contact Us</h1>
+
+<div>
+Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+</div>
+
+<div>
+{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+{% if success_message %}<p>{{ success_message }}</p>{% endif %}
+
+<form action="/web/request_ownership/send/" method="post">
+{% csrf_token %}
+
+<table width="550px">
+</tr>
+<tr>
+ <td valign="top">
+  <label for="name">Name</label>
+ </td>
+ <td valign="top">
+  <input  type="text" name="name" maxlength="50" size="50">
+ </td>
+</tr>
+<tr>
+ <td valign="top">
+  <label for="email">Email Address</label>
+ </td>
+ <td valign="top">
+  <input  type="text" name="email" maxlength="80" size="50">
+ </td>
+ 
+</tr>
+<tr>
+ <td valign="top">
+  <label for="comments">Comments</label>
+ </td>
+ <td valign="top">
+  <textarea  name="comments" maxlength="1000" cols="50" rows="15">{% if taxonomy %}I wish to take ownership of taxonomy item "{{ taxonomy.name }}". I include relevant details of my expertise in the area.
+	{% endif %}
+</textarea>
+ </td>
+ 
+</tr>
+<tr>
+ <td></td>
+ <td>
+  <input type="submit" value="Submit">  
+ </td>
+</tr>
+</table>
+
+</form>
+</div>
+
+{% endblock %}

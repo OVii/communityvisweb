@@ -1,0 +1,25 @@
+
+{% extends "base.html" %}
+
+{% block title %}Visualization References{% endblock %}
+
+{% block head_additional %}
+<script type="text/javascript" src="http://bibtex-js.googlecode.com/svn/trunk/src/bibtex_js.js"></script>
+{% endblock %}
+
+{% block content %}
+
+{% if references %}
+	<textarea id="bibtex_input" style="display:none">
+		{% for reference in references %}
+			{{reference.bibtex}}
+		{% endfor %}
+	</textarea>
+
+	<div id="bibtex_display"></div>
+
+{% else %}
+	No references found.
+{% endif %} 
+
+{% endblock %}

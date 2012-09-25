@@ -1,0 +1,23 @@
+
+{% extends "base.html" %}
+{% block title %}Visualization Taxonomy{% endblock %}
+
+{% block content %}
+<h1>Visualization Taxonomy</h1>
+
+{% if taxonomies %}
+	<ul>
+		{% for category in taxonomies %}
+			<li><strong>{{ category.name }}</strong></li>
+			<ul>
+				{% for item in category.taxonomyitem_set.all %}
+					<li><a href="/web/taxonomy/{{ item.id }}">{{ item.name }}</a></li>
+				{% endfor %}
+			</ul>
+		{% endfor %}
+	</ul>
+{% else %}
+	No taxonomy found.
+{% endif %} 
+	
+{% endblock %}

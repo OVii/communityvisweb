@@ -1,0 +1,13 @@
+
+{% extends "base.html" %}
+{% block title %}View Taxonomy Item{% endblock %}
+
+{% block content %}
+
+<h1>More detail on Taxonomy Item: {{ taxonomy.name }}</h1>
+
+{{ taxonomy.detailhtml }}
+
+If you wish to request ownership of this taxonomy item, please <a href="/web/request_ownership/{{ taxonomy.id }}">click here</a> to request ownership.
+
+{% endblock %}
