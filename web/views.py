@@ -14,13 +14,11 @@ email_to = "simon.walton@oerc.ox.ac.uk"
 
 def index(request):
 	t = loader.get_template("templates/index.html")
-	return HttpResponse(t.render(Context()))
+	return HttpResponse(t.render(RequestContext(request)))
 
 def taxonomy(request):
-	t = loader.get_template("templates/taxonomy.html")
 	taxonomies = TaxonomyCategory.objects.all()
-	c = Context({ 'taxonomies' : taxonomies, })
-	return HttpResponse(t.render(c))
+	return render_to_response("templates/taxonomy.html", {'taxonomies': taxonomies}, context_instance=RequestContext(request))
 
 def taxonomy_detail(request, taxonomy_id):
 	taxonomy = get_object_or_404(TaxonomyItem, pk=taxonomy_id)
@@ -31,7 +29,8 @@ def taxonomy_detail(request, taxonomy_id):
 	return render_to_response("templates/taxonomy_detail.html",
 		 {'taxonomy': taxonomy,
 		 'formatted_detail': html,
-		 'references': reference_entries(taxonomy.detail_html) })
+		 'references': reference_entries(taxonomy.detail_html) },
+		 context_instance=RequestContext(request))
 
 def request_ownership(request, taxonomy_id):
 	taxonomy = get_object_or_404(TaxonomyItem, pk=taxonomy_id)
@@ -48,10 +47,12 @@ def request_ownership_send(request):
   		 	 [item[1] for item in settings.ADMINS], fail_silently=False)
 	except:
 		return render_to_response("templates/contact.html", {'error_message':"There was a problem sending the email. Please contact " + 
-			settings.ADMINS[0][1] + " to resolve."}) 
+			settings.ADMINS[0][1] + " to resolve."},
+			context_instance=RequestContext(request)) 
 	else:
-		return render_to_response("templates/contact.html", {'success_message':'Your request was sent successfully!'})
+		return render_to_response("templates/contact.html", {'success_message':'Your request was sent successfully!'},
+			 context_instance=RequestContext(request))
 
 def references(request):
 	refs = Reference.objects.all()
-	return render_to_response("templates/references.html", {'references': refs })
+	return render_to_response("templates/references.html", {'references': refs }, context_instance=RequestContext(request))
