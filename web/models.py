@@ -18,6 +18,9 @@ class TaxonomyItem(models.Model):
 	category = models.ForeignKey(TaxonomyCategory)
 	detail_html = models.CharField(max_length=2048)
 
+	def has_detail(self):
+		return len(self.detail_html) != 0
+
 	def __unicode__(self):
 		return self.name + " (" + self.category.name + ")"
 

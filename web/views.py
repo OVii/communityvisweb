@@ -7,6 +7,8 @@ from django.core.mail import send_mail
 import os
 from django.conf import settings
 from reference_parse import reference_entries, html_format
+from django.contrib.auth import authenticate
+from django.contrib.auth import logout as django_logout, login as django_login
 
 os.environ['DJANGO_SETTINGS_MODULE'] = "viscommunityweb.settings"
 email_prefix = "[OXVIS] "
@@ -56,3 +58,13 @@ def request_ownership_send(request):
 def references(request):
 	refs = Reference.objects.all()
 	return render_to_response("templates/references.html", {'references': refs }, context_instance=RequestContext(request))
+
+def login(request):
+	user = authenticate(username=request.POST['username'], password=request.POST['password'])
+	if user is not None:
+		django_login(request,user)
+	return render_to_response("templates/index.html", context_instance=RequestContext(request))	
+	
+def logout(request):
+	django_logout(request)
+	return render_to_response("templates/index.html", context_instance=RequestContext(request))	

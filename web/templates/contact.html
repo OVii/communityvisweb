@@ -10,50 +10,43 @@
 {% lorem 1 p %}
 
 <div>
-{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
-{% if success_message %}<p>{{ success_message }}</p>{% endif %}
+{% if error_message %}
+	<div class="alert">
+		<button type="button" class="close" data-dismiss="alert">×</button>
+		<strong>Warning!</strong> {{ error_message }}
+	</div>
+{% endif %}
+{% if success_message %}<span class="well">{{ success_message }}</span>{% endif %}
+</div>
 
-<form action="/web/request_ownership/send/" method="post">
+<div>
+<form action="/web/request_ownership/send/" method="post" class="form-horizontal">
 {% csrf_token %}
 
-<table width="550px">
-</tr>
-<tr>
- <td valign="top">
-  <label for="name">Name</label>
- </td>
- <td valign="top">
-  <input  type="text" name="name" maxlength="50" size="50">
- </td>
-</tr>
-<tr>
- <td valign="top">
-  <label for="email">Email Address</label>
- </td>
- <td valign="top">
-  <input  type="text" name="email" maxlength="80" size="50">
- </td>
- 
-</tr>
-<tr>
- <td valign="top">
-  <label for="comments">Comments</label>
- </td>
- <td valign="top">
-  <textarea  name="comments" maxlength="1000" cols="50" rows="15">{% if taxonomy %}I wish to take ownership of taxonomy item "{{ taxonomy.name }}". I include relevant details of my expertise in the area.
-	{% endif %}
-</textarea>
- </td>
- 
-</tr>
-<tr>
- <td></td>
- <td>
-  <input type="submit" value="Submit">  
- </td>
-</tr>
-</table>
-
+	<div class="control-group">
+		<label for="name" class="control-label">Name</label>
+  		<div class="controls">
+			<input type="text" name="name">
+		</div>
+	</div>
+	<div class="control-group">
+  		<label for="email" class="control-label">Email Address</label>
+  		<div class="controls">
+  			<input type="text" name="email">
+		</div>
+	</div>
+	<div class="control-group">
+		<label for="comments" class="control-label">Comments</label>
+  		<div class="controls">
+  			<textarea  name="comments" maxlength="5000" rows=10>{% if taxonomy %}I wish to take ownership of taxonomy item "{{ taxonomy.name }}". I include relevant details of my expertise in the area.
+	{% endif %}</textarea>
+		</div>
+	</div>
+  	<div class="control-group">
+		<div class="controls">
+			<input type="submit" class="btn" value="Submit">  
+		</div>
+	</div>
 </form>
 </div>
 

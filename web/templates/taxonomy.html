@@ -2,22 +2,41 @@
 {% extends "base.html" %}
 {% block title %}Visualization Taxonomy{% endblock %}
 
+{% load webdesign %}
+
 {% block content %}
 <h1>Visualization Taxonomy</h1>
+{% lorem 1 p %}
+
+<div class="well">
+	<div>Items in <span class="badge badge-success">green</span> have further information.</div>
+	<div>Items in <span class="badge badge-warning">orange</span> are missing further information.</div>
+</div>
 
 {% if taxonomies %}
-	<ul>
-		{% for category in taxonomies %}
-			<li><strong>{{ category.name }}</strong></li>
-			<ul>
-				{% for item in category.taxonomyitem_set.all %}
-					<li><a href="/web/taxonomy/{{ item.id }}">{{ item.name }}</a></li>
-				{% endfor %}
-			</ul>
-		{% endfor %}
-	</ul>
+	{% for category in taxonomies %}
+		{% if forloop.counter|divisibleby:"1" %}<ul class="thumbnails">{% endif %}
+		<li class="span10">
+			<div class="thumbnail">
+				<h3>{{ category.name }}</h3>
+				<p>
+					{% for item in category.taxonomyitem_set.all %}
+						{% if item.has_detail %}
+							<span class="badge badge-success">
+						{% else %}
+							<span class="badge badge-warning">
+						{% endif %}
+						<i class="icon-asterisk icon-white"></i><a href="/web/taxonomy/{{ item.id }}" style="color:white">{{ item.name }}</a></span>
+					{% endfor %}
+				</p>
+			</div>
+		</li>
+		{% if forloop.counter|divisibleby:"1" %}</ul>{% endif %}
+	{% endfor %}
+</div>
 {% else %}
 	No taxonomy found.
 {% endif %} 
+
 	
 {% endblock %}

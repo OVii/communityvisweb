@@ -18,6 +18,8 @@ urlpatterns = patterns('',
 	url(r'^web/request_ownership/(?P<taxonomy_id>\d+)/$', 'web.views.request_ownership'),
 	url(r'^web/request_ownership/send/$', 'web.views.request_ownership_send'),
 	url(r'^web/references/$', 'web.views.references'),
+	url(r'^web/login/$', 'web.views.login'),
+	url(r'^web/logout/$', 'web.views.logout'),
 	#url(r'^web/references/(?P<reference_id>\d+)/$', 'web.views.reference_detail')
 
     # Uncomment the next line to enable the admin:
