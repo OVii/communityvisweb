@@ -117,6 +117,7 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+	'django.contrib.webdesign',
     # Uncomment the next line to enable the admin:
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
@@ -157,6 +158,6 @@ LOGGING = {
 EMAIL_HOST = "smtp.ox.ac.uk"
 EMAIL_PORT = 587
 EMAIL_HOST_USER = "oerc0058"
-EMAIL_HOST_PASSWORD = "dUKe3doX"
+EMAIL_HOST_PASSWORD = "" 'Need a custom SMTP account I think... cant just use mine! - Simon'
 EMAIL_USE_TLS = True
 EMAIL_SUBJECT_PREFIX = "[OXVIS]"
