@@ -1,3 +1,9 @@
+
+"""
+ Data models
+"""
+
+from django.contrib.auth.models import User
 from django.db import models
 
 class TaxonomyArea(models.Model):
@@ -23,6 +29,13 @@ class TaxonomyItem(models.Model):
 
 	def __unicode__(self):
 		return self.name + " (" + self.category.name + ")"
+
+class UserTaxonomyItemOwnership(models.Model):
+	user = models.ForeignKey(User)
+	item = models.ForeignKey(TaxonomyItem)
+
+	def __unicode__(self):
+		return self.user.__unicode__() + " owns " + item.__unicode__()
 
 class Reference(models.Model):
 	bibtex = models.CharField(max_length=2048)

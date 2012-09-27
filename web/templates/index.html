@@ -1,11 +1,41 @@
 {% extends "base.html" %}
 {% load webdesign %}
-{% block title %}Community Visualization Website{% endblock %}
+{% block title %}Community Resource: Visualization{% endblock %}
 
 {% block content %}
-<h1>Welcome to the Community Visualization Website</h1>
 
-<h2>Introduction</h2>
-{% lorem 4 p %}
+<div class="hero-unit">
+	<h1>Community Resource: Visualization</h1>
+	<p>
+		{% lorem 1 p %}
+	</p>
+	<p>
+		<ul class="thumbnails">
+			<li class="span3">
+		    	<a href="#" class="thumbnail">
+					<img src="{{ STATIC_URL }}img/static_img/multisperm.png" alt="">
+				</a>
+			</li>
+			<li class="span3">
+    			<a href="#" class="thumbnail">
+					<img src="{{ STATIC_URL }}img/static_img/geo.png" alt="">
+				</a>
+			</li>
+			<li class="span3">
+    			<a href="#" class="thumbnail">
+					<img src="{{ STATIC_URL }}img/static_img/traffic.png" alt="">
+				</a>
+			</li>
+		</ul>
+	</p>
+	<p>
+		{% lorem 1 p %}
+	</p>
+	<p>
+		<a class="btn btn-primary btn-large">
+    	  Learn more
+	    </a>
+	</p>
+</div>
 
 {% endblock %}

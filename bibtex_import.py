@@ -65,7 +65,6 @@ while i < len(lines):
 		except:
 			None
 	
-		# save
 		# save into DB through Model
 		Reference(entry_id = entry_id.decode('utf-8'), bibtex = remainder.decode('utf-8')).save()	
 	else:

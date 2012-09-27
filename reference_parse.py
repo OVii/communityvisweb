@@ -1,4 +1,9 @@
 
+"""
+ For taxonomy items, we can add references like this {{bibtex_entry_id}}. The defs in this file
+ deal with parsing and formatting this text from the database and into the pages.
+"""
+
 from web.models import Reference
 
 """
@@ -60,7 +65,8 @@ def html_format(meta_str):
 			ref_idx_dict[ref_id] = ref_idx
 			ref_idx += 1	
 
-		html_str = html_str + '<a href="#' + str(ref_idx_dict[ref_id]) + '">[' + str(ref_idx_dict[ref_id]) + ']</a>'
+		html_str = html_str + '<span class="badge badge-info">\
+			<a href="#' + str(ref_idx_dict[ref_id]) + '" style="color:white">' + str(ref_idx_dict[ref_id]) + '</a></span>'
 
 		if i < len(ind)-1:
 			(c,d) = ind[i+1]

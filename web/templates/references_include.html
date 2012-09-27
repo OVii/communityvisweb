@@ -1,0 +1,20 @@
+
+{% if references %}
+
+<div>
+	<textarea id="bibtex_input" style="display:none">
+		{% for reference in references %}
+			{{reference.bibtex}}
+		{% endfor %}
+	</textarea>
+
+	<div class="alert alert-info">
+  		<button type="button" class="close" data-dismiss="alert">×</button>
+		You can get the reference entry in BibTeX format by clicking the reference number.
+	</div>
+
+	<div id="bibtex_display"></div>
+</div>
+
+{% endif %}
+

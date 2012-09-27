@@ -4,24 +4,15 @@
 {% block title %}Visualization References{% endblock %}
 
 {% block head_additional %}
-<script type="text/javascript" src="http://bibtex-js.googlecode.com/svn/trunk/src/bibtex_js.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}js/bibtex_js.js"></script>
 {% endblock %}
 
 {% block content %}
 
 <h1>References</h1>
-
-{% if references %}
-	<textarea id="bibtex_input" style="display:none">
-		{% for reference in references %}
-			{{reference.bibtex}}
-		{% endfor %}
-	</textarea>
-
-	<div id="bibtex_display"></div>
-
-{% else %}
-	No references found.
-{% endif %} 
+<p>
+A list of all visualization-related references included on this website.
+</p>
+{% include "templates/references_include.html" %}
 
 {% endblock %}

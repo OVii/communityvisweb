@@ -5,6 +5,12 @@ TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
      ('Simon Walton', 'simon.walton@oerc.ox.ac.uk'),
+     ('Eamonn Maguire', 'eamonn.maguire@st-annes.ox.ac.uk')
+)
+
+# Change below for your own machine. This is the only per-machine def. 
+TEMPLATE_DIRS = (
+	"/Users/sim/Documents/VisWeb/viscommunityweb/web/"
 )
 
 MANAGERS = ADMINS
@@ -112,12 +118,7 @@ ROOT_URLCONF = 'viscommunityweb.urls'
 # Python dotted path to the WSGI application used by Django's runserver.
 WSGI_APPLICATION = 'viscommunityweb.wsgi.application'
 
-TEMPLATE_DIRS = (
-    # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
-    # Always use forward slashes, even on Windows.
-    # Don't forget to use absolute paths, not relative paths.
-	"/Users/sim/Documents/VisWeb/viscommunityweb/web/"
-)
+
 
 INSTALLED_APPS = (
     'django.contrib.auth',

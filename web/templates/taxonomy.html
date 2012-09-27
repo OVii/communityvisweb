@@ -10,7 +10,7 @@
 
 <div class="well">
 	<div>Items in <span class="badge badge-success">green</span> have further information.</div>
-	<div>Items in <span class="badge badge-warning">orange</span> are missing further information.</div>
+	<div>Items in <span class="badge badge-important">red</span> are missing further information.</div>
 </div>
 
 {% if taxonomies %}
@@ -24,7 +24,7 @@
 						{% if item.has_detail %}
 							<span class="badge badge-success">
 						{% else %}
-							<span class="badge badge-warning">
+							<span class="badge badge-important">
 						{% endif %}
 						<i class="icon-asterisk icon-white"></i><a href="/web/taxonomy/{{ item.id }}" style="color:white">{{ item.name }}</a></span>
 					{% endfor %}

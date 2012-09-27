@@ -1,4 +1,9 @@
 
+"""
+ Initialises the visualisation taxonomy database entries
+ according to TVCG definitions
+"""
+
 from web.models import TaxonomyArea, TaxonomyCategory, TaxonomyItem, Reference
 
 rs = TaxonomyArea.objects.all()
