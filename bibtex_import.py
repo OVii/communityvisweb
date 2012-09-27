@@ -1,4 +1,10 @@
 
+"""
+ Script used for BibTeX file importing into database from terminal
+ Usage - bibtex_import.py -f /path/to/bibtex
+ Really not bulletproof but it'll do for now.
+"""
+
 from optparse import OptionParser
 from web.models import Reference
 
@@ -60,6 +66,7 @@ while i < len(lines):
 			None
 	
 		# save
+		# save into DB through Model
 		Reference(entry_id = entry_id.decode('utf-8'), bibtex = remainder.decode('utf-8')).save()	
 	else:
 		i += 1		
