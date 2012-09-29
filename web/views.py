@@ -24,6 +24,16 @@ def index(request):
 	t = loader.get_template("templates/index.html")
 	return HttpResponse(t.render(RequestContext(request)))
 
+# sign in page.
+def sign_in(request):
+    t = loader.get_template("templates/signin.html")
+    return HttpResponse(t.render(RequestContext(request)))
+
+# register page.
+def register(request):
+    t = loader.get_template("templates/register.html")
+    return HttpResponse(t.render(RequestContext(request)))
+
 # taxonomy list
 def taxonomy(request):
 	taxonomies = TaxonomyCategory.objects.all()

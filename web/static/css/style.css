@@ -1,0 +1,119 @@
+.topbar {
+    position: fixed;
+    height: 60px;
+    width: 100%;
+    background-color: #fff;
+    overflow: visible;
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 10000;
+    border-bottom: thick solid #f1f2f1;
+}
+
+.topbar-content {
+    width: 95%;
+    margin-left: auto;
+    margin-right: auto;
+    zoom: 1;
+
+}
+
+.logo {
+    background-image: url('../img/static_img/logo.png');
+    background-repeat: no-repeat;
+    width: 351px;
+    height: 60px;
+    float: left;
+    display: block;
+    padding: 8px 20px 12px;
+    margin-left: -20px;
+    color: white;
+    line-height: 1;
+    text-indent: -9999px;
+}
+
+.menu {
+    margin-top: 17px;
+    display: block-inline;
+    float: right;
+}
+
+.menu-item {
+    background: #fff;
+    border: none;
+    color: #333;
+    text-decoration: none;
+    border-bottom: thick solid #f1f2f1;
+    padding-bottom: 20px;
+}
+
+.menu-item:hover {
+    color: #0081A6;
+    border-bottom: thick solid #0081A6;
+}
+
+/*login*/
+
+#login {
+    width: 31em;
+}
+
+.login_form {
+    margin: 5em auto;
+}
+
+.login_form .formbody {
+
+    padding: 2em;
+    background-color: whiteSmoke;
+    overflow: hidden;
+    border-style: solid;
+    border-width: 1px 1px 2px;
+    border-color: #E9F1F4 #D8DEE2 #D8DEE2;
+    border-radius: 0 0 3px 3px;
+}
+
+.form-text {
+    width: 31em;
+    padding: 2px 5px 5px 5px;
+    border: 1px solid #D8DEE2;
+    margin: 0em 0 0em 0;
+}
+
+.login_form form input.text, .login_form form textarea, .login_form form input[type="checkbox"] {
+    padding: 5px;
+    border: 1px solid #D8DEE2;
+    margin: .2em 0 1em 0;
+}
+
+
+.section-header {
+    border: 1px solid #EAEAEA;
+    border-bottom-color: #CACACA;
+    border-radius: 3px;
+    background: #FAFAFA;
+    background: -moz-linear-gradient(#FAFAFA, #EAEAEA);
+    background: -webkit-linear-gradient(#FAFAFA, #EAEAEA);
+    filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#fafafa',endColorstr='#eaeaea')";
+    width: 100%;
+    height: 30px;
+    /*text-indent: -9999px;*/
+}
+
+.header-text {
+    display: inline-block;
+    font-weight: bold;
+    padding-top: 8px;
+}
+
+.content-section {
+    display: inline-block;
+    background-size: 30px;
+    height: 30px;
+    padding-left: 10px;
+    padding-top: 0px;
+    font-weight: bold;
+}
