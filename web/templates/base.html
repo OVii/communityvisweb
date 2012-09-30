@@ -7,32 +7,45 @@
     <link rel="stylesheet" href="{{ STATIC_URL }}/css/style.css"/>
     {% block head_additional %} {% endblock %}
     <title>{% block title %}Community-driven Visualization Resource Website{% endblock %}</title>
-    <style type="text/css">
-        body {
-            padding-top: 60px;
-            padding-bottom: 40px;
-        }
 
-        .sidebar-nav {
-            padding: 9px 0;
-        }
-    </style>
 </head>
 
 <body>
 <div class="topbar">
     <div class="topbar-content" align="center">
-        <a href="/web/"><div class="logo">Home</div></a>
+        <a href="/web/">
+            <div class="logo">Home</div>
+        </a>
+
+        <div class="user-account">
+            <i class="icon-user"></i> Eamonn
+            <a href="/web/account/" class="btn btn-mini"><i class="icon-wrench"></i></a>
+            <a href="/web/do_logout/" class="btn btn-mini"><i class="icon-off"></i></a>
+        </div>
+
+        <div class="search">
+
+            <form id="search" action="/search">
+                <input id="search-text" type="text" name="q" placeholder="Search">
+            </form>
+        </div>
 
         <div class="menu">
-            <a href="/web/taxonomy/"><button class="menu-item">Taxonomy</button></a>
-            <a href="/web/references/"><button class="menu-item">References</button></a>
-            <a href="/web/sign_in/"><button class="menu-item">Sign In</button></a>
+            <a href="/web/taxonomy/" class="btn">
+               Taxonomy
+            </a>
+            <a href="/web/references/" class="btn">
+                References
+            </a>
         </div>
+
+
+
+
     </div>
 </div>
 
-<div class="container-fluid">
+<div class="container-fluid content">
     <div class="row-fluid">
         <div class="">
             {% block content %}{% endblock %}
