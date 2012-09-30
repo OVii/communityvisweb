@@ -18,9 +18,14 @@
         </a>
 
         <div class="user-account">
-            <i class="icon-user"></i> Eamonn
-            <a href="/web/account/" class="btn btn-mini"><i class="icon-wrench"></i></a>
-            <a href="/web/do_logout/" class="btn btn-mini"><i class="icon-off"></i></a>
+            {% if user.is_authenticated %}
+                <i class="icon-user"></i> Eamonn
+                <a href="/web/account/" class="btn btn-mini account-button"><i class="icon-wrench"></i></a>
+                <a href="/web/do_logout/" class="btn btn-mini account-button"><i class="icon-off"></i></a>
+            {% else %}
+                <a href="/web/sign_in" class="btn btn account-button"><i class="icon-user"></i> Sign In</a>
+            {% endif %}
+
         </div>
 
         <div class="search">
@@ -31,15 +36,13 @@
         </div>
 
         <div class="menu">
-            <a href="/web/taxonomy/" class="btn">
-               Taxonomy
+            <a href="/web/taxonomy/" class="menu-item">
+                Taxonomy
             </a>
-            <a href="/web/references/" class="btn">
+            <a href="/web/references/" class="menu-item">
                 References
             </a>
         </div>
-
-
 
 
     </div>

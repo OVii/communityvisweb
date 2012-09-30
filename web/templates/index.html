@@ -1,41 +1,44 @@
-{% extends "base.html" %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <link rel="stylesheet" href="{{ STATIC_URL }}/bootstrap/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="{{ STATIC_URL }}/css/style.css"/>
+    {% block head_additional %} {% endblock %}
+
+</head>
+<body>
 {% load webdesign %}
-{% block title %}Community Resource: Visualization{% endblock %}
 
-{% block content %}
+<div align="center" class="home-page">
+    <img src="{{ STATIC_URL }}/img/static_img/home/logo_lrg.png"/>
 
-<div>
-	<h1>Community Resource: Visualization</h1>
-	<p>
-		{% lorem 1 p %}
-	</p>
-	<p>
-		<ul class="thumbnails">
-			<li class="span3">
-		    	<a href="#" class="thumbnail">
-					<img src="{{ STATIC_URL }}img/static_img/multisperm.png" alt="">
-				</a>
-			</li>
-			<li class="span3">
-    			<a href="#" class="thumbnail">
-					<img src="{{ STATIC_URL }}img/static_img/geo.png" alt="">
-				</a>
-			</li>
-			<li class="span3">
-    			<a href="#" class="thumbnail">
-					<img src="{{ STATIC_URL }}img/static_img/traffic.png" alt="">
-				</a>
-			</li>
-		</ul>
-	</p>
-	<p>
-		{% lorem 1 p %}
-	</p>
-	<p>
-		<a class="btn btn-primary btn-large">
-    	  Learn more
-	    </a>
-	</p>
+    <div class="search-wrapper">
+        <form id="search" action="/search">
+            <input id="search-text" type="text" name="q" placeholder="Search">
+        </form>
+    </div
+
+    <div class="grid">
+
+
+        <div class="offset5-5 span4 front-item">
+            <a href="/web/taxonomy/"><img src="{{ STATIC_URL }}/img/static_img/home/taxonomy.png"></a><br/>
+            <strong>We use a comprehensive taxonomy for categorising works in visualization.</strong>
+
+            <br/><br/>
+            We have a group of experts in these areas maintaining reference collections.
+        </div>
+
+        <div class="span4 front-item"><a href="/web/taxonomy/"><img
+                src="{{ STATIC_URL }}/img/static_img/home/references.png"></a>
+            <br/>
+            <strong>We collect and share references pertaining to many areas of visualization.</strong>
+            <br/><br/>
+            You can download the references freely or rate them to let others know about quality.
+        </div>
+    </div>
 </div>
 
-{% endblock %}
+</body>
+</html>
