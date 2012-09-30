@@ -7,32 +7,49 @@
     <link rel="stylesheet" href="{{ STATIC_URL }}/css/style.css"/>
     {% block head_additional %} {% endblock %}
     <title>{% block title %}Community-driven Visualization Resource Website{% endblock %}</title>
-    <style type="text/css">
-        body {
-            padding-top: 60px;
-            padding-bottom: 40px;
-        }
 
-        .sidebar-nav {
-            padding: 9px 0;
-        }
-    </style>
 </head>
 
 <body>
 <div class="topbar">
     <div class="topbar-content" align="center">
-        <a href="/web/"><div class="logo">Home</div></a>
+        <a href="/web/">
+            <div class="logo">Home</div>
+        </a>
+
+        <div class="user-account">
+            {% if user.is_authenticated %}
+                <i class="icon-user"></i> Eamonn
+                <a href="/web/account/" class="btn btn-mini account-button"><i class="icon-wrench"></i></a>
+                <a href="/web/do_logout/" class="btn btn-mini account-button"><i class="icon-off"></i></a>
+            {% else %}
+                <a href="/web/register" class="btn btn account-button"><i class="icon-check"></i> Register</a>
+                <a href="/web/sign_in" class="btn btn account-button"><i class="icon-user"></i> Sign In</a>
+            {% endif %}
+
+        </div>
+
+        <div class="search">
+
+            <form id="search" action="/web/search">
+                <input id="search-text" type="text" name="q" placeholder="Search References">
+            </form>
+        </div>
 
         <div class="menu">
-            <a href="/web/taxonomy/"><button class="menu-item">Taxonomy</button></a>
-            <a href="/web/references/"><button class="menu-item">References</button></a>
-            <a href="/web/sign_in/"><button class="menu-item">Sign In</button></a>
+            <a href="/web/taxonomy/" class="menu-item">
+                Taxonomy
+            </a>
+            <a href="/web/references/" class="menu-item">
+                References
+            </a>
         </div>
+
+
     </div>
 </div>
 
-<div class="container-fluid">
+<div class="container-fluid content">
     <div class="row-fluid">
         <div class="">
             {% block content %}{% endblock %}

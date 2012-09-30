@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Register{% endblock %}
+{% block content %}
+
+    {% block head_additional %}
+        <script type="text/javascript" src="{{ STATIC_URL }}js/bibtex_js.js"></script>
+    {% endblock %}
+    You searched for {{ searchTerm }}. There are {{ size }} results!
+
+    <textarea id="bibtex_input" style="display:none">
+        {% for searchResult in searchResults %}
+            {{ searchResult.bibtex }}
+        {% endfor %}
+    </textarea>
+
+    <div id="bibtex_display"></div>
+
+
+{% endblock %}
