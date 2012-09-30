@@ -1,2 +1,36 @@
 {% extends "base.html" %}
 {% block title %}Register{% endblock %}
+{% block content %}
+    <div id="login" class="login_form" xmlns="http://www.w3.org/1999/html">
+        <div class="section-header"><span class="content-section login-section"><span
+                class="header-text"><i class="icon-check"></i> Register</span></span>
+        </div>
+
+
+        <form accept-charset="UTF-8" action="/users" class="formbody" id="user_edit" method="post">
+            <div style="margin:0;padding:0;display:inline">
+                <input name="utf8" type="hidden" class="text" value="✓"><input
+                    name="_method" type="hidden" value="put"><input name="authenticity_token" type="hidden">
+            </div>
+
+            <div><label for="user_name" class="span3">Name</label>
+                <input id="user_name" class="text form-text span9" name="user[name]" size="20" type="email" value="">
+            </div>
+
+            <div><label for="user_email" class="span3">Email</label>
+                <input id="user_email" class="text form-text span9" name="user[email]" size="20" type="email"
+                       value="">
+            </div>
+
+            <div><label for="user_password" class="span3">Password</label>
+                <input id="user_password" class="text form-text span9" name="user[password]" size="30" type="password">
+            </div>
+
+            <div><input name="commit" type="submit" class="btn btn-success" value="Sign in"></div>
+        </form>
+
+        <div class="login-additional">
+            <a href="/web/reset" rel="nofollow" class="btn btn-small"><i class="icon-user"></i>Forgot your password?</a><br/>
+
+        </div>
+{% endblock %}
