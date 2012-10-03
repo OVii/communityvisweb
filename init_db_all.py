@@ -18,6 +18,8 @@ os.system('python ' + os.path.join(os.getcwd(),'manage.py syncdb'))
 
 from taxonomy_init import taxonomy_init
 from bibtex_import import bibtex_import
-taxonomy_init()
+
 bibtex_import(open(bibtex_file))
+taxonomy_init()
+
 
