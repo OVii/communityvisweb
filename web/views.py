@@ -85,7 +85,7 @@ def references(request):
 
 # login POST
 def login(request):
-    user = authenticate(username=request.POST['username'], password=request.POST['password'])
+    user = authenticate(username=request.POST['user[email]'], password=request.POST['user[password]'])
     if user is not None:
         django_login(request, user)
     return render_to_response("templates/index.html", context_instance=RequestContext(request))
@@ -95,7 +95,7 @@ def logout(request):
     django_logout(request)
     return render_to_response("templates/index.html", context_instance=RequestContext(request))
 
-
+# search
 def search(request):
     searchTerm = request.GET['q']
     references = Reference.objects.all()
@@ -108,3 +108,4 @@ def search(request):
 
     return render_to_response("templates/search.html", {"searchTerm":searchTerm, "size":len(searchResult), "searchResults": searchResult},
         context_instance=RequestContext(request))
+

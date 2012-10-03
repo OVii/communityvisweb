@@ -19,7 +19,7 @@
 
         <div class="user-account">
             {% if user.is_authenticated %}
-                <i class="icon-user"></i> Eamonn
+                <i class="icon-user"></i> {{ user.username }}
                 <a href="/web/account/" class="btn btn-mini account-button"><i class="icon-wrench"></i></a>
                 <a href="/web/do_logout/" class="btn btn-mini account-button"><i class="icon-off"></i></a>
             {% else %}
