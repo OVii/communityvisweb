@@ -23,6 +23,8 @@ class TaxonomyItem(models.Model):
 	name = models.CharField(max_length=128)
 	category = models.ForeignKey(TaxonomyCategory)
 	detail_html = models.CharField(max_length=2048)
+	last_updated = models.DateTimeField(auto_now=True)
+	last_updated_by = models.ForeignKey(User, null=True)
 
 	def has_detail(self):
 		return len(self.detail_html) != 0
