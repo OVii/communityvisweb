@@ -10,7 +10,8 @@ ADMINS = (
 
 # Change below for your own machine. This is the only per-machine def. 
 TEMPLATE_DIRS = (
-	"/Users/eamonnmaguire/git/ovii/communityvisweb/web/"
+	#"/Users/eamonnmaguire/git/ovii/communityvisweb/web/"
+	"/Users/sim/Documents/VisWeb/viscommunityweb/web/"
 )
 
 MANAGERS = ADMINS

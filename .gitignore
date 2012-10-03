@@ -50,3 +50,21 @@ web/templates/.taxonomy_detail.html.swp
 
 .idea/
 *.pyc
+
+web/__init__.pyc
+
+visweb.db
+
+viscommunityweb/wsgi.pyc
+
+visweb.db
+
+viscommunityweb/urls.pyc
+
+viscommunityweb/__init__.pyc
+
+web/admin.pyc
+
+web/views.pyc
+
+*.pyc
