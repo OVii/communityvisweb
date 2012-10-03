@@ -29,6 +29,9 @@ class TaxonomyItem(models.Model):
 	def has_detail(self):
 		return len(self.detail_html) != 0
 
+	def short_description(self):
+		return self.detail_html[:50] + '...'
+
 	def __unicode__(self):
 		return self.name + " (" + self.category.name + ")"
 

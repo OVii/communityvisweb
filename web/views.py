@@ -20,8 +20,8 @@ email_to = "simon.walton@oerc.ox.ac.uk"
 
 # index page
 def index(request):
-    t = loader.get_template("templates/index.html")
-    return HttpResponse(t.render(RequestContext(request)))
+	recent_items = TaxonomyItem.objects.exclude(detail_html="").order_by('last_updated')[:3]
+	return render_to_response("templates/index.html", { 'recent_taxonomy_items': recent_items }, context_instance=RequestContext(request))
 
 # sign in page.
 def sign_in(request):
