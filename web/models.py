@@ -25,6 +25,7 @@ class TaxonomyItem(models.Model):
 	detail_html = models.CharField(max_length=2048)
 	last_updated = models.DateTimeField(auto_now=True)
 	last_updated_by = models.ForeignKey(User, null=True)
+	owners = models.ManyToManyField(User, related_name="owners+")
 
 	def has_detail(self):
 		return len(self.detail_html) != 0
@@ -35,13 +36,13 @@ class TaxonomyItem(models.Model):
 	def __unicode__(self):
 		return self.name + " (" + self.category.name + ")"
 
-class UserTaxonomyItemOwnership(models.Model):
+"""class UserTaxonomyItemOwnership(models.Model):
 	user = models.ForeignKey(User)
 	item = models.ForeignKey(TaxonomyItem)
 
 	def __unicode__(self):
 		return self.user.__unicode__() + " owns " + item.__unicode__()
-
+"""
 class Reference(models.Model):
 	bibtex = models.CharField(max_length=2048)
 	entry_id = models.CharField(max_length=256)

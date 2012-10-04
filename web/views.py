@@ -109,3 +109,7 @@ def search(request):
     return render_to_response("templates/search.html", {"searchTerm":searchTerm, "size":len(searchResult), "searchResults": searchResult},
         context_instance=RequestContext(request))
 
+# account
+def account(request):
+	items_owned = TaxonomyItem.objects.filter(owners__id__contains = request.user.id) if request.user.id is not None else None
+	return render_to_response("templates/account.html", {'items_owned': items_owned }, context_instance=RequestContext(request))	

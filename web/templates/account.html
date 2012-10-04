@@ -1,0 +1,20 @@
+
+{% extends "base.html" %}
+{% block title %}My Account{% endblock %}
+{% block content %}
+
+<h1>My Account</h1>
+<div>
+<h2>Taxonomy Items I'm part of</h2>
+
+<ul>
+
+{% for item in items_owned %}
+	<li><a href="/web/taxonomy/{{ item.id }}">{{ item.name }}</a></li>
+{% endfor %}
+
+</ul>
+
+</div>
+
+{% endblock %}

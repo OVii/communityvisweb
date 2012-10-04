@@ -23,6 +23,7 @@ urlpatterns = patterns('',
     url(r'^web/do_login/$', 'web.views.login'),
 	url(r'^web/do_logout/$', 'web.views.logout'),
     url(r'^web/search/$', 'web.views.search'),
+	url(r'^web/account/$','web.views.account'),
 	#url(r'^web/references/(?P<reference_id>\d+)/$', 'web.views.reference_detail')
 
     # Uncomment the next line to enable the admin:
