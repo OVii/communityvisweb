@@ -7,11 +7,13 @@
 {% block content %}
 
 <h1>Contact Us</h1>
-{% lorem 1 p %}
+<p>
+Please fill out the below form to contact our team, and we'll get back to you as soon as we can.
+</p>
 
 <div>
 {% if error_message %}
-	<div class="alert">
+	<div class="alert alert-error">
 		<button type="button" class="close" data-dismiss="alert">×</button>
 		<strong>Warning!</strong> {{ error_message }}
 	</div>
@@ -26,25 +28,25 @@
 	<div class="control-group">
 		<label for="name" class="control-label">Name</label>
   		<div class="controls">
-			<input type="text" name="name">
+			<input type="text" name="name" class="input-xlarge">
 		</div>
 	</div>
 	<div class="control-group">
   		<label for="email" class="control-label">Email Address</label>
   		<div class="controls">
-  			<input type="text" name="email">
+  			<input type="text" name="email" class="input-xlarge">
 		</div>
 	</div>
 	<div class="control-group">
 		<label for="comments" class="control-label">Comments</label>
   		<div class="controls">
-  			<textarea  name="comments" maxlength="5000" rows=10>{% if taxonomy %}I wish to take ownership of taxonomy item "{{ taxonomy.name }}". I include relevant details of my expertise in the area.
+  			<textarea  name="comments" maxlength="5000" rows=10 class="span4">{% if taxonomy %}I wish to take ownership of taxonomy item "{{ taxonomy.name }}". I include relevant details of my expertise in the area.
 	{% endif %}</textarea>
 		</div>
 	</div>
   	<div class="control-group">
 		<div class="controls">
-			<input type="submit" class="btn" value="Submit">  
+			<input type="submit" class="btn btn-primary" value="Submit">  
 		</div>
 	</div>
 </form>

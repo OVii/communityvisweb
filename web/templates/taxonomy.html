@@ -5,32 +5,25 @@
 {% load webdesign %}
 
 {% block content %}
-<h1>Visualization Taxonomy</h1>
-{% lorem 1 p %}
 
-<div class="well">
-	<div>Items in <span class="badge badge-success">green</span> have further information.</div>
-	<div>Items in <span class="badge badge-important">red</span> are missing further information.</div>
-</div>
+{% include "taxonomy-header.html" %}
 
 {% if taxonomies %}
 	{% for category in taxonomies %}
 		{% if forloop.counter|divisibleby:"1" %}<ul class="thumbnails">{% endif %}
-		<li class="span10">
-			<div class="thumbnail">
-				<h3>{{ category.name }}</h3>
+			<div class="well taxonomy-well">
+				<h1>{{ category.name }}</h1>
 				<p>
 					{% for item in category.taxonomyitem_set.all %}
 						{% if item.has_detail %}
-							<span class="badge badge-success">
+							<span class="badge badge-success taxonomy-item">
 						{% else %}
-							<span class="badge badge-important">
+							<span class="badge badge-important taxonomy-item">
 						{% endif %}
 						<i class="icon-asterisk icon-white"></i><a href="/web/taxonomy/{{ item.id }}" style="color:white">{{ item.name }}</a></span>
 					{% endfor %}
 				</p>
 			</div>
-		</li>
 		{% if forloop.counter|divisibleby:"1" %}</ul>{% endif %}
 	{% endfor %}
 </div>
@@ -38,5 +31,13 @@
 	No taxonomy found.
 {% endif %} 
 
+<div class="well">
+<p>
+This taxonomy is based on the subject categories used by the submission and review processes for IEEE VisWeek conferences (SciVis, InfoVis and VAST) and European Conference on Visualization (EuroVis). We understand that almost all taxonomies will undergo an evolutionary development by the community concerned. We will review this taxonomy on a regular basis. Please let us know if you have any suggestions.
+</p>
+<p>
+	<button class="btn btn-large btn-primary" type="button">I have a suggestion</button>
+</p>
+</div>
 	
 {% endblock %}

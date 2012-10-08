@@ -10,7 +10,7 @@
 
 </head>
 
-<body>
+<body {% block body_attributes %}{% endblock %}>
 <div class="topbar">
     <div class="topbar-content" align="center">
         <a href="/web/">
@@ -29,10 +29,9 @@
 
         </div>
 
-        <div class="search">
-
+        <div class="search" style="margin-right:20px">
             <form id="search" action="/web/search">
-                <input id="search-text" type="text" name="q" placeholder="Search References">
+                <input id="search-text" style="width:80%" type="text" name="q" placeholder="Search References">
             </form>
         </div>
 

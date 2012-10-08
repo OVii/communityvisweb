@@ -1,0 +1,64 @@
+
+{% extends "base.html" %}
+{% block title %}Visualization Taxonomy{% endblock %}
+
+{% load webdesign %}
+
+{% block body_attributes %} data-spy="scroll" data-target=".alphanav"{% endblock %}
+
+{% block content %}
+
+{% include "taxonomy-header.html" %}
+
+
+
+<div class="row-fluid">
+	<div class="span1 alphanav">
+		<ul class="nav nav-pills nav-stacked" id="navbar" style="position:fixed;">
+			{% for item in index %}
+				<li><a href="#{{ item }}"><i class="icon-chevron-right"></i> {{ item }}</a></li>
+			{% endfor %}
+		</ul>
+	</div>
+	<div class="span11">
+
+		{% if index %}
+			{% for letter, items in index.items %}
+				<section id="{{ letter }}">
+				<div class="well taxonomy-well">
+					<a name="{{ letter }}" style="padding-top:-150px"></a>
+					<h1>{{ letter }}</h1>
+					{% for item in items %}
+						<p>
+						{% if item.3 %}
+							<span class="badge badge-success">
+						{% else %}
+							<span class="badge badge-important">
+						{% endif %}
+						<i class="icon-white icon-chevron-right"></i></span>
+						<a href="/web/taxonomy/{{ item.0 }}">{{ item.1 }}</a> <span class="label">{{ item.2 }}</span>
+						</p>
+					{% endfor %}
+				</div>
+				</section>
+			{% endfor %}
+		</div>
+		{% else %}
+			No taxonomy found.
+		{% endif %} 
+
+	</div>
+</div>
+
+<div class="well">
+<p>
+This taxonomy is based on the subject categories used by the submission and review processes for IEEE VisWeek conferences (SciVis, InfoVis and VAST) and European Conference on Visualization (EuroVis). We understand that almost all taxonomies will undergo an evolutionary development by the community concerned. We will review this taxonomy on a regular basis. Please let us know if you have any suggestions.
+</p>
+<p>
+	<button class="btn btn-large btn-primary" type="button">I have a suggestion</button>
+</p>
+</div>
+
+</div>
+	
+{% endblock %}

@@ -5,7 +5,7 @@
     <link rel="stylesheet" href="{{ STATIC_URL }}/bootstrap/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="{{ STATIC_URL }}/css/style.css"/>
     {% block head_additional %} {% endblock %}
-
+	<title>Community Resource: Visualization</title>
 </head>
 <body>
 {% load webdesign %}
@@ -26,16 +26,44 @@
 </div>
 </div>
 
-<div align="center" class="home-page">
-    <img src="{{ STATIC_URL }}/img/static_img/home/logo_lrg.png"/>
+<div class="home-page">
+    <div class="row-fluid">
+		<img src="{{ STATIC_URL }}/img/static_img/home/logo_lrg.png"/>
+	</div>
+    <div class="row-fluid">
+		<div class="span6">
+			<div class="row-fluid">
+				<a href="/web/taxonomy"><button class="btn btn-large btn-primary" type="button">Taxonomic Index</button></a>
+				<a href="/web/taxonomy_alpha"><button class="btn btn-large btn-primary" type="button">Alphabetic Index</button></a>
+			</div>
+		</div>
+		<div class="span6">
+			<form id="search" action="/web/search"><input id="search-text" type="text" name="q" placeholder="Search References"></form>
+		</div>
+    </div>
+	<div class="row-fluid cr-hero-unit">
+			<h1>About CR</h1>
+			<p>CR is an online collection of references compiled by researchers in the field of visualization (including scientific visualization, information visualization and visual analytics). It reflects individual volunteers’ knowledge about a particular subject domain, and is designed to complement conventional search engines which reply more on various rankings such as citations, publication time and user queries.</p>
+			<p>
+				<a class="btn btn-primary btn-large">
+				Learn more about CR
+				</a>
+			</p>	
+	</div>
 
-    <div class="search-wrapper">
-        <form id="search" action="/web/search">
-            <input id="search-text" type="text" name="q" placeholder="Search References">
-        </form>
-    </div
+		<div class="row-fluid cr-hero-unit" style="">
+			<h1>How to Volunteer</h1>
+			<p>The development and maintenance of this resource requires the selfless contributions from many volunteers in the field. If you wish to help manage a sub-collection of references on a specific subject of which you have considerable knowledge of, please let us know. You can click the button below to request ownership of one of our taxonomy items.
+			</p>
+			<p>
+				<a class="btn btn-primary btn-large">
+					I wish to volunteer
+				</a>
+			</p>	
+		</div>
 
-    <div class="home-content">
+
+  <!--  <div class="home-content">
         <div class="span5 front-item">
             <a href="/web/taxonomy/"><img src="{{ STATIC_URL }}/img/static_img/home/taxonomy.png"></a><br/>
             <strong>We use a comprehensive taxonomy for categorising works in visualization.</strong>
@@ -52,22 +80,20 @@
             You can download the references freely or rate them to let others know about quality.
         </div>
     </div>
-
+	-->
 	{% if recent_taxonomy_items %}
 
-	<!-- eamonn: give this some styyyllllllin' -->
-	<div class="home-content">
-		<div class="span10">
-			<strong>Recently updated taxonomy items</strong>
-			<ul>
-			{% for item in recent_taxonomy_items %}
-				<li><i>{{ item }}</i> : {{ item.short_description }}</li>
-			{% endfor %}
-			</ul>
-		</div>
+	<div class="row-fluid">
+		<strong>Recently updated taxonomy items</strong>
+		<ul>
+		{% for item in recent_taxonomy_items %}
+			<li>{{ item }} : <i>{{ item.short_description }}</i></li>
+		{% endfor %}
+		</ul>
 	</div>
-
+	
 	{% endif %}
+
 </div>
 
 </body>
