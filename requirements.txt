@@ -1,4 +1,5 @@
 Django==1.4.1
+dj-database-url==0.2.1
 PyRSS2Gen==1.0.0
 Twisted==12.0.0
 altgraph==0.9
