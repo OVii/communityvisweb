@@ -10,7 +10,6 @@ numpy==1.6.1
 psycopg2==2.4.5
 py2app==0.6.3
 pyOpenSSL==0.13
-pyobjc-core==2.3
 python-dateutil==1.5
 virtualenv==1.8.2
 wsgiref==0.1.2
