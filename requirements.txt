@@ -3,7 +3,7 @@ PyRSS2Gen==1.0.0
 Twisted==12.0.0
 altgraph==0.9
 bdist-mpkg==0.4.4
-bonjour-py==0.3
+#bonjour-py==0.3
 macholib==1.4.2
 modulegraph==0.9.1
 numpy==1.6.1
