@@ -25,7 +25,7 @@ def gen_detail_html():
 		while i < len(lorem):
 			output_str += lorem[i] + ' '
 			if random.random() < reference_likelihood:
-				output_str += '{{' + random_reference().entry_id + '}} '
+				output_str += '{{' + random_reference().entry_key + '}} '
 			i += 1 
 		return output_str	
 	else:

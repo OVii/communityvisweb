@@ -5,6 +5,7 @@
 
 from django.contrib.auth.models import User
 from django.db import models
+import reference_backend
 
 class TaxonomyArea(models.Model):
 	name = models.CharField(max_length=128)
@@ -43,9 +44,32 @@ class TaxonomyItem(models.Model):
 	def __unicode__(self):
 		return self.user.__unicode__() + " owns " + item.__unicode__()
 """
+
+class ReferenceAuthor(models.Model):
+	first_name = models.CharField(max_length=256)
+	last_name = models.CharField(max_length=256)
+	middle_name = models.CharField(max_length=256)
+	prelast_name = models.CharField(max_length=256)
+	lineage = models.CharField(max_length=256)
+
+class ReferenceColumn(models.Model):
+	name = models.CharField(max_length=128)	
+
 class Reference(models.Model):
 	bibtex = models.CharField(max_length=2048)
-	entry_id = models.CharField(max_length=256)
+	entry_key = models.CharField(max_length=256)
+	authors = models.ManyToManyField(ReferenceAuthor, related_name="authors+")
+	#attributes = models.ManyToManyField(ReferenceAttribute, related_name="attributes+")
+
+	def html(self):
+		return reference_backend.html_format_entry(self)
 
 	def __unicode__(self):
 		return self.bibtex
+
+class ReferenceAttribute(models.Model):
+	column = models.ForeignKey(ReferenceColumn)
+	value = models.CharField(max_length=4096)
+	reference = models.ForeignKey(Reference)
+
+

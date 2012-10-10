@@ -37,7 +37,7 @@ def reference_entries(meta_str):
 	for (i,j) in indices(meta_str):
 		ref = meta_str[i+2:j-1]
 		try:
-			ref_obj = Reference.objects.get(entry_id=ref)
+			ref_obj = Reference.objects.get(entry_key=ref)
 		except:
 			pass
 		else:

@@ -23,9 +23,9 @@ os.system('python ' + os.path.join(os.getcwd(),'manage.py syncdb'))
 
 # setup references and taxonomy items
 from taxonomy_init import taxonomy_init
-from bibtex_import import bibtex_import
+from bibtex_import_server import bibtex_import
 
-bibtex_import(open(bibtex_file))
+bibtex_import(bibtex_file)
 taxonomy_init()
 
 # add some users

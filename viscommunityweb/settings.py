@@ -13,8 +13,8 @@ ADMINS = (
 # Change below for your own machine. This is the only per-machine def. 
 TEMPLATE_DIRS = (
 	#"/Users/eamonnmaguire/git/ovii/communityvisweb/web/"
-	#"/Users/sim/Documents/VisWeb/viscommunityweb/web/"
-	"/app/web/"
+	"/Users/sim/Documents/VisWeb/viscommunityweb/web/"
+	#"/app/web/"
 )
 
 MANAGERS = ADMINS
@@ -31,7 +31,7 @@ DATABASES = {
     }
 }
 
-DATABASES = {'default': dj_database_url.config(default='postgres://localhost')}
+#DATABASES = {'default': dj_database_url.config(default='postgres://localhost')}
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name

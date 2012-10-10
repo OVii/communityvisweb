@@ -13,6 +13,7 @@ from reference_parse import reference_entries, html_format
 from django.contrib.auth import authenticate
 from django.contrib.auth import logout as django_logout, login as django_login
 import taxonomy_backend
+import json
 
 # couple of globals
 os.environ['DJANGO_SETTINGS_MODULE'] = "viscommunityweb.settings"
@@ -45,19 +46,21 @@ def taxonomy_alpha(request):
     return render_to_response("templates/taxonomy-alpha.html", {'index': index},
         context_instance=RequestContext(request))
 
-
 # taxonomy detail page
 def taxonomy_detail(request, taxonomy_id):
-    taxonomy = get_object_or_404(TaxonomyItem, pk=taxonomy_id)
-    html = html_format(taxonomy.detail_html)
-    if len(html) == 0:
-        html = "There is currently no information on this taxonomy item."
+	taxonomy = get_object_or_404(TaxonomyItem, pk=taxonomy_id)
+	html = html_format(taxonomy.detail_html)
+   
+	if len(html) == 0:
+		html = "There is currently no information on this taxonomy item."
+	
+	refer = reference_entries(taxonomy.detail_html)
+	bibtex_texts = json.dumps([x.bibtex for x in refer])
 
-    return render_to_response("templates/taxonomy_detail.html",
-            {'taxonomy': taxonomy,
-             'formatted_detail': html,
-             'references': reference_entries(taxonomy.detail_html)},
-        context_instance=RequestContext(request))
+	print "Got %i refs" % len(refer)
+
+	return render_to_response("templates/taxonomy_detail.html",
+		{'taxonomy': taxonomy, 'formatted_detail': html, 'references': refer, 'bibtex_texts': bibtex_texts}, context_instance=RequestContext(request))
 
 # contact page for ownership request
 def request_ownership(request, taxonomy_id):
@@ -91,7 +94,7 @@ def request_ownership_send(request):
 # big list of all references in database (future: sorting/filtering etc)
 def references(request):
     refs = Reference.objects.all()
-    return render_to_response("templates/references.html", {'references': refs},
+    return render_to_response("templates/references.html", {'references': refs, 'bibtex_texts': json.dumps([x.bibtex for x in refs])},
         context_instance=RequestContext(request))
 
 # login POST

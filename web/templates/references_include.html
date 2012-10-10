@@ -1,19 +1,46 @@
+
+{% autoescape off %}
+
 {% if references %}
 
     <div>
-        <textarea id="bibtex_input" style="display:none">
-            {% for reference in references %}
-                {{ reference.bibtex }}
-            {% endfor %}
-        </textarea>
-
-        <div class="alert alert-info">
+       
+		<div class="alert alert-info">
             <button type="button" class="close" data-dismiss="alert">×</button>
             You can get the reference entry in BibTeX format by clicking the reference number.
         </div>
 
-        <div id="bibtex_display"></div>
+
+        {% for reference in references %}
+			{{ reference.html }}
+        {% endfor %}
+
     </div>
+
+<script language="javascript">
+
+var bibtexes = {{ bibtex_texts }};
+
+//#for(var text in bibtexes)
+//	alert(bibtexes[text]);
+
+$(document).ready(function() {
+	var ref_tag = $('div:not(a).reference_box');
+	ref_tag.each(function(idx) {
+	    $("<a/>", {
+			"href":"#",
+			"class":"badge badge-info bibtex_js_popover reference_number",
+			"rel":"popover",
+			"title":"BibTeX",
+			"html":true,
+			"data-content":"<tiny>" + bibtexes[idx] + "</tiny>",
+			text:(idx+1).toString()}
+		).prependTo($(this)).popover();
+	});
+
+});
+
+</script>
 
 {% else %}
 
@@ -21,3 +48,4 @@ There are no references.
 
 {% endif %}
 
+{% endautoescape %}

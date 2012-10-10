@@ -315,8 +315,9 @@ class Parser(BaseParser):
         self.person_fields = person_fields
         self.keyless_entries = keyless_entries
 
-    def process_entry(self, entry_type, key, fields):
+    def process_entry(self, entry_type, text, key, fields):
         entry = Entry(entry_type)
+        entry.text = text
 
         if key is None:
             key = 'unnamed-%i' % self.unnamed_entry_counter
@@ -357,10 +358,11 @@ class Parser(BaseParser):
         )
         for entry in entry_iterator:
             entry_type = entry[0]
+            #print entry
             if entry_type == 'string':
                 pass
             elif entry_type == 'preamble':
                 self.process_preamble(*entry[1])
             else:
-                self.process_entry(entry_type, *entry[1])
+                self.process_entry(entry_type, text, *entry[1])
         return self.data

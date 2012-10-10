@@ -84,7 +84,8 @@ class Writer(BaseWriter):
             if end_brace_level != 0:
                 raise BibTeXError('String has unmatched braces: %s' % s)
 
-    def write_stream(self, bib_data, stream):
+
+    def write_entry(self, key, entry, stream):
         def write_field(type, value):
             stream.write(u',\n    %s = %s' % (type, self.quote(value)))
         def format_name(person):
@@ -108,18 +109,21 @@ class Writer(BaseWriter):
 #            persons = getattr(entry, role + 's')
             if persons:
                 write_field(role, u' and '.join([format_name(person) for person in persons]))
+        
+        stream.write(u'@%s' % entry.type)
+        stream.write(u'{\n')
+        stream.write(u'    %s' % key)
+        for role, persons in entry.persons.iteritems():
+            write_persons(persons, role)
+        for type, value in entry.fields.iteritems():
+            write_field(type, value)
+        stream.write(u'\n}\n\n')
+
+    def write_stream(self, bib_data, stream):
         def write_preamble(preamble):
-            if preamble:
-                stream.write(u'@preamble{%s}\n\n' % self.quote(preamble))
+           if preamble:
+               stream.write(u'@preamble{%s}\n\n' % self.quote(preamble))
 
         write_preamble(bib_data.preamble())
         for key, entry in bib_data.entries.iteritems():
-            stream.write(u'@%s' % entry.type)
-            stream.write(u'{\n')
-            stream.write(u'    %s' % key)
-#            for role in ('author', 'editor'):
-            for role, persons in entry.persons.iteritems():
-                write_persons(persons, role)
-            for type, value in entry.fields.iteritems():
-                write_field(type, value)
-            stream.write(u'\n}\n\n')
+        	self.write_entry(key, entry, stream)
