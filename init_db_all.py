@@ -12,6 +12,22 @@ import random
 db_file = os.path.join(os.getcwd(),'visweb.db')
 bibtex_file = os.path.join(os.getcwd(),'bibtex','test.bib')
 
+# remove existing tables
+from django.core.management import setup_environ, call_command
+import StringIO, sys
+from django.db.models import get_apps
+app_labels = [app.__name__.split('.')[-2] for app in get_apps()]
+sys.stdout = buffer = StringIO.StringIO()
+call_command('sqlclear', *app_labels)
+sys.stdout = sys.__stdout__
+
+queries = buffer.getvalue().split(';')[1:-2]
+
+from django.db import connection
+cursor = connection.cursor()
+for query in queries:
+	cursor.execute(query.strip())
+
 # delete existing database file
 if os.path.exists(db_file):
 	answer = raw_input('Are you sure you want to delete existing visweb.db? [y/n]')
@@ -19,7 +35,8 @@ if os.path.exists(db_file):
 		os.remove(db_file)
 
 # run syncdb to generate new one
-os.system('python ' + os.path.join(os.getcwd(),'manage.py syncdb'))
+#os.system('python ' + os.path.join(os.getcwd(),'manage.py syncdb'))
+call_command('syncdb')
 
 # setup references and taxonomy items
 from taxonomy_init import taxonomy_init
