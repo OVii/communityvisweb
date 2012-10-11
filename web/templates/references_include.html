@@ -10,6 +10,22 @@
             You can get the reference entry in BibTeX format by clicking the reference number.
         </div>
 
+		<div class="well row">
+			<div class="btn-group pull-left">
+				<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+				    Sort by
+				    <span class="caret"></span>
+  				</a>
+			  	<ul class="dropdown-menu">
+					<li><a href="{{ request.path }}">Date Added</a></li>
+					<li><a href="{{ request.path }}?sort=title">Author list</a></li>
+					<li><a href="{{ request.path }}?sort=year">Year</a></li>
+					<li><a href="{{ request.path }}?sort=journal">Journal</a></li>
+					<li><a href="{{ request.path }}?sort=booktitle">Book Title</a></li>
+					<li><a href="{{ request.path }}?sort=issn">ISSN</a></li>
+				</ul>
+			</div>
+		</div>
 
         {% for reference in references %}
 			{{ reference.html }}

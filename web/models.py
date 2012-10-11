@@ -61,9 +61,6 @@ class Reference(models.Model):
 	authors = models.ManyToManyField(ReferenceAuthor, related_name="authors+")
 	#attributes = models.ManyToManyField(ReferenceAttribute, related_name="attributes+")
 
-	def html(self):
-		return reference_backend.html_format_entry(self)
-
 	def __unicode__(self):
 		return self.bibtex
 
