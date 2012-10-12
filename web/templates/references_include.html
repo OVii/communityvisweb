@@ -3,44 +3,55 @@
 
 {% if references %}
 
-    <div>
-       
-		<div class="alert alert-info">
-            <button type="button" class="close" data-dismiss="alert">×</button>
-            You can get the reference entry in BibTeX format by clicking the reference number.
-        </div>
-
-		<div class="well row">
-			<div class="btn-group pull-left">
-				<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-				    Sort by
-				    <span class="caret"></span>
-  				</a>
-			  	<ul class="dropdown-menu">
-					<li><a href="{{ request.path }}">Date Added</a></li>
-					<li><a href="{{ request.path }}?sort=title">Author list</a></li>
-					<li><a href="{{ request.path }}?sort=year">Year</a></li>
-					<li><a href="{{ request.path }}?sort=journal">Journal</a></li>
-					<li><a href="{{ request.path }}?sort=booktitle">Book Title</a></li>
-					<li><a href="{{ request.path }}?sort=issn">ISSN</a></li>
-				</ul>
+    <div class="row">
+		<div class="span2 well">
+			<!-- sort -->
+			<div class="">
+				<p><h4>Search/Filter</h4></p>
+				<div class="btn-group">
+					<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+					    Sort by
+					    <span class="caret"></span>
+  					</a>
+				  	<ul class="dropdown-menu">
+						<li><a href="{{ request.path }}">Date Added</a></li>
+						<li><a href="{{ request.path }}?sort=title">Author list</a></li>
+						<li><a href="{{ request.path }}?sort=year">Year</a></li>
+						<li><a href="{{ request.path }}?sort=journal">Journal</a></li>
+						<li><a href="{{ request.path }}?sort=booktitle">Book Title</a></li>
+						<li><a href="{{ request.path }}?sort=issn">ISSN</a></li>
+					</ul>
+				</div>
+				<!-- filter -->
+				<div style="padding-top:5px"> 
+					 <form id="search" action="/web/search">
+        	        	<input id="referencefilter" style="width:90%;" type="text" name="q" placeholder="Type to filter...">
+	        	     </form>
+				</div>
+			</div>
+			<!-- note -->
+			<div class="">
+				<div class="alert alert-info" style="text-align:justify">
+        	    	<small>Click the reference number for the entry's BibTeX markup.</small>
+	        	</div>
+			</div>
+			<div class="">
+				<a href="/web/contact/"><button class="btn btn-primary">Suggest addition/correction</button></a>
 			</div>
 		</div>
-
-        {% for reference in references %}
-			{{ reference.html }}
-        {% endfor %}
-
+		<div class="span10">
+	        {% for reference in references %}
+				{{ reference.html }}
+        	{% endfor %}
+		</div>
     </div>
 
 <script language="javascript">
 
 var bibtexes = {{ bibtex_texts }};
 
-//#for(var text in bibtexes)
-//	alert(bibtexes[text]);
-
 $(document).ready(function() {
+	// bibtex popup
 	var ref_tag = $('div:not(a).reference_box');
 	ref_tag.each(function(idx) {
 	    $("<a/>", {
@@ -53,6 +64,31 @@ $(document).ready(function() {
 			text:(idx+1).toString()}
 		).prependTo($(this)).popover();
 	});
+
+	// filter functionality
+	var rf_box = $('#referencefilter');
+	
+	$.extend($.expr[':'], {
+  	'containsi': function(elem, i, match, array)
+	  {
+	    return (elem.textContent || elem.innerText || '').toLowerCase()
+    	.indexOf((match[3] || "").toLowerCase()) >= 0;
+	  }
+	});
+
+	rf_box.keyup(function() { 
+		if(rf_box.val().length > 0) {
+			$(".reference_box:not(:containsi('" + rf_box.val() + "'))").each(function() {
+				$(this).hide(); 
+			});
+			$(".reference_box:containsi('" + rf_box.val() + "')").each(function() {
+				$(this).show();
+			});	
+		}
+		else {
+			$(".reference_box").show();
+		}
+	});	
 
 });
 
