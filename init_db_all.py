@@ -19,8 +19,8 @@ if os.path.exists(db_file):
 		os.remove(db_file)
 
 # run syncdb to generate new one
-#os.system('python ' + os.path.join(os.getcwd(),'manage.py syncdb'))
-call_command('syncdb')
+os.system('python ' + os.path.join(os.getcwd(),'manage.py syncdb'))
+#call_command('syncdb')
 
 # setup references and taxonomy items
 from taxonomy_init import taxonomy_init
