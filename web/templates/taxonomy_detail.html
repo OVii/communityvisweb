@@ -1,30 +1,37 @@
-
 {% extends "base.html" %}
 {% block title %}View Taxonomy Item{% endblock %}
 
 {% block content %}
 
-<div class="page-header">
-	<h1>Taxonomy Item <small>{{ taxonomy.name }}</small></h1>
-</div>
+    <div class="page-header">
+        <h1>
+            <small>{{ taxonomy.name }}</small>
+        </h1>
+    </div>
 
-<div>
-{% autoescape off %}
-{{ formatted_detail }}
-{% endautoescape %}
-</div>
+    <div>
+        {% autoescape off %}
+            {{ formatted_detail }}
+        {% endautoescape %}
+        <br/>
+        <br/>
+        <div class="well well-small">
+            Click the reference number for the entry's BibTeX markup.
+        </div>
+    </div>
 
-{% if references %}
+    {% if references %}
 
-<h2>References</h2>
 
-{% include "templates/references_include.html" %}
 
-{% endif %}
+        {% include "templates/references_include.html" %}
 
-<h2>More Information</h2>
-<div>
-If you wish to request ownership of this taxonomy item, please <a href="/web/request_ownership/{{ taxonomy.id }}">click here</a> to request ownership.
-</div>
+    {% endif %}
+
+    <h2>More Information</h2>
+    <div>
+        If you wish to request ownership of this taxonomy item, please <a
+            href="/web/request_ownership/{{ taxonomy.id }}">click here</a> to request ownership.
+    </div>
 
 {% endblock %}

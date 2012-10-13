@@ -1,7 +1,5 @@
 # Django settings for viscommunityweb project.
 
-import dj_database_url
-
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
@@ -12,8 +10,8 @@ ADMINS = (
 
 # Change below for your own machine. This is the only per-machine def. 
 TEMPLATE_DIRS = (
-	#"/Users/eamonnmaguire/git/ovii/communityvisweb/web/"
-	"/Users/sim/Documents/VisWeb/viscommunityweb/web/"
+	"/Users/eamonnmaguire/git/ovii/communityvisweb/web/"
+	#/Users/sim/Documents/VisWeb/viscommunityweb/web/"
 	#"/app/web/"
 )
 

@@ -3,13 +3,13 @@
 
 {% if references %}
 
-    <div class="row">
-		<div class="span2 well">
+    <div class="row-fluid">
+		<div class="span2 well well-small">
 			<!-- sort -->
-			<div class="">
+			<div>
 				<p><h4>Search/Filter</h4></p>
 				<div class="btn-group">
-					<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+					<a class="btn dropdown-toggle span12" data-toggle="dropdown" href="#" align="right">
 					    Sort by
 					    <span class="caret"></span>
   					</a>
@@ -23,7 +23,8 @@
 					</ul>
 				</div>
 				<!-- filter -->
-				<div style="padding-top:5px"> 
+				<div style="padding-top:5px">
+                    <br/><br/>
 					 <form id="search" action="/web/search">
         	        	<input id="referencefilter" style="width:90%;" type="text" name="q" placeholder="Type to filter...">
 	        	     </form>
@@ -31,12 +32,7 @@
 			</div>
 			<!-- note -->
 			<div class="">
-				<div class="alert alert-info" style="text-align:justify">
-        	    	<small>Click the reference number for the entry's BibTeX markup.</small>
-	        	</div>
-			</div>
-			<div class="">
-				<a href="/web/contact/"><button class="btn btn-primary">Suggest addition/correction</button></a>
+				<a href="/web/contact/"><button class="btn">Suggest addition/correction</button></a>
 			</div>
 		</div>
 		<div class="span10">
@@ -67,7 +63,7 @@ $(document).ready(function() {
 
 	// filter functionality
 	var rf_box = $('#referencefilter');
-	
+
 	$.extend($.expr[':'], {
   	'containsi': function(elem, i, match, array)
 	  {
@@ -76,19 +72,19 @@ $(document).ready(function() {
 	  }
 	});
 
-	rf_box.keyup(function() { 
+	rf_box.keyup(function() {
 		if(rf_box.val().length > 0) {
 			$(".reference_box:not(:containsi('" + rf_box.val() + "'))").each(function() {
-				$(this).hide(); 
+				$(this).hide();
 			});
 			$(".reference_box:containsi('" + rf_box.val() + "')").each(function() {
 				$(this).show();
-			});	
+			});
 		}
 		else {
 			$(".reference_box").show();
 		}
-	});	
+	});
 
 });
 

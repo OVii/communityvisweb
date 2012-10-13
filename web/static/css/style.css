@@ -381,4 +381,8 @@ body {
     border-left: thick solid #EBB77B;
 }
 
+.badge-info,.badge-info[href] {
+    background-color: #042F4B;
+}
+
 ​

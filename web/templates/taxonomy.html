@@ -1,4 +1,3 @@
-
 {% extends "base.html" %}
 {% block title %}Visualization Taxonomy{% endblock %}
 
@@ -6,38 +5,46 @@
 
 {% block content %}
 
-{% include "taxonomy-header.html" %}
+    {% include "taxonomy-header.html" %}
+    <div class="row-fluid">
+        {% if taxonomies %}
+            {% for category in taxonomies %}
+                {% if forloop.counter|divisibleby:"1" %}
+                    <ul class="thumbnails">{% endif %}
+                <div class="well taxonomy-well">
+                    <h1>{{ category.name }}</h1>
 
-{% if taxonomies %}
-	{% for category in taxonomies %}
-		{% if forloop.counter|divisibleby:"1" %}<ul class="thumbnails">{% endif %}
-			<div class="well taxonomy-well">
-				<h1>{{ category.name }}</h1>
-				<p>
-					{% for item in category.taxonomyitem_set.all %}
-						{% if item.has_detail %}
-							<span class="badge badge-success taxonomy-item">
-						{% else %}
-							<span class="badge badge-important taxonomy-item">
-						{% endif %}
-						<i class="icon-asterisk icon-white"></i><a href="/web/taxonomy/{{ item.id }}" style="color:white">{{ item.name }}</a></span>
-					{% endfor %}
-				</p>
-			</div>
-		{% if forloop.counter|divisibleby:"1" %}</ul>{% endif %}
-	{% endfor %}
-</div>
-{% else %}
-	No taxonomy found.
-{% endif %} 
+                    <p>
+                        {% for item in category.taxonomyitem_set.all %}
+                            {% if item.has_detail %}
+                                <span class="badge badge-success taxonomy-item">
+                            {% else %}
+                                <span class="badge badge-important taxonomy-item">
+                            {% endif %}
+                        <i class="icon-asterisk icon-white"></i><a href="/web/taxonomy/{{ item.id }}"
+                                                                   style="color:white">{{ item.name }}</a></span>
+                        {% endfor %}
+                    </p>
+                </div>
+                {% if forloop.counter|divisibleby:"1" %}</ul>{% endif %}
+            {% endfor %}
+            </div>
+        {% else %}
+            No taxonomy found.
+        {% endif %}
+    </div>
 
-<div class="well">
-<p>
-This taxonomy is based on the subject categories used by the submission and review processes for IEEE VisWeek conferences (SciVis, InfoVis and VAST) and European Conference on Visualization (EuroVis). We understand that almost all taxonomies will undergo an evolutionary development by the community concerned. We will review this taxonomy on a regular basis. Please let us know if you have any suggestions.
-</p>
-<p>
-	<button class="btn btn-large btn-primary" type="button">I have a suggestion</button>
-</p>
-</div>
-	
+    <div class="well">
+        <p>
+            This taxonomy is based on the subject categories used by the submission and review processes for IEEE
+            VisWeek conferences (SciVis, InfoVis and VAST) and European Conference on Visualization (EuroVis). We
+            understand that almost all taxonomies will undergo an evolutionary development by the community concerned.
+            We will review this taxonomy on a regular basis. Please let us know if you have any suggestions.
+        </p>
+
+        <p>
+            <button class="btn btn-large" type="button">I have a suggestion</button>
+        </p>
+    </div>
+
 {% endblock %}
