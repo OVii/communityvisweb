@@ -8,18 +8,19 @@
 
 {% block content %}
 
-{% include "taxonomy-header.html" %}
 
 <div class="row-fluid">
-	<div class="span1 alphanav">
-		<ul class="nav nav-pills nav-stacked" id="navbar" style="position:fixed">
+	<div class="span1 navbar alphanav">
+		<ul class="nav nav-pills" id="navbar">
 			{% for item in index %}
-				<li><a href="#{{ item }}"><i class="icon-chevron-right"></i> {{ item }}</a></li>
+				<li><a href="#{{ item }}">{{ item }}</a></li>
 			{% endfor %}
 		</ul>
 	</div>
 	<div class="span11">
-		{% if index %}
+        {% include "taxonomy-header.html" %}
+
+        {% if index %}
 			{% for letter, items in index.items %}
 				<section id="{{ letter }}">
 					<div class="well taxonomy-well">
