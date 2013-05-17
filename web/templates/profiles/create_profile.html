@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+
+{% block head_additional %}
+    <link rel="stylesheet" href="{{ STATIC_URL }}/css/overridden.css" xmlns="http://www.w3.org/1999/html"
+          xmlns="http://www.w3.org/1999/html">
+{% endblock %}
+
+{% load i18n %}
+
+{% block content %}
+    <div class="hero-unit">
+        <p>
+            <h3>{{ user.username }}</h3>
+        </p>
+
+        {% if form.errors %}
+            <p class="errorlist">{% trans "Sorry there are corrections needed in your form below:" %} {{ form.non_field_errors }}</p>
+        {% endif %}
+        {% if form.is_multipart %}
+            <form enctype="multipart/form-data" method="post" action=".">
+        {% else %}
+            <form method="post" action=".">
+        {% endif %}
+        {{ form.as_p }}
+        {% csrf_token %}
+        <input type="submit" class="btn btn-info" value="Save"/>
+        </form>
+    </div>
+{% endblock %}

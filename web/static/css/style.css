@@ -8,6 +8,7 @@ body {
 .topbar {
     position: fixed;
     height: 60px;
+    min-width: 1100px;
     width: 100%;
     overflow: visible;
     display: block;
@@ -177,7 +178,7 @@ body {
 }
 
 .content {
-    margin-top: 80px;
+    margin-top: 60px;
 }
 
 .user-account span {
@@ -381,16 +382,156 @@ body {
     border-left: thick solid #EBB77B;
 }
 
-.badge-info,.badge-info[href] {
+.badge-info, .badge-info[href] {
     background-color: #042F4B;
 }
 
 .alphanav {
     position: fixed;
-    bottom: 0; left: 10px;
+    bottom: 0;
+    left: 10px;
     width: 40px;
     top: 80px;
 
+}
+
+#footer h6 {
+    font-size: 1.1em;
+    line-height: 18px;
+    margin-bottom: 0;
+    font-weight: bold;
+    color: #042F4B;
+}
+
+#footer #social-links li {
+    line-height: 24px;
+    padding-left: 20px;
+}
+
+#footer {
+    width: 100%;
+    float: left;
+    clear: both;
+    padding: 0 0 36px 0;
+}
+
+#footer .section {
+    overflow: hidden
+}
+
+#footer p, #footer a, #footer p a {
+
+    color: #042F4B;
+    border-bottom: 0 none;
+}
+
+#footer .menu {
+    margin-left: 0;
+    font-size: 1.1em;
+}
+
+#footer .menu li {
+    color: #999;
+    line-height: 18px;
+    white-space: normal;
+}
+
+#footer #copyright {
+    white-space: nowrap;
+    margin: 0 30px 0 0;
+    text-align: right;
+}
+
+#footer .hr {
+    height: 18px;
+}
+
+#footer {
+    color: #042F4B;
+    /*padding: 10px 0 0 0;*/
+    font-size: 12px;
+    clear: both;
+    /*margin-top: 20px;*/
+}
+
+.footer_container {
+    width: 992px;
+    margin: 0 auto;
+}
+
+.upper_footer {
+    min-height: 130px;
+    /*margin-top: 20px;*/
+    width: 100%;
+    overflow: hidden;
+    border-top: 1px solid #E0E0E0;
+    border-bottom: 1px solid #E0E0E0;
+    box-shadow: inset 0 -1px 0 white;
+    background-color: #F8F8F8;
+}
+
+#additionalLinks {
+    height: 130px;
+    width: 164px;
+    float: left;
+    background: url('../img/static_img/abstract-logo.png') no-repeat;
+    text-indent: -5000px;
+    margin: 15px 20px 0 0;
+}
+
+.bottom_footer {
+    position: relative;
+    background-color: white;
+    overflow: hidden;
+    clear: both;
+    min-height: 60px;
+}
+
+#footer .upper_footer h4 {
+    color: #666;
+    font-size: 13px;
+}
+
+
+#footer .upper_footer ul {
+    list-style: none;
+}
+
+#footer .upper_footer ul.footer_links {
+    position: relative;
+    float: left;
+    width: 164px;
+    margin: 20px 10px;
+}
+
+#footer .upper_footer ul.footer_links a {
+    color: #EBB77B;
+    font-size: 13px;
+    font-weight: normal;
+}
+
+
+.profile-top {
+    height: 80px;
+    background-color: #f8f8f8;
+    border-bottom: #f1f2f1 solid 2px;
+
+}
+
+.profile-top #username {
+    padding-top: 30px;
+    padding-left: 20px;
+    font-size: 1.9em;
+    text-transform: uppercase;
+    font-weight: lighter;
+    color: #fff;
+    float: left;
+}
+
+.profile-top #options {
+    float: right;
+    padding-top: 23px;
+    padding-right: 20px;
 }
 
 ​

@@ -3,7 +3,7 @@
 <head>
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
     <script type="text/javascript" src="{{ STATIC_URL }}/bootstrap/js/bootstrap.min.js"></script>
-    <link rel="stylesheet" href="{{ STATIC_URL }}/bootstrap/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="{{ STATIC_URL }}/bootstrap/css/bootstrap.css"/>
     <link rel="stylesheet" href="{{ STATIC_URL }}/css/style.css"/>
     {% block head_additional %} {% endblock %}
     <title>{% block title %}Community-driven Visualization Resource Website{% endblock %}</title>
@@ -13,30 +13,30 @@
 <body {% block body_attributes %}{% endblock %}>
 <div class="topbar">
     <div class="topbar-content" align="center">
-        <a href="/web/">
+        <a href="/">
             <div class="logo">Home</div>
         </a>
 
         <div class="user-account">
             {% if user.is_authenticated %}
                 <i class="icon-user"></i> {{ user.username }}
-                <a href="/web/account/" class="btn btn-mini account-button"><i class="icon-wrench"></i></a>
-                <a href="/web/do_logout/" class="btn btn-mini account-button"><i class="icon-off"></i></a>
+                <a href="/accounts/profile" class="btn btn-mini account-button"><i class="icon-wrench"></i></a>
+                <a href="/accounts/logout/" class="btn btn-mini account-button"><i class="icon-off"></i></a>
             {% else %}
-                <a href="/web/register" class="btn btn account-button"><i class="icon-check"></i> Register</a>
-                <a href="/web/sign_in" class="btn btn account-button"><i class="icon-user"></i> Sign In</a>
+                <a href="/accounts/register" class="btn btn account-button"><i class="icon-check"></i> Register</a>
+                <a href="/accounts/login" class="btn btn account-button"><i class="icon-user"></i> Sign In</a>
             {% endif %}
 
         </div>
 
         <div class="search" style="margin-right:20px">
-            <form id="search" action="/web/search">
+            <form id="search" action="/search">
                 <input id="search-text" style="width:80%" type="text" name="q" placeholder="Search References">
             </form>
         </div>
 
         <div class="menu">
-            <a href="/web/taxonomy/" class="menu-item">
+            <a href="/taxonomy/" class="menu-item">
                 Taxonomy
             </a>
         </div>
@@ -46,9 +46,67 @@
 </div>
 
 <div class="container-fluid content">
-    <div class="row-fluid main-content">
+
     	{% block content %}{% endblock %}
-    </div>
+
 </div>
+
+
+<div id="footer">
+    <div class="upper_footer">
+        <div class="footer_container">
+            <h4 id="additionalLinks">Additional BioSharing Links</h4>
+
+            <ul class="footer_links">
+            </ul>
+
+            <ul class="footer_links">
+                <h4>Developed by</h4>
+                <li><a href="http://www.oerc.ox.ac.uk" target="_blank">Oxford e-Research Center</a></li>
+                <li><a href="http://ovii.oerc.ox.ac.uk" target="_blank">OVii</a></li>
+            </ul>
+
+
+            {% if user.is_authenticated %}
+                <ul class="footer_links">
+                    <h4>Contribute</h4>
+
+                    <li><a href="/new/policy" target="_blank">Add new Policy</a></li>
+                    <li><a href="/new/biosharing" target="_blank">Add new Standard</a></li>
+                    <li><a href="/new/biodbcore" target="_blank">Add new BioDBCore</a></li>
+                    <li><a href="/communities" target="_blank">Join the Community!</a></li>
+                </ul>
+            {% endif %}
+
+            <ul class="footer_links">
+                <h4>Contact Us</h4>
+                <li><a href="mailto:biosharing-contact-us@lists.sf.net?subject=BioSharing Issue">Report an issue</a>
+                </li>
+                <li><a href="https://www.facebook.com/biosharing" target="_blank">Facebook</a></li>
+                <li><a href="https://www.twitter.com/biosharing" target="_blank">Twitter</a></li>
+                <li><a href="https://blog.biosharing.org" target="_blank">Blog</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="bottom_footer">
+        <div class="footer_container">
+            <div class="additional-information" align="center">
+                {% block social_network %}
+                <span class='st_facebook_hcount' displayText='Facebook'></span>
+                <span class='st_twitter_hcount' displayText='Tweet'></span>
+                <span class='st_linkedin_hcount' displayText='LinkedIn'></span>
+                <br/><br/>
+                {% endblock %}
+                © Community Resource: Visualization 2013-Present | Licensed under <a href="http://creativecommons.org/licenses/by/3.0/" alt="View License" target="_blank">Creative Commons by 3.0 Unported</a> | Designed by <a href="http://www.antarctic-design.co.uk" target="_blank">Antarctic Design</a>
+
+            </div>
+
+
+        </div>
+    </div>
+
+</div>
+
 </body>
 </html>

@@ -1,0 +1,41 @@
+{% extends "templates/base.html" %}
+{% load webdesign %}
+
+{% block title %}BioSharing | {{ profile.user.username }} {% endblock %}
+{% block head_additional %}
+    <style>
+        .container-fluid {
+            padding-right: 0px;
+            padding-left: 0px;
+            *zoom: 1;
+        }
+    </style>
+{% endblock %}
+{% block content %}
+
+    <div class="profile-top">
+        <div id="userprofile">
+            <img src="http://www.gravatar.com/avatar/{{ gravatar }}"/>
+        </div>
+
+        <div id="username">
+            {{ profile.user.username }}
+        </div>
+
+        <div class="pull-right" id="options">
+            {% if loggedInUser %}
+
+                <a class="btn btn-info" href='/profiles/edit'>Expand Profile</a>
+                <a class="btn" href='/profile/{{ profile.user.username }}'>Public Profile</a>
+                <a class="btn" href='/accounts/password/reset/'>Reset Password
+                </a>
+
+                {% if profile.user.is_authenticated and profile.user.is_superuser %}
+                    <a class="btn" href='/admin/'>Administration pages</a>
+                {% endif %}
+                <a class="btn btn-danger" href='/accounts/logout/'>Logout</a>
+
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
