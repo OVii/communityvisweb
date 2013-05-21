@@ -5,33 +5,45 @@ DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
-     ('Simon Walton', 'simon.walton@oerc.ox.ac.uk'),
-     ('Eamonn Maguire', 'eamonn.maguire@st-annes.ox.ac.uk')
+    ('Simon Walton', 'simon.walton@oerc.ox.ac.uk'),
+    ('Eamonn Maguire', 'eamonn.maguire@st-annes.ox.ac.uk')
 )
+
+AUTH_PROFILE_MODULE='web.UserProfile'
+
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'biosharing.project@gmail.com'
+EMAIL_HOST_PASSWORD = 'c67WFmlu'
+EMAIL_PORT = 587
+EMAIL_SUBJECT_PREFIX = "[OXVIS]"
+
+ACCOUNT_ACTIVATION_DAYS = 7
 
 # Change below for your own machine. This is the only per-machine def. 
 TEMPLATE_DIRS = (
-	#"/Users/eamonnmaguire/git/ovii/communityvisweb/web/"
-	#"/Users/sim/Documents/VisWeb/viscommunityweb/web/"
-	"/app/web/"
+"/Users/eamonnmaguire/git/ovii/communityvisweb/web/",
+#"/Users/sim/Documents/VisWeb/viscommunityweb/web/"
+"/app/web/"
 )
 
 MANAGERS = ADMINS
-"""
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'visweb.db',                      # Or path to database file if using sqlite3.
+        'NAME': 'visweb.db', # Or path to database file if using sqlite3.
         # The following settings are not used with sqlite3:
         'USER': '',
         'PASSWORD': '',
-        'HOST': '',                      # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
-        'PORT': '',                      # Set to empty string for default.
+        'HOST': '', # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
+        'PORT': '', # Set to empty string for default.
     }
 }
+
 """
 DATABASES = {'default': dj_database_url.config(default='postgres://localhost')}
-
+"""
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
 # although not all choices may be available on all operating systems.
@@ -76,9 +88,9 @@ STATIC_URL = '/static/'
 
 # Additional locations of static files
 STATICFILES_DIRS = (
-    # Put strings here, like "/home/html/static" or "C:/www/django/static".
-    # Always use forward slashes, even on Windows.
-    # Don't forget to use absolute paths, not relative paths.
+# Put strings here, like "/home/html/static" or "C:/www/django/static".
+# Always use forward slashes, even on Windows.
+# Don't forget to use absolute paths, not relative paths.
 )
 
 # List of finder classes that know how to find static files in
@@ -86,7 +98,7 @@ STATICFILES_DIRS = (
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-#    'django.contrib.staticfiles.finders.DefaultStorageFinder',
+    #    'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
 
 # Make this unique, and don't share it with anybody.
@@ -96,17 +108,17 @@ SECRET_KEY = '%c08uu9a13y0j3#vmi&y9pf7uiu5_&*x3jt2^1#a2sxw)vk19j'
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
     'django.template.loaders.app_directories.Loader',
-#     'django.template.loaders.eggs.Loader',
+    #     'django.template.loaders.eggs.Loader',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
- 	'django.core.context_processors.debug',
-    'django.core.context_processors.i18n',
-    'django.core.context_processors.media',
-    'django.core.context_processors.static',
-	'django.core.context_processors.request',
-    'django.contrib.auth.context_processors.auth',
-    'django.contrib.messages.context_processors.messages',
+'django.core.context_processors.debug',
+'django.core.context_processors.i18n',
+'django.core.context_processors.media',
+'django.core.context_processors.static',
+'django.core.context_processors.request',
+'django.contrib.auth.context_processors.auth',
+'django.contrib.messages.context_processors.messages',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -124,8 +136,6 @@ ROOT_URLCONF = 'viscommunityweb.urls'
 # Python dotted path to the WSGI application used by Django's runserver.
 WSGI_APPLICATION = 'viscommunityweb.wsgi.application'
 
-
-
 INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -133,13 +143,16 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-	'django.contrib.webdesign',
+    'django.contrib.webdesign',
 
     # Uncomment the next line to enable the admin:
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
-	'web'
+    'web',
+    'registration',
+    'django_evolution',
+    'profiles',
 )
 
 
@@ -171,10 +184,3 @@ LOGGING = {
         },
     }
 }
-
-EMAIL_HOST = "smtp.ox.ac.uk"
-EMAIL_PORT = 587
-EMAIL_HOST_USER = "oerc0058"
-EMAIL_HOST_PASSWORD = "" 'Need a custom SMTP account I think... cant just use mine! - Simon'
-EMAIL_USE_TLS = True
-EMAIL_SUBJECT_PREFIX = "[OXVIS]"

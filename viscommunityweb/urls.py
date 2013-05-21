@@ -26,6 +26,7 @@ urlpatterns = patterns('',
                        url(r'^references/$', 'web.views.references'),
                        url(r'^search/$', 'web.views.search'),
                        url(r'^account/$', 'web.views.account'),
+                       url(r'^orcid$', 'web.views.orcid_profile'),
 
                        #url(r'^web/references/(?P<reference_id>\d+)/$', 'web.views.reference_detail')
 

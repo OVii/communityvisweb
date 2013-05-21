@@ -1,15 +1,113 @@
-{% extends "templates/base.html" %}
+{% extends "base.html" %}
 {% load webdesign %}
 
 {% block title %}BioSharing | {{ profile.user.username }} {% endblock %}
 {% block head_additional %}
     <style>
-        .container-fluid {
+        .content {
             padding-right: 0px;
             padding-left: 0px;
             *zoom: 1;
+            background-color: #f1f2f1;
         }
     </style>
+
+    {% ifnotequal profile.orcid "" %}
+        <script type="text/javascript">
+
+        $(document).ready(function () {
+            $.ajax({
+                type: 'GET',
+                url: '/orcid?orcid={{ profile.orcid }}',
+                dataType: 'json'
+            }).done(function (res) {
+
+                        var html = '<div class="profile-unit" id="orcid"><p>';
+
+                        var orcidBio = res["orcid-profile"]["orcid-bio"];
+                        var personalDetails = orcidBio["personal-details"];
+
+                        html += personalDetails["given-names"].value + ' ' + personalDetails["family-name"].value + '<br/>';
+
+
+                        var biography = '<p>No biography information available.</p>';
+                        if (orcidBio["biography"]) {
+                            biography = orcidBio["biography"]["value"];
+                        }
+
+
+                        html += '<span style="font-size:0.7em">' + biography + "</span><br/>";
+                        if (orcidBio['researcher-urls']) {
+                            var urls = orcidBio['researcher-urls']["researcher-url"];
+
+                            if (urls.length > 0) {
+                                html += '<p><i class="icon-globe"></i> Websites</p>'
+                            }
+
+                            for (var urlIndex in urls) {
+                                researchURL = urls[urlIndex];
+                                var url = researchURL.url.value;
+                                if (url.indexOf("http") == -1) {
+                                    url = "http://" + url;
+                                }
+                                html += '<a href="' + url + '" target="_blank" class="btn btn-small btn-link">' + researchURL["url-name"].value + '</a> <br/>';
+                            }
+
+                        }
+
+                        html += '<br/><br/><p><a href="http://orcid.org/{{ profile.orcid }}" target="_blank">View ' + personalDetails["given-names"].value + 's profile on ORCID.' + '</a></p><br/>';
+
+                        html += '</p></div>';
+
+                        $("#profile-spinner").hide();
+                        $("#orcid").append(html);
+
+                        var publicationHTML = '<div class="profile-unit" id="publication-content">';
+
+                        if (res["orcid-profile"]["orcid-activities"]) {
+                            var orcidWorks = res["orcid-profile"]["orcid-activities"]["orcid-works"]["orcid-work"];
+
+                            var count = 0;
+                            for (var publicationIndex in orcidWorks) {
+                                var publicationTitle = orcidWorks[publicationIndex]["work-title"]["title"]["value"];
+                                var externalLinks = orcidWorks[publicationIndex]["work-external-identifiers"]["work-external-identifier"];
+                                publicationHTML += '<p>' + publicationTitle;
+
+                                for (var linkIndex in externalLinks) {
+                                    if (externalLinks[linkIndex]["work-external-identifier-type"] === "DOI") {
+                                        publicationHTML += '<br/><a href="http://dx.doi.org/' + externalLinks[linkIndex]["work-external-identifier-id"]["value"] + '" class="" target="_blank">Read the paper</a>';
+                                    }
+                                }
+
+                                publicationHTML += '</p><hr/>';
+
+
+                                if (count >= 2) {
+                                    publicationHTML += '<p><a href="http://orcid.org/{{ profile.orcid }}" target="_blank">View the rest here</a></p>';
+                                    break;
+                                }
+                                count += 1;
+
+                            }
+                        } else {
+                            publicationHTML += '<p>No publications available in this ORCID profile.</p>'
+                        }
+
+                        publicationHTML += '</div>';
+                        $("#publication-spinner").hide();
+                        $("#publication-content").append(publicationHTML);
+
+
+                    }).
+                    fail(function (res) {
+                        console.log('Failed to get ORCID Profile for {{ profile.orcid }}.');
+                        console.log(res)
+                    })
+
+        });
+    {% endifnotequal %}
+
+</script>
 {% endblock %}
 {% block content %}
 
@@ -19,23 +117,101 @@
         </div>
 
         <div id="username">
-            {{ profile.user.username }}
+            {{ user.username }}
         </div>
 
         <div class="pull-right" id="options">
-            {% if loggedInUser %}
+            <a class="btn btn-info" href='/profiles/edit'>Expand Profile</a>
+            <a class="btn" href='/profile/{{ user.username }}'>Public Profile</a>
+            <a class="btn" href='/accounts/password/reset/'>Reset Password
+            </a>
 
-                <a class="btn btn-info" href='/profiles/edit'>Expand Profile</a>
-                <a class="btn" href='/profile/{{ profile.user.username }}'>Public Profile</a>
-                <a class="btn" href='/accounts/password/reset/'>Reset Password
-                </a>
-
-                {% if profile.user.is_authenticated and profile.user.is_superuser %}
-                    <a class="btn" href='/admin/'>Administration pages</a>
-                {% endif %}
-                <a class="btn btn-danger" href='/accounts/logout/'>Logout</a>
-
+            {% if profile.user.is_authenticated and profile.user.is_superuser %}
+                <a class="btn" href='/admin/'>Administration pages</a>
             {% endif %}
+
+        </div>
+    </div>
+
+    <div class="profile-content">
+        <div class="profile-blocks span6">
+            <div class="block span5" id="about">
+                <div class="block-head">
+                    ORCID Profile
+                    <hr/>
+                </div>
+                <div id="orcid">
+                    {% ifnotequal profile.orcid "" %}
+                        <span id="profile-spinner" align="center">
+                            <p><img align="center" src="{{ STATIC_URL }}img/static_img/profile/spinner.gif"/><br/><br/>
+                                Loading profile from ORCID
+                            </p>
+                        </span>
+                    {% else %}
+                        <div class="standard-unit">
+                            {% if loggedInUser %}
+                                <p><a href="http://www.orcid.org" target="_blank">Register</a> for orcid then enter your
+                                    ORCID <a href="/profiles/edit">here</a> to integrate your profile information.</p>
+                            {% else %}
+                                <p>{{ profile.user.username }} has not registered their ORCID, so this panel is blank.
+                                    Learn
+                                    more about ORCID <a href="http://www.orcid.org" target="_blank">here</a>.</p>
+                            {% endif %}
+                        </div>
+                    {% endifnotequal %}
+                </div>
+            </div>
+
+            <div class="block span5" id="publications">
+                <div class="block-head">
+                    Latest Publications
+                    <hr/>
+                </div>
+                <div id="publication-content">
+                    {% ifnotequal profile.orcid "" %}
+                        <span id="publication-spinner" align="center">
+                    <p><img align="center" src="{{ STATIC_URL }}img/static_img/profile/spinner.gif"/><br/><br/>
+                        Loading publications from ORCID</p>
+                </span>
+                    {% else %}
+                        <div class="standard-unit">
+                            {% if loggedInUser %}
+                                <p><a href="http://www.orcid.org" target="_blank">Register</a> for orcid then enter your
+                                    orcid <a
+                                            href="/profiles/edit">here</a> to integrate your profile information.</p>
+                            {% else %}
+                                <p>{{ profile.user.username }} has not registered their ORCID, so this panel is blank.
+                                    Learn
+                                    more about ORCID <a href="http://www.orcid.org" target="_blank">here</a>.</p>
+                            {% endif %}
+                        </div>
+                    {% endifnotequal %}
+                </div>
+            </div>
+        </div>
+
+        <div class="profile-blocks" id="notification-center">
+
+            {#            start notifications section#}
+            <div class="block span7" id="notifications">
+                <div class="block-head">
+                    Notifications
+                    <hr/>
+                </div>
+            </div>
+            {#            end notifications section#}
+
+            <div class="clearfix"></div>
+            {#            START taxonomy items section#}
+            <div class="block span7" id="taxonomy-items">
+                <div class="block-head">
+                    Taxonomy Items
+                    <hr/>
+                </div>
+            </div>
+            {#            END taxonomy items section#}
+
+
         </div>
     </div>
 {% endblock %}

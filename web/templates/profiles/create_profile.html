@@ -1,18 +1,46 @@
 {% extends "base.html" %}
 
 
-{% block head_additional %}
-    <link rel="stylesheet" href="{{ STATIC_URL }}/css/overridden.css" xmlns="http://www.w3.org/1999/html"
-          xmlns="http://www.w3.org/1999/html">
-{% endblock %}
-
 {% load i18n %}
 
+{% block head_additional %}
+    <style>
+        .content {
+            padding-right: 0px;
+            padding-left: 0px;
+            *zoom: 1;
+            background-color: #fff;
+        }
+    </style>
+{% endblock %}
+
 {% block content %}
-    <div class="hero-unit">
-        <p>
-            <h3>{{ user.username }}</h3>
-        </p>
+
+    <div class="profile-top">
+        <div id="userprofile">
+            <img src="http://www.gravatar.com/avatar/{{ gravatar }}"/>
+        </div>
+
+        <div id="username">
+            {{ user.username }}
+        </div>
+
+        <div class="pull-right" id="options">
+
+            <a class="btn" href='/accounts/profile'>Your Profile</a>
+            <a class="btn" href='/accounts/password/reset/'>Reset Password
+            </a>
+
+            {% if profile.user.is_authenticated and profile.user.is_superuser %}
+                <a class="btn" href='/admin/'>Administration pages</a>
+            {% endif %}
+
+        </div>
+    </div>
+
+    <div style="margin: 40px">
+
+        <h4>Expand your profile</h4>
 
         {% if form.errors %}
             <p class="errorlist">{% trans "Sorry there are corrections needed in your form below:" %} {{ form.non_field_errors }}</p>
@@ -27,4 +55,5 @@
         <input type="submit" class="btn btn-info" value="Save"/>
         </form>
     </div>
+
 {% endblock %}
