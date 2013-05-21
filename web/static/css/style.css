@@ -520,6 +520,10 @@ body {
     float: left;
 }
 
+.profile-picture {
+    border-radius: 1px;
+}
+
 .profile-top #username {
     padding-top: 30px;
     padding-left: 20px;

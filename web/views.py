@@ -1,10 +1,12 @@
 """
  Views - see urls.py for the mappings from URLs to the defs here.
 """
+import hashlib
+import urllib2
 
 from django.http import HttpResponse
 from django.template import Context, RequestContext, loader
-from web.models import TaxonomyArea, TaxonomyCategory, TaxonomyItem, Reference
+from web.models import TaxonomyArea, TaxonomyCategory, TaxonomyItem, Reference, UserProfile
 from django.shortcuts import render_to_response, get_object_or_404
 from django.core.mail import send_mail
 import os
@@ -38,6 +40,7 @@ def taxonomy_alpha(request):
     return render_to_response("templates/taxonomy-alpha.html", {'index': index},
                               context_instance=RequestContext(request))
 
+
 # taxonomy detail page
 def taxonomy_detail(request, taxonomy_id):
     taxonomy = get_object_or_404(TaxonomyItem, pk=taxonomy_id)
@@ -55,15 +58,18 @@ def taxonomy_detail(request, taxonomy_id):
                               {'taxonomy': taxonomy, 'formatted_detail': html, 'references': refer,
                                'bibtex_texts': bibtex_texts}, context_instance=RequestContext(request))
 
+
 # contact page for ownership request
 def request_ownership(request, taxonomy_id):
     taxonomy = get_object_or_404(TaxonomyItem, pk=taxonomy_id)
     return render_to_response("templates/contact.html", {'taxonomy': taxonomy},
                               context_instance=RequestContext(request))
 
+
 # general contact page
 def contact(request):
     return render_to_response("templates/contact.html", context_instance=RequestContext(request))
+
 
 # accessed through a POST to send email to the admins regarding above
 def request_ownership_send(request):
@@ -75,15 +81,16 @@ def request_ownership_send(request):
     try:
         send_mail(email_subject, email_body, email_from,
                   [item[1] for item in settings.ADMINS], fail_silently=False)
-    except:
+    except Exception,e:
         return render_to_response("templates/contact.html",
                                   {
-                                  'error_message': "There was a problem sending the email. Please ensure all fields are filled in correctly. Please contact " +
-                                                   settings.ADMINS[0][1] + " if the problem continues."},
+                                      'error_message': "There was a problem sending the email. Please ensure all fields are filled in correctly. Please contact " +
+                                                       settings.ADMINS[0][1] + " if the problem continues."},
                                   context_instance=RequestContext(request))
     else:
         return render_to_response("templates/contact.html", {'success_message': 'Your request was sent successfully!'},
                                   context_instance=RequestContext(request))
+
 
 # big list of all references in database (future: sorting/filtering etc)
 def references(request):
@@ -92,6 +99,7 @@ def references(request):
     return render_to_response("templates/references.html",
                               {'references': refs, 'bibtex_texts': json.dumps([x.bibtex for x in refs])},
                               context_instance=RequestContext(request))
+
 
 # search
 def search(request):
@@ -117,5 +125,41 @@ def account(request):
 
 
 def profile(request):
-    return render_to_response("templates/profile.html", {},
+    requestedUser = None
+    loggedInUser = False
+
+    if request.user.is_authenticated:
+        requestedUser = request.user
+        loggedInUser = True
+    else:
+        return render_to_response("information.html",
+                                  {"header": "You must be logged in to view this page",
+                                   "message": "Please log in before attempting to view this content."},
+                                  context_instance=RequestContext(request))
+
+    profile = None
+
+    try:
+        if not requestedUser.get_profile() is None:
+            profile = requestedUser.get_profile()
+    except:
+        profile = UserProfile(user=requestedUser)
+        profile.save()
+
+    gravatarMD5 = None
+    if profile.gravatarEmail:
+        gravatarMD5 = hashlib.md5(profile.gravatarEmail).hexdigest()
+
+    return render_to_response("profile.html",
+                              {"loggedInUser": loggedInUser, "profile": profile, "gravatar": gravatarMD5},
                               context_instance=RequestContext(request))
+
+
+def orcid_profile(request):
+    orcid = request.GET['orcid']
+
+    request = urllib2.Request('http://pub.orcid.org/' + orcid + "/orcid-profile",
+                              headers={"Accept": "application/orcid+json"})
+    response = urllib2.urlopen(request).read()
+
+    return HttpResponse(response, mimetype='application/json')

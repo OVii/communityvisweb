@@ -19,8 +19,8 @@
 
         <div class="user-account">
             {% if user.is_authenticated %}
-                <i class="icon-user"></i> {{ user.username }}
-                <a href="/accounts/profile" class="btn btn-mini account-button"><i class="icon-wrench"></i></a>
+                 {{ user.username }}
+                <a href="/accounts/profile" class="btn btn-mini account-button"><i class="icon-user"></i></a>
                 <a href="/accounts/logout/" class="btn btn-mini account-button"><i class="icon-off"></i></a>
             {% else %}
                 <a href="/accounts/register" class="btn btn account-button"><i class="icon-check"></i> Register</a>
@@ -71,20 +71,14 @@
                 <ul class="footer_links">
                     <h4>Contribute</h4>
 
-                    <li><a href="/new/policy" target="_blank">Add new Policy</a></li>
-                    <li><a href="/new/biosharing" target="_blank">Add new Standard</a></li>
-                    <li><a href="/new/biodbcore" target="_blank">Add new BioDBCore</a></li>
-                    <li><a href="/communities" target="_blank">Join the Community!</a></li>
                 </ul>
             {% endif %}
 
             <ul class="footer_links">
                 <h4>Contact Us</h4>
-                <li><a href="mailto:biosharing-contact-us@lists.sf.net?subject=BioSharing Issue">Report an issue</a>
+                <li><a href="mailto:support@communityvis.org?subject=Community Vis issue">Report an issue</a>
                 </li>
-                <li><a href="https://www.facebook.com/biosharing" target="_blank">Facebook</a></li>
-                <li><a href="https://www.twitter.com/biosharing" target="_blank">Twitter</a></li>
-                <li><a href="https://blog.biosharing.org" target="_blank">Blog</a></li>
+                <li><a href="https://www.github.com/ovii" target="_blank">GitHub</a></li>
             </ul>
         </div>
     </div>

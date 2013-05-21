@@ -11,22 +11,22 @@
             {% for category in taxonomies %}
                 {% if forloop.counter|divisibleby:"1" %}
                     <ul class="thumbnails">{% endif %}
-                <div class="well taxonomy-well">
-                    <h1>{{ category.name }}</h1>
+            <div class="well taxonomy-well">
+                <h1>{{ category.name }}</h1>
 
-                    <p>
-                        {% for item in category.taxonomyitem_set.all %}
-                            {% if item.has_detail %}
-                                <span class="badge badge-success taxonomy-item">
-                            {% else %}
-                                <span class="badge badge-important taxonomy-item">
-                            {% endif %}
-                        <i class="icon-asterisk icon-white"></i><a href="/taxonomy/{{ item.id }}"
-                                                                   style="color:white">{{ item.name }}</a></span>
-                        {% endfor %}
-                    </p>
-                </div>
-                {% if forloop.counter|divisibleby:"1" %}</ul>{% endif %}
+                <p>
+                    {% for item in category.taxonomyitem_set.all %}
+                        {% if item.has_detail %}
+                            <span class="badge badge-success taxonomy-item">
+                        {% else %}
+                            <span class="badge badge-important taxonomy-item">
+                        {% endif %}
+                    <a href="/taxonomy/{{ item.id }}"
+                       style="color:white">{{ item.name }}</a></span>
+                    {% endfor %}
+                </p>
+            </div>
+            {% if forloop.counter|divisibleby:"1" %}</ul>{% endif %}
             {% endfor %}
             </div>
         {% else %}
