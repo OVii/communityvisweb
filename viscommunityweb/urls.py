@@ -20,8 +20,10 @@ urlpatterns = patterns('',
                        url(r'^taxonomy/$', 'web.views.taxonomy'),
                        url(r'^taxonomy_alpha/$', 'web.views.taxonomy_alpha'),
                        url(r'^taxonomy/(?P<taxonomy_id>\d+)/$', 'web.views.taxonomy_detail'),
-                       url(r'^request_ownership/(?P<taxonomy_id>\d+)/$', 'web.views.request_ownership'),
-                       url(r'^request_ownership/send/$', 'web.views.request_ownership_send'),
+                       url(r'^request_ownership/(?P<taxonomy_id>\d+)$', 'web.views.request_ownership_send'),
+                       url(r'^request_ownership/response/(?P<approval_id>\d+)$', 'web.views.request_ownership_response'),
+
+
                        url(r'^contact/$', 'web.views.contact'),
                        url(r'^references/$', 'web.views.references'),
                        url(r'^search/$', 'web.views.search'),

@@ -41,15 +41,6 @@ class TaxonomyItem(models.Model):
         return self.name + " (" + self.category.name + ")"
 
 
-"""class UserTaxonomyItemOwnership(models.Model):
-	user = models.ForeignKey(User)
-	item = models.ForeignKey(TaxonomyItem)
-
-	def __unicode__(self):
-		return self.user.__unicode__() + " owns " + item.__unicode__()
-"""
-
-
 class ReferenceAuthor(models.Model):
     first_name = models.CharField(max_length=256)
     last_name = models.CharField(max_length=256)
@@ -91,3 +82,11 @@ class UserProfile(models.Model):
 
     get_absolute_url = models.permalink(get_absolute_url)
 
+
+class OwnershipRequest(models.Model):
+    requester = models.ForeignKey(User)
+    taxonomyItem = models.ForeignKey(TaxonomyItem)
+    additionalNotes = models.TextField()
+
+    def __unicode__(self):
+        return self.requester.username + ' - ' + self.taxonomyItem.name

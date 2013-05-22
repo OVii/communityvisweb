@@ -1,12 +1,58 @@
 {% extends "base.html" %}
 {% block title %}View Taxonomy Item{% endblock %}
 
+{% block head_additional %}
+    <script>
+        function showRequestWindow() {
+            $('#taxonomyRequestModal').modal('show');
+        }
+    </script>
+{% endblock %}
+
 {% block content %}
 
     <div class="page-header">
         <h1>
-            <small>{{ taxonomy.name }}</small>
+            <small><a href="/taxonomy">Taxonomy</a> - {{ taxonomy.name }}</small>
         </h1>
+    </div>
+    <div class="clearfix"></div>
+    <div class="pull-right">
+        <div class="btn-group pull-right">
+
+
+            {% if user.is_superuser or ownerLoggedIn %}
+                <a class="btn">Edit Record</a>
+            {% endif %}
+
+            {% if ownerLoggedIn %}
+                <a class="btn btn-danger">Revoke Ownership</a>
+            {% endif %}
+
+            {% if owners == 0 %}
+                <a onclick="showRequestWindow()" class="btn btn-danger">Volunteer to maintain</a>
+            {% else %}
+                <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+                    Record Maintained by
+                    <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu">
+                    {% for owner in taxonomy.owners.all %}
+                        <li><a href="/profile/{{ owner.username }}">{{ owner.username }}</a></li>
+                    {% endfor %}
+                </ul>
+
+            {% endif %}
+
+
+        </div>
+    </div>
+
+    <div class="clearfix"></div>
+    <br/>
+
+    <div class="well well-small">
+        Click the reference number for the entry's BibTeX markup.
     </div>
 
     <div>
@@ -15,23 +61,38 @@
         {% endautoescape %}
         <br/>
         <br/>
-        <div class="well well-small">
-            Click the reference number for the entry's BibTeX markup.
-        </div>
+
     </div>
 
     {% if references %}
-
-
-
-        {% include "templates/references_include.html" %}
-
+        {% include "references_include.html" %}
     {% endif %}
 
-    <h2>More Information</h2>
-    <div>
-        If you wish to request ownership of this taxonomy item, please <a
-            href="/request_ownership/{{ taxonomy.id }}">click here</a> to request ownership.
+    <div id="taxonomyRequestModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="taxonomyRequest"
+         aria-hidden="true">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3>Taxonomy Request</h3>
+        </div>
+        <form accept-charset="UTF-8" action="/request_ownership/{{ taxonomy.id }}" class="formbody" id="bookingForm"
+              method="post">
+            <div class="modal-body">
+                <div class="modal-body" id="booking">
+                    {% csrf_token %}
+                    <div class="control-group">
+                        <label for="comments" class="control-label">Tell us why you want to maintain this item?</label>
+
+                        <div class="controls">
+                            <textarea name="comments" maxlength="5000" rows=10 class="span6"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" id="button">
+                <input name="commit" type="submit" class="btn btn-danger" value="Submit Request">
+            </div>
+        </form>
     </div>
+
 
 {% endblock %}

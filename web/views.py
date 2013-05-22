@@ -4,9 +4,10 @@
 import hashlib
 import urllib2
 
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.template import Context, RequestContext, loader
-from web.models import TaxonomyArea, TaxonomyCategory, TaxonomyItem, Reference, UserProfile
+from viscommunityweb.settings import EMAIL_HOST_USER
+from web.models import TaxonomyArea, TaxonomyCategory, TaxonomyItem, Reference, UserProfile, OwnershipRequest
 from django.shortcuts import render_to_response, get_object_or_404
 from django.core.mail import send_mail
 import os
@@ -20,13 +21,14 @@ import json
 # couple of globals
 os.environ['DJANGO_SETTINGS_MODULE'] = "viscommunityweb.settings"
 email_prefix = "[OXVIS] "
-email_to = "simon.walton@oerc.ox.ac.uk"
+email_to = "eamonn.maguire@oerc.ox.ac.uk"
 
 # index page
 def index(request):
     recent_items = TaxonomyItem.objects.exclude(detail_html="").order_by('last_updated')[:3]
     return render_to_response("templates/index.html", {'recent_taxonomy_items': recent_items},
                               context_instance=RequestContext(request))
+
 
 # taxonomy list
 def taxonomy(request):
@@ -54,16 +56,16 @@ def taxonomy_detail(request, taxonomy_id):
 
     print "Got %i refs" % len(refer)
 
+    ownerLoggedIn = False
+    if request.user in taxonomy.owners.all():
+        ownerLoggedIn = True
+
+    print 'There are ' + str(len(taxonomy.owners.all())) + ' owners.'
+
     return render_to_response("templates/taxonomy_detail.html",
-                              {'taxonomy': taxonomy, 'formatted_detail': html, 'references': refer,
+                              {'taxonomy': taxonomy, 'owners': len(taxonomy.owners.all()),
+                               'ownerLoggedIn': ownerLoggedIn, 'formatted_detail': html, 'references': refer,
                                'bibtex_texts': bibtex_texts}, context_instance=RequestContext(request))
-
-
-# contact page for ownership request
-def request_ownership(request, taxonomy_id):
-    taxonomy = get_object_or_404(TaxonomyItem, pk=taxonomy_id)
-    return render_to_response("templates/contact.html", {'taxonomy': taxonomy},
-                              context_instance=RequestContext(request))
 
 
 # general contact page
@@ -72,24 +74,71 @@ def contact(request):
 
 
 # accessed through a POST to send email to the admins regarding above
-def request_ownership_send(request):
-    email_subject = email_prefix + "Request for taxonomy ownership"
-    email_from = request.POST['email']
-    email_name = request.POST['name']
+def request_ownership_send(request, taxonomy_id):
+    email_subject = email_prefix + "Request for taxonomy ownership by " + request.user.username
+    email_from = request.user.email
+    email_name = request.user.username
     email_body = request.POST['comments']
+
+    taxonomyItem = TaxonomyItem.objects.filter(pk=taxonomy_id).get(pk=taxonomy_id)
+
+    ownershipRequest = OwnershipRequest(requester=request.user, taxonomyItem=taxonomyItem, additionalNotes=email_body)
+    ownershipRequest.save()
 
     try:
         send_mail(email_subject, email_body, email_from,
                   [item[1] for item in settings.ADMINS], fail_silently=False)
-    except Exception,e:
-        return render_to_response("templates/contact.html",
+    except Exception, e:
+        return render_to_response("templates/infopage.html",
                                   {
-                                      'error_message': "There was a problem sending the email. Please ensure all fields are filled in correctly. Please contact " +
-                                                       settings.ADMINS[0][1] + " if the problem continues."},
+                                      'messageTitle': 'Problem encountered sending the request.',
+                                      'messageBody': "There was a problem sending the email. Please ensure all fields "
+                                                     "are filled in correctly. Please contact " +
+                                                     settings.ADMINS[0][1] + " if the problem continues."},
                                   context_instance=RequestContext(request))
     else:
-        return render_to_response("templates/contact.html", {'success_message': 'Your request was sent successfully!'},
+        return render_to_response("templates/infopage.html", {
+            'messageTitle': 'Request sent successfully!',
+            'messageBody': 'Your request was sent successfully! We will get back to you soon!'},
                                   context_instance=RequestContext(request))
+
+
+def request_ownership_response(request, approval_id):
+    response = request.POST['type']
+    responseDetail = request.POST['responseDetail']
+
+    ownershipRequest = OwnershipRequest.objects.filter(pk=approval_id).get(pk=approval_id)
+    ownershipRequest = OwnershipRequest.objects.filter(pk=approval_id).get(pk=approval_id)
+    taxonomyItem = ownershipRequest.taxonomyItem
+    if response == 'Approved':
+        ownershipRequest = OwnershipRequest.objects.filter(pk=approval_id).get(pk=approval_id)
+        taxonomyItem = ownershipRequest.taxonomyItem
+        taxonomyItem.owners.add(ownershipRequest.requester)
+        taxonomyItem.save()
+
+    email_subject = email_prefix + "Request for ownership of " + taxonomyItem.name + " " + response
+
+    email_body_prefix = "We are pleased to welcome you on board Community Vis!\n\n"
+    if response != "Approved":
+        email_body_prefix = "We are sorry to inform you that we were unable to approve your request.!\n\n"
+
+    email_body_reason = responseDetail
+
+    try:
+        send_mail(email_subject, email_body_prefix + email_body_reason,
+                  EMAIL_HOST_USER,
+                  [ownershipRequest.requester.email], fail_silently=False)
+
+    except Exception, e:
+        return render_to_response("templates/infopage.html",
+                                  {
+                                      'messageTitle': 'Problem encountered sending the message to ' + ownershipRequest.requester.email + '/',
+                                      'messageBody': "Here are the details\n." + e.message},
+                                  context_instance=RequestContext(request))
+    finally:
+        ownershipRequest.delete()
+
+    return HttpResponseRedirect("/accounts/profile")
 
 
 # big list of all references in database (future: sorting/filtering etc)
@@ -132,9 +181,9 @@ def profile(request):
         requestedUser = request.user
         loggedInUser = True
     else:
-        return render_to_response("information.html",
-                                  {"header": "You must be logged in to view this page",
-                                   "message": "Please log in before attempting to view this content."},
+        return render_to_response("infopage.html",
+                                  {"messageTitle": "You must be logged in to view this page",
+                                   "messageBody": "Please log in before attempting to view this content."},
                                   context_instance=RequestContext(request))
 
     profile = None
@@ -150,8 +199,21 @@ def profile(request):
     if profile.gravatarEmail:
         gravatarMD5 = hashlib.md5(profile.gravatarEmail).hexdigest()
 
+    approvals = []
+    if requestedUser.is_superuser:
+        approvalsQuery = OwnershipRequest.objects.all()
+        for approvalQueryResultItem in approvalsQuery:
+            approvals.append(approvalQueryResultItem)
+
+    taxonomyItems = []
+
+    taxonomyItemsForUser = TaxonomyItem.objects.filter(owners__username=requestedUser.username)
+    for userTaxonomyItem in taxonomyItemsForUser:
+        taxonomyItems.append(userTaxonomyItem)
+
     return render_to_response("profile.html",
-                              {"loggedInUser": loggedInUser, "profile": profile, "gravatar": gravatarMD5},
+                              {"loggedInUser": loggedInUser, "profile": profile, "gravatar": gravatarMD5,
+                               'approvals': approvals, 'taxonomyItems':taxonomyItems},
                               context_instance=RequestContext(request))
 
 

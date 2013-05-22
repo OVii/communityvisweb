@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load webdesign %}
 
-{% block title %}BioSharing | {{ profile.user.username }} {% endblock %}
+{% block title %}Profile | {{ profile.user.username }} {% endblock %}
 {% block head_additional %}
     <style>
         .content {
@@ -14,6 +14,11 @@
 
     {% ifnotequal profile.orcid "" %}
         <script type="text/javascript">
+
+        function showResponse(approvalId) {
+            $("#responseForm").attr("action", "/request_ownership/response/" + approvalId);
+            $('#responseModal').modal('show');
+        }
 
         $(document).ready(function () {
             $.ajax({
@@ -203,8 +208,40 @@
                     <p>Move along, nothing to see here.</p><br/>
                 </div>
             </div>
-            {#            end notifications section#}
+            {#            end approvals section#}
 
+            {% if user.is_superuser and approvals|length > 0 %}
+                <div class="clearfix"></div>
+                {#            start notifications section#}
+                <div class="block span7" id="approvals">
+                    <div class="block-head">
+                        Approvals Required
+                        <hr/>
+                    </div>
+
+                    <div class="profile-unit">
+                        {% for approval in approvals %}
+                            <div class="well">
+
+                                <p><strong>{{ approval.taxonomyItem.name }}</strong></p>
+
+                                <p style="font-size:1em; font-weight: bolder">Request by <a
+                                        href="/profiles/"{{ approval.requester.username }}>{{ approval.requester.username }}</a>
+                                </p>
+
+                                <p style="font-size:0.8em; font-weight: lighter">{{ approval.additionalNotes }}</p>
+
+                                <a href="/taxonomy/{{ approval.taxonomyItem.id }}" target="_blank" class="btn">View
+                                    Taxonomy Item</a>
+                                <a onclick="showResponse({{ approval.id }})" class="btn btn-success">Respond</a>
+                            </div>
+                            <div class="clearfix"></div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {#            end approvals section#}
+
+            {% endif %}
             <div class="clearfix"></div>
             {#            START taxonomy items section#}
             <div class="block span7" id="taxonomy-items">
@@ -214,12 +251,61 @@
                 </div>
 
                 <div class="profile-unit">
-                    <p>Move along, nothing to see here.</p><br/>
+                    {% for taxonomyItem in taxonomyItems %}
+                        <div class="well">
+
+                            <p><strong><a href="/taxonomy/{{ taxonomyItem.id }}">{{ taxonomyItem.name }}</a></strong>
+                            </p>
+
+                            <p><i class="icon-arrow-up"></i> {{ taxonomyItem.category }}</p>
+
+
+                            {% if loggedInUser %}
+                                <a onclick="showResponse({{ approval.id }})" class="btn btn-small btn-danger">Revoke ownership</a>
+                            {% endif %}
+                        </div>
+                        <div class="clearfix"></div>
+                    {% endfor %}
                 </div>
             </div>
             {#            END taxonomy items section#}
 
 
         </div>
+    </div>
+
+    <div id="responseModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="taxonomyRequest"
+         aria-hidden="true">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3>Response to Taxonomy Moderation Request</h3>
+        </div>
+        <form accept-charset="UTF-8" action="/request_ownership/response/" class="formbody" id="responseForm"
+              method="post">
+            <div class="modal-body">
+                <div class="modal-body" id="booking">
+                    {% csrf_token %}
+                    <div class="control-group">
+
+                        <label for="response" class="control-label">Reponse</label>
+                        <select name="type">
+                            <option>Approved</option>
+                            <option>Rejected</option>
+                        </select>
+
+
+                        <label for="comments" class="control-label">Insert any further information you want to add and
+                            send to the volunteer here?</label>
+
+                        <div class="controls">
+                            <textarea name="responseDetail" maxlength="5000" rows=10 class="span6"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" id="button">
+                <input name="commit" type="submit" class="btn btn-danger" value="Submit Request">
+            </div>
+        </form>
     </div>
 {% endblock %}
