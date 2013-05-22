@@ -3,46 +3,60 @@
     {% if references %}
 
         <div class="row-fluid">
-            <div class="span2 well well-small">
-                <!-- sort -->
-                <div>
-                    <p><h4>Search/Filter</h4></p>
-                    <div class="btn-group">
-                        <a class="btn dropdown-toggle span12" data-toggle="dropdown" href="#" align="right">
-                            Sort by
-                            <span class="caret"></span>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><a href="{{ request.path }}">Date Added</a></li>
-                            <li><a href="{{ request.path }}?sort=title">Author list</a></li>
-                            <li><a href="{{ request.path }}?sort=year">Year</a></li>
-                            <li><a href="{{ request.path }}?sort=journal">Journal</a></li>
-                            <li><a href="{{ request.path }}?sort=booktitle">Book Title</a></li>
-                            <li><a href="{{ request.path }}?sort=issn">ISSN</a></li>
-                        </ul>
-                    </div>
-                    <!-- filter -->
-                    <div style="padding-top:5px">
-                        <br/><br/>
+            <div class="span2">
+                <div class="well well-small">
+                    <!-- sort -->
+                    <div>
+                        <p><h4>Search &amp; Filter</h4></p>
+                        <div class="btn-group">
+                            <a class="btn dropdown-toggle span12" data-toggle="dropdown" href="#" align="right">
+                                Sort by
+                                <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a href="{{ request.path }}?sort=authors">Author list</a></li>
+                                <li><a href="{{ request.path }}?sort=year">Year</a></li>
+                                <li><a href="{{ request.path }}?sort=journal">Journal</a></li>
+                                <li><a href="{{ request.path }}?sort=title">Title</a></li>
+                            </ul>
+                        </div>
+                        <!-- filter -->
+                        <div style="padding-top:5px">
+                            <br/><br/>
 
-                        <form id="search" action="/search">
-                            <input id="referencefilter" style="width:90%;" type="text" name="q"
-                                   placeholder="Type to filter...">
-                        </form>
+                            <form id="search" action="/search">
+                                <input id="referencefilter" style="width:90%;" type="text" name="q"
+                                       placeholder="Type to filter...">
+                            </form>
+                        </div>
                     </div>
+                    <!-- note -->
+
                 </div>
-                <!-- note -->
+
+
                 <div class="">
                     <a href="/contact/">
                         <button class="btn">Suggest addition/correction</button>
                     </a>
                 </div>
+
+
+                <div style="padding-top:5px">
+                    <a href="/taxonomy/{{ taxonomy.id}}/download" class="btn btn-inverse" style="width: 82%">Download Bibtex</a>
+                </div>
             </div>
+
             <div class="span10">
                 {% for reference in references %}
-                    <div class="well taxonomy-well">
-                        <p>{{ reference.entry_key }}</p>
-                        <p>{{ reference. }}</p>
+                    <div class="well taxonomy-well reference_box">
+                        <p class="title">{{ reference.title }}</p>
+
+                        <p class="authors">{{ reference.authors }}</p>
+
+                        <p><span class="journal">{{ reference.journal }}</span>{% if reference.year > 0 %}
+                            <span class="year">, {{ reference.year }}</span>{% endif %} </p>
+                        <a onclick="showBibex({{ reference.bibtex }})" class="btn btn-small">Bibtex</a>
                     </div>
                 {% endfor %}
             </div>
@@ -50,22 +64,7 @@
 
         <script language="javascript">
 
-            var bibtexes = {{ bibtex_texts }};
-
             $(document).ready(function () {
-                // bibtex popup
-                var ref_tag = $('div:not(a).reference_box');
-                ref_tag.each(function (idx) {
-                    $("<a/>", {
-                                "href": "#",
-                                "class": "badge badge-info bibtex_js_popover reference_number",
-                                "rel": "popover",
-                                "title": "BibTeX",
-                                "html": true,
-                                "data-content": "<tiny>" + bibtexes[idx] + "</tiny>",
-                                text: (idx + 1).toString()}
-                    ).prependTo($(this)).popover();
-                });
 
                 // filter functionality
                 var rf_box = $('#referencefilter');

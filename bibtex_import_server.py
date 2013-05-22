@@ -58,7 +58,13 @@ def bibtex_import(filename):
             value = bib_data.entries[key].fields[field]
             col = get_column(field)
 
-            print 'Field is ' + field
+            if 'title' in field.lower():
+                ref_obj.title = value
+            elif 'journal' in field.lower():
+                ref_obj.journal = value
+            elif 'year' in field.lower():
+                ref_obj.year = int(value)
+
             attr = ReferenceAttribute(column=col, value=value)
             attr.save()
 

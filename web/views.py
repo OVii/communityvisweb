@@ -49,10 +49,7 @@ def taxonomy_detail(request, taxonomy_id):
 
     references = taxonomy.references.all()
 
-    refer = reference_backend.sorted_reference_list(request, taxonomy.references.all())
-    bibtex_texts = json.dumps([x.bibtex for x in refer])
-
-
+    refer = reference_backend.sorted_reference_list(request, references)
 
     ownerLoggedIn = False
     if request.user in taxonomy.owners.all():
@@ -60,8 +57,24 @@ def taxonomy_detail(request, taxonomy_id):
 
     return render_to_response("templates/taxonomy_detail.html",
                               {'taxonomy': taxonomy, 'owners': len(taxonomy.owners.all()),
-                               'ownerLoggedIn': ownerLoggedIn, 'references': refer,
-                               'bibtex_texts': bibtex_texts}, context_instance=RequestContext(request))
+                               'ownerLoggedIn': ownerLoggedIn, 'references': refer},
+                              context_instance=RequestContext(request))
+
+
+def taxonomy_download(request, taxonomy_id):
+    taxonomy = get_object_or_404(TaxonomyItem, pk=taxonomy_id)
+
+    references = taxonomy.references.all()
+
+    bibtex = ""
+
+    for reference in references:
+        bibtex += reference.bibtex + "\n"
+
+    response = HttpResponse(bibtex, mimetype='application/text')
+    response['Content-Disposition'] = 'attachment; filename=' + taxonomy.name + ".bib"
+    return response
+
 
 
 # general contact page
@@ -135,6 +148,7 @@ def request_ownership_response(request, approval_id):
         ownershipRequest.delete()
 
     return HttpResponseRedirect("/accounts/profile")
+
 
 @login_required
 def revoke_ownership(request, taxonomy_id):

@@ -21,7 +21,10 @@
         </h1>
     </div>
     <div class="clearfix"></div>
-    <div class="pull-right">
+    <div>
+        <div class="span8 taxonomy-detail">
+            {{ taxonomy.detail }}
+        </div>
         <div class="btn-group pull-right">
 
 
@@ -53,16 +56,7 @@
     </div>
 
     <div class="clearfix"></div>
-
-
-    <div>
-        {% autoescape off %}
-            {{ taxonomy.detail }}
-        {% endautoescape %}
-        <br/>
-        <br/>
-
-    </div>
+    <br/>
 
     {% if references %}
         {% include "references_include.html" %}

@@ -33,17 +33,16 @@ class ReferenceAttribute(models.Model):
 
 class Reference(models.Model):
     entry_key = models.CharField(max_length=256)
-    title = models.TextField()
-    journal = models.CharField(max_length=256)
-
-    bibtex = models.CharField(max_length=2048)
+    title = models.TextField(default="")
+    journal = models.CharField(max_length=256, default="")
+    year = models.IntegerField(max_length=4, null=True)
 
     authors = models.ManyToManyField(ReferenceAuthor, related_name="authors+")
-
+    bibtex = models.CharField(max_length=2048)
     referenceAttributes = models.ManyToManyField(ReferenceAttribute, related_name="attributes+")
 
     def __unicode__(self):
-        return self.entry_key + " - " + self.bibtex[:100]
+        return self.entry_key + " - " + self.title
 
 
 class TaxonomyArea(models.Model):
