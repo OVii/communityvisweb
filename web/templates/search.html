@@ -5,15 +5,28 @@
     {% block head_additional %}
         <script type="text/javascript" src="{{ STATIC_URL }}js/bibtex_js.js"></script>
     {% endblock %}
-    You searched for {{ searchTerm }}. There are {{ size }} results!
 
-    <textarea id="bibtex_input" style="display:none">
-        {% for searchResult in searchResults %}
-            {{ searchResult.bibtex }}
-        {% endfor %}
-    </textarea>
 
-    <div id="bibtex_display"></div>
+    <div class="home-content">
+        <div class="row-fluid">
+            <div class="search-wrapper">
+                <form id="search" action="/search">
+                    <input id="search-text" type="text" name="q" placeholder="Search">
+                </form>
+            </div
+        </div>
+
+        <div class="clearfix"></div>
+        You searched for {{ searchTerm }}. There are {{ size }} results!
+
+        <textarea id="bibtex_input" style="display:none">
+            {% for searchResult in searchResults %}
+                {{ searchResult.bibtex }}
+            {% endfor %}
+        </textarea>
+
+        <div id="bibtex_display"></div>
+    </div>
 
 
 {% endblock %}

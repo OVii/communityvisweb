@@ -1,99 +1,104 @@
-
 {% autoescape off %}
 
-{% if references %}
+    {% if references %}
 
-    <div class="row-fluid">
-		<div class="span2 well well-small">
-			<!-- sort -->
-			<div>
-				<p><h4>Search/Filter</h4></p>
-				<div class="btn-group">
-					<a class="btn dropdown-toggle span12" data-toggle="dropdown" href="#" align="right">
-					    Sort by
-					    <span class="caret"></span>
-  					</a>
-				  	<ul class="dropdown-menu">
-						<li><a href="{{ request.path }}">Date Added</a></li>
-						<li><a href="{{ request.path }}?sort=title">Author list</a></li>
-						<li><a href="{{ request.path }}?sort=year">Year</a></li>
-						<li><a href="{{ request.path }}?sort=journal">Journal</a></li>
-						<li><a href="{{ request.path }}?sort=booktitle">Book Title</a></li>
-						<li><a href="{{ request.path }}?sort=issn">ISSN</a></li>
-					</ul>
-				</div>
-				<!-- filter -->
-				<div style="padding-top:5px">
-                    <br/><br/>
-					 <form id="search" action="/search">
-        	        	<input id="referencefilter" style="width:90%;" type="text" name="q" placeholder="Type to filter...">
-	        	     </form>
-				</div>
-			</div>
-			<!-- note -->
-			<div class="">
-				<a href="/contact/"><button class="btn">Suggest addition/correction</button></a>
-			</div>
-		</div>
-		<div class="span10">
-	        {% for reference in references %}
-				{{ reference.html }}
-        	{% endfor %}
-		</div>
-    </div>
+        <div class="row-fluid">
+            <div class="span2 well well-small">
+                <!-- sort -->
+                <div>
+                    <p><h4>Search/Filter</h4></p>
+                    <div class="btn-group">
+                        <a class="btn dropdown-toggle span12" data-toggle="dropdown" href="#" align="right">
+                            Sort by
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{{ request.path }}">Date Added</a></li>
+                            <li><a href="{{ request.path }}?sort=title">Author list</a></li>
+                            <li><a href="{{ request.path }}?sort=year">Year</a></li>
+                            <li><a href="{{ request.path }}?sort=journal">Journal</a></li>
+                            <li><a href="{{ request.path }}?sort=booktitle">Book Title</a></li>
+                            <li><a href="{{ request.path }}?sort=issn">ISSN</a></li>
+                        </ul>
+                    </div>
+                    <!-- filter -->
+                    <div style="padding-top:5px">
+                        <br/><br/>
 
-<script language="javascript">
+                        <form id="search" action="/search">
+                            <input id="referencefilter" style="width:90%;" type="text" name="q"
+                                   placeholder="Type to filter...">
+                        </form>
+                    </div>
+                </div>
+                <!-- note -->
+                <div class="">
+                    <a href="/contact/">
+                        <button class="btn">Suggest addition/correction</button>
+                    </a>
+                </div>
+            </div>
+            <div class="span10">
+                {% for reference in references %}
+                    <div class="well taxonomy-well">
+                        <p>{{ reference.entry_key }}</p>
+                        <p>{{ reference. }}</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
 
-var bibtexes = {{ bibtex_texts }};
+        <script language="javascript">
 
-$(document).ready(function() {
-	// bibtex popup
-	var ref_tag = $('div:not(a).reference_box');
-	ref_tag.each(function(idx) {
-	    $("<a/>", {
-			"href":"#",
-			"class":"badge badge-info bibtex_js_popover reference_number",
-			"rel":"popover",
-			"title":"BibTeX",
-			"html":true,
-			"data-content":"<tiny>" + bibtexes[idx] + "</tiny>",
-			text:(idx+1).toString()}
-		).prependTo($(this)).popover();
-	});
+            var bibtexes = {{ bibtex_texts }};
 
-	// filter functionality
-	var rf_box = $('#referencefilter');
+            $(document).ready(function () {
+                // bibtex popup
+                var ref_tag = $('div:not(a).reference_box');
+                ref_tag.each(function (idx) {
+                    $("<a/>", {
+                                "href": "#",
+                                "class": "badge badge-info bibtex_js_popover reference_number",
+                                "rel": "popover",
+                                "title": "BibTeX",
+                                "html": true,
+                                "data-content": "<tiny>" + bibtexes[idx] + "</tiny>",
+                                text: (idx + 1).toString()}
+                    ).prependTo($(this)).popover();
+                });
 
-	$.extend($.expr[':'], {
-  	'containsi': function(elem, i, match, array)
-	  {
-	    return (elem.textContent || elem.innerText || '').toLowerCase()
-    	.indexOf((match[3] || "").toLowerCase()) >= 0;
-	  }
-	});
+                // filter functionality
+                var rf_box = $('#referencefilter');
 
-	rf_box.keyup(function() {
-		if(rf_box.val().length > 0) {
-			$(".reference_box:not(:containsi('" + rf_box.val() + "'))").each(function() {
-				$(this).hide();
-			});
-			$(".reference_box:containsi('" + rf_box.val() + "')").each(function() {
-				$(this).show();
-			});
-		}
-		else {
-			$(".reference_box").show();
-		}
-	});
+                $.extend($.expr[':'], {
+                    'containsi': function (elem, i, match, array) {
+                        return (elem.textContent || elem.innerText || '').toLowerCase()
+                                .indexOf((match[3] || "").toLowerCase()) >= 0;
+                    }
+                });
 
-});
+                rf_box.keyup(function () {
+                    if (rf_box.val().length > 0) {
+                        $(".reference_box:not(:containsi('" + rf_box.val() + "'))").each(function () {
+                            $(this).hide();
+                        });
+                        $(".reference_box:containsi('" + rf_box.val() + "')").each(function () {
+                            $(this).show();
+                        });
+                    }
+                    else {
+                        $(".reference_box").show();
+                    }
+                });
 
-</script>
+            });
 
-{% else %}
+        </script>
 
-There are no references.
+    {% else %}
 
-{% endif %}
+        There are no references.
+
+    {% endif %}
 
 {% endautoescape %}

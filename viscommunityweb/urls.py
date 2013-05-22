@@ -22,6 +22,7 @@ urlpatterns = patterns('',
                        url(r'^taxonomy/(?P<taxonomy_id>\d+)/$', 'web.views.taxonomy_detail'),
                        url(r'^request_ownership/(?P<taxonomy_id>\d+)$', 'web.views.request_ownership_send'),
                        url(r'^request_ownership/response/(?P<approval_id>\d+)$', 'web.views.request_ownership_response'),
+                       url(r'^revoke_ownership/(?P<taxonomy_id>\d+)$', 'web.views.revoke_ownership'),
 
 
                        url(r'^contact/$', 'web.views.contact'),

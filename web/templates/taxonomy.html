@@ -30,7 +30,8 @@
 
                 <p>
                     {% for item in category.taxonomyitem_set.all %}
-                        {% if item.has_detail %}
+
+                        {% if item.references.all %}
                             <span class="badge badge-success taxonomy-item">
                         {% else %}
                             <span class="badge badge-important taxonomy-item">

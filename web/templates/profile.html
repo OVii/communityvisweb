@@ -20,6 +20,11 @@
             $('#responseModal').modal('show');
         }
 
+        function showConfirmWindow(taxonomyId) {
+            $("#confirmRemove").attr("action", "/revoke_ownership/" + taxonomyId);
+            $('#confirmRemoveModal').modal('show');
+        }
+
         $(document).ready(function () {
             $.ajax({
                 type: 'GET',
@@ -261,7 +266,7 @@
 
 
                             {% if loggedInUser %}
-                                <a onclick="showResponse({{ approval.id }})" class="btn btn-small btn-danger">Revoke ownership</a>
+                                <a onclick="showConfirmWindow({{ taxonomyItem.id }})" class="btn btn-small btn-danger">Revoke ownership</a>
                             {% endif %}
                         </div>
                         <div class="clearfix"></div>
@@ -308,4 +313,7 @@
             </div>
         </form>
     </div>
+
+    {% include 'fragments/removeModal.html' %}
+
 {% endblock %}

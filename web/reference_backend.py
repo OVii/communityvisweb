@@ -84,15 +84,3 @@ def format_name(person):
         s += ', '
         s += join([first, middle])
     return s
-
-
-"""
-$("body").append("<div class=\"bibtex_template\"> <div class=\"if author\" style=\"font-weight: bold;\">\n  " +
-                "<span class=\"ref_begin\"></span> <span class=\"if year\">\n    " +
-                "<span class=\"year\"></span>, \n  </span>\n  " +
-                "<span class=\"author\"></span>\n  <span class=\"if url\" " +
-                "style=\"margin-left: 20px\">\n    " +
-                "<a class=\"btn btn-small\" style=\"color:black; font-size:10px\"><i class=\"icon-book\"></i> View Online</a>\n  </span>\n</div>" +
-                "<div style=\"margin-left: 10px; margin-bottom:5px;\">\n  " +
-                "<span class=\"title\"></span>\n</div></div>");
-"""

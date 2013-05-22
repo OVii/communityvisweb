@@ -3,6 +3,7 @@
 """
 import hashlib
 import urllib2
+from django.contrib.auth.decorators import login_required
 
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import Context, RequestContext, loader
@@ -12,7 +13,6 @@ from django.shortcuts import render_to_response, get_object_or_404
 from django.core.mail import send_mail
 import os
 from django.conf import settings
-from reference_parse import reference_entries, html_format
 from django.contrib.auth import authenticate
 from django.contrib.auth import logout as django_logout, login as django_login
 import taxonomy_backend, reference_backend
@@ -25,7 +25,7 @@ email_to = "eamonn.maguire@oerc.ox.ac.uk"
 
 # index page
 def index(request):
-    recent_items = TaxonomyItem.objects.exclude(detail_html="").order_by('last_updated')[:3]
+    recent_items = TaxonomyItem.objects.order_by('last_updated')[:3]
     return render_to_response("templates/index.html", {'recent_taxonomy_items': recent_items},
                               context_instance=RequestContext(request))
 
@@ -46,25 +46,21 @@ def taxonomy_alpha(request):
 # taxonomy detail page
 def taxonomy_detail(request, taxonomy_id):
     taxonomy = get_object_or_404(TaxonomyItem, pk=taxonomy_id)
-    html = html_format(taxonomy.detail_html)
 
-    if len(html) == 0:
-        html = "There is currently no information on this taxonomy item."
+    references = taxonomy.references.all()
 
-    refer = reference_backend.sorted_reference_list(request, reference_entries(taxonomy.detail_html))
+    refer = reference_backend.sorted_reference_list(request, taxonomy.references.all())
     bibtex_texts = json.dumps([x.bibtex for x in refer])
 
-    print "Got %i refs" % len(refer)
+
 
     ownerLoggedIn = False
     if request.user in taxonomy.owners.all():
         ownerLoggedIn = True
 
-    print 'There are ' + str(len(taxonomy.owners.all())) + ' owners.'
-
     return render_to_response("templates/taxonomy_detail.html",
                               {'taxonomy': taxonomy, 'owners': len(taxonomy.owners.all()),
-                               'ownerLoggedIn': ownerLoggedIn, 'formatted_detail': html, 'references': refer,
+                               'ownerLoggedIn': ownerLoggedIn, 'references': refer,
                                'bibtex_texts': bibtex_texts}, context_instance=RequestContext(request))
 
 
@@ -108,7 +104,7 @@ def request_ownership_response(request, approval_id):
     responseDetail = request.POST['responseDetail']
 
     ownershipRequest = OwnershipRequest.objects.filter(pk=approval_id).get(pk=approval_id)
-    ownershipRequest = OwnershipRequest.objects.filter(pk=approval_id).get(pk=approval_id)
+
     taxonomyItem = ownershipRequest.taxonomyItem
     if response == 'Approved':
         ownershipRequest = OwnershipRequest.objects.filter(pk=approval_id).get(pk=approval_id)
@@ -139,6 +135,38 @@ def request_ownership_response(request, approval_id):
         ownershipRequest.delete()
 
     return HttpResponseRedirect("/accounts/profile")
+
+@login_required
+def revoke_ownership(request, taxonomy_id):
+    reason = request.POST['comments']
+
+    taxonomyItem = TaxonomyItem.objects.filter(pk=taxonomy_id).get(pk=taxonomy_id)
+
+    taxonomyItem.owners.remove(request.user)
+
+    try:
+        email_subject = email_prefix + "Ownership revoked by " + request.user.username + " for " + taxonomyItem.name
+        email_from = request.user.email
+        email_name = request.user.username
+        email_body = request.POST['comments']
+
+        send_mail(email_subject, email_body, email_from,
+                  [EMAIL_HOST_USER], fail_silently=False)
+    except Exception, e:
+        return render_to_response("templates/infopage.html",
+                                  {
+                                      'messageTitle': 'Problem encountered sending the request.',
+                                      'messageBody': "There was a problem sending the email. Please ensure all fields "
+                                                     "are filled in correctly. Please contact " +
+                                                     settings.ADMINS[0][1]
+                                                     + " if the problem continues.\n\nDetailed reason is below: \n\n"
+                                                     + e.message},
+                                  context_instance=RequestContext(request))
+    else:
+        return render_to_response("templates/infopage.html",
+                                  {'messageTitle': 'You have been removed as owner of ' + taxonomyItem.name + '.',
+                                   'messageBody': "We're sad to see you leave, we hope you come back soon if you get the time!"},
+                                  context_instance=RequestContext(request))
 
 
 # big list of all references in database (future: sorting/filtering etc)
@@ -213,7 +241,7 @@ def profile(request):
 
     return render_to_response("profile.html",
                               {"loggedInUser": loggedInUser, "profile": profile, "gravatar": gravatarMD5,
-                               'approvals': approvals, 'taxonomyItems':taxonomyItems},
+                               'approvals': approvals, 'taxonomyItems': taxonomyItems},
                               context_instance=RequestContext(request))
 
 

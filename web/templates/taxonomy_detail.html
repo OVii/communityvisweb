@@ -6,6 +6,10 @@
         function showRequestWindow() {
             $('#taxonomyRequestModal').modal('show');
         }
+
+        function showConfirmWindow() {
+            $('#confirmRemoveModal').modal('show');
+        }
     </script>
 {% endblock %}
 
@@ -26,7 +30,7 @@
             {% endif %}
 
             {% if ownerLoggedIn %}
-                <a class="btn btn-danger">Revoke Ownership</a>
+                <a class="btn btn-danger" onclick="showConfirmWindow()">Revoke Ownership</a>
             {% endif %}
 
             {% if owners == 0 %}
@@ -49,15 +53,11 @@
     </div>
 
     <div class="clearfix"></div>
-    <br/>
 
-    <div class="well well-small">
-        Click the reference number for the entry's BibTeX markup.
-    </div>
 
     <div>
         {% autoescape off %}
-            {{ formatted_detail }}
+            {{ taxonomy.detail }}
         {% endautoescape %}
         <br/>
         <br/>
@@ -93,6 +93,8 @@
             </div>
         </form>
     </div>
+
+    {% include 'fragments/removeModal.html' %}
 
 
 {% endblock %}

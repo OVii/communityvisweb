@@ -8,6 +8,44 @@ import user
 import reference_backend
 
 
+class ReferenceAuthor(models.Model):
+    first_name = models.CharField(max_length=256)
+    last_name = models.CharField(max_length=256)
+    middle_name = models.CharField(max_length=256)
+    prelast_name = models.CharField(max_length=256)
+    lineage = models.CharField(max_length=256)
+
+    def __unicode__(self):
+        return self.first_name + ", " + self.last_name + ", " + self.lineage
+
+
+class ReferenceColumn(models.Model):
+    name = models.CharField(max_length=128)
+
+
+class ReferenceAttribute(models.Model):
+    column = models.ForeignKey(ReferenceColumn)
+    value = models.TextField(default="")
+
+    def __unicode__(self):
+        return self.column.name + " (" + self.value + ")"
+
+
+class Reference(models.Model):
+    entry_key = models.CharField(max_length=256)
+    title = models.TextField()
+    journal = models.CharField(max_length=256)
+
+    bibtex = models.CharField(max_length=2048)
+
+    authors = models.ManyToManyField(ReferenceAuthor, related_name="authors+")
+
+    referenceAttributes = models.ManyToManyField(ReferenceAttribute, related_name="attributes+")
+
+    def __unicode__(self):
+        return self.entry_key + " - " + self.bibtex[:100]
+
+
 class TaxonomyArea(models.Model):
     name = models.CharField(max_length=128)
 
@@ -24,49 +62,20 @@ class TaxonomyCategory(models.Model):
 
 
 class TaxonomyItem(models.Model):
-    name = models.CharField(max_length=128)
+    name = models.CharField(max_length=256)
     category = models.ForeignKey(TaxonomyCategory)
-    detail_html = models.CharField(max_length=2048)
+    detail = models.TextField(default="")
     last_updated = models.DateTimeField(auto_now=True)
     last_updated_by = models.ForeignKey(User, null=True)
     owners = models.ManyToManyField(User, related_name="owners+")
 
-    def has_detail(self):
-        return len(self.detail_html) != 0
+    references = models.ManyToManyField(Reference)
 
     def short_description(self):
-        return self.detail_html[:50] + '...'
+        return self.detail[:50] + '...'
 
     def __unicode__(self):
         return self.name + " (" + self.category.name + ")"
-
-
-class ReferenceAuthor(models.Model):
-    first_name = models.CharField(max_length=256)
-    last_name = models.CharField(max_length=256)
-    middle_name = models.CharField(max_length=256)
-    prelast_name = models.CharField(max_length=256)
-    lineage = models.CharField(max_length=256)
-
-
-class ReferenceColumn(models.Model):
-    name = models.CharField(max_length=128)
-
-
-class Reference(models.Model):
-    bibtex = models.CharField(max_length=2048)
-    entry_key = models.CharField(max_length=256)
-    authors = models.ManyToManyField(ReferenceAuthor, related_name="authors+")
-    #attributes = models.ManyToManyField(ReferenceAttribute, related_name="attributes+")
-
-    def __unicode__(self):
-        return self.bibtex
-
-
-class ReferenceAttribute(models.Model):
-    column = models.ForeignKey(ReferenceColumn)
-    value = models.CharField(max_length=4096)
-    reference = models.ForeignKey(Reference)
 
 
 class UserProfile(models.Model):

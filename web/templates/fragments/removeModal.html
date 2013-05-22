@@ -1,0 +1,27 @@
+<div id="confirmRemoveModal" class="modal hide fade" tabindex="-1" role="dialog"
+     aria-labelledby="confirmRemoveRequest"
+     aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3>Are you sure</h3>
+    </div>
+    <form accept-charset="UTF-8" action="/revoke_ownership/{{ taxonomy.id }}" class="formbody" id="confirmRemove"
+          method="post">
+        <div class="modal-body">
+            <div class="modal-body" id="booking">
+                {% csrf_token %}
+                <div class="control-group">
+                    <label for="comments" class="control-label">If you can spare some time, please tell us why you're
+                        going?</label>
+
+                    <div class="controls">
+                        <textarea name="comments" maxlength="5000" rows=10 class="span6"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer" id="button">
+            <input name="commit" type="submit" class="btn btn-danger" value="Revoke Ownership">
+        </div>
+    </form>
+</div>
