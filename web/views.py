@@ -4,17 +4,16 @@
 import hashlib
 import urllib2
 from django.contrib.auth.decorators import login_required
+from django.contrib.sites.models import Site
 
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import Context, RequestContext, loader
-from viscommunityweb.settings import EMAIL_HOST_USER
-from web.models import TaxonomyArea, TaxonomyCategory, TaxonomyItem, Reference, UserProfile, OwnershipRequest
+from viscommunityweb.settings import EMAIL_HOST_USER, SITE_ID
+from web.models import TaxonomyArea, TaxonomyCategory, TaxonomyItem, Reference, UserProfile, OwnershipRequest, Enquiry
 from django.shortcuts import render_to_response, get_object_or_404
 from django.core.mail import send_mail
 import os
 from django.conf import settings
-from django.contrib.auth import authenticate
-from django.contrib.auth import logout as django_logout, login as django_login
 import taxonomy_backend, reference_backend
 import json
 
@@ -22,6 +21,7 @@ import json
 os.environ['DJANGO_SETTINGS_MODULE'] = "viscommunityweb.settings"
 email_prefix = "[OXVIS] "
 email_to = "eamonn.maguire@oerc.ox.ac.uk"
+
 
 # index page
 def index(request):
@@ -76,7 +76,6 @@ def taxonomy_download(request, taxonomy_id):
     return response
 
 
-
 # general contact page
 def contact(request):
     return render_to_response("templates/contact.html", context_instance=RequestContext(request))
@@ -86,7 +85,6 @@ def contact(request):
 def request_ownership_send(request, taxonomy_id):
     email_subject = email_prefix + "Request for taxonomy ownership by " + request.user.username
     email_from = request.user.email
-    email_name = request.user.username
     email_body = request.POST['comments']
 
     taxonomyItem = TaxonomyItem.objects.filter(pk=taxonomy_id).get(pk=taxonomy_id)
@@ -197,7 +195,7 @@ def search(request):
     searchTerm = request.GET['q']
     references = Reference.objects.all()
 
-    searchResult = [];
+    searchResult = []
 
     for reference in references:
         if searchTerm in reference.bibtex:
@@ -249,13 +247,20 @@ def profile(request):
 
     taxonomyItems = []
 
+    notifications = []
     taxonomyItemsForUser = TaxonomyItem.objects.filter(owners__username=requestedUser.username)
     for userTaxonomyItem in taxonomyItemsForUser:
         taxonomyItems.append(userTaxonomyItem)
+        enquiryQueryForTaxonomyItem = Enquiry.objects.filter(taxonomyItem=userTaxonomyItem)
+
+        for enquiry in enquiryQueryForTaxonomyItem:
+            notifications.append(enquiry)
+
+
 
     return render_to_response("profile.html",
                               {"loggedInUser": loggedInUser, "profile": profile, "gravatar": gravatarMD5,
-                               'approvals': approvals, 'taxonomyItems': taxonomyItems},
+                               'approvals': approvals, 'taxonomyItems': taxonomyItems, 'notifications': notifications},
                               context_instance=RequestContext(request))
 
 
@@ -267,3 +272,42 @@ def orcid_profile(request):
     response = urllib2.urlopen(request).read()
 
     return HttpResponse(response, mimetype='application/json')
+
+
+@login_required
+def handleTaxonomyEnquiry(request, taxonomy_id):
+    type = request.POST['type']
+    message = request.POST['message']
+
+    taxonomyItem = TaxonomyItem.objects.filter(pk=taxonomy_id).get(pk=taxonomy_id)
+    enquiry = Enquiry(taxonomyItem=taxonomyItem, requester=request.user, additionalNotes=message, enquiry_type=type)
+    enquiry.save()
+
+    try:
+        email_subject = email_prefix + "Message received by " + request.user.username + " for taxonomy item " + taxonomyItem.name
+        email_from = request.user.email
+
+        url = Site.objects.filter(id=SITE_ID).get(id=SITE_ID).domain
+
+        email_body = "You can view this taxonomy item <a href=" + url + "/taxonomy/" \
+                     + taxonomyItem.id + ">here</a>.\n\n"
+
+        email_body += message
+
+        send_mail(email_subject, email_body, email_from,
+                  [EMAIL_HOST_USER], fail_silently=False)
+    except Exception, e:
+        return render_to_response("templates/infopage.html",
+                                  {
+                                      'messageTitle': 'Problem encountered sending the request.',
+                                      'messageBody': "There was a problem sending the email. Please ensure all fields "
+                                                     "are filled in correctly. Please contact " +
+                                                     settings.ADMINS[0][1]
+                                                     + " if the problem continues.\n\nDetailed reason is below: \n\n"
+                                                     + e.message},
+                                  context_instance=RequestContext(request))
+    else:
+        return render_to_response("templates/infopage.html",
+                                  {'messageTitle': 'You suggestion for ' + taxonomyItem.name + ' has been lodged.',
+                                   'messageBody': "The maintainer will get back to you soon!"},
+                                  context_instance=RequestContext(request))

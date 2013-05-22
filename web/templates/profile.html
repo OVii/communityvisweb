@@ -210,7 +210,34 @@
                 </div>
 
                 <div class="profile-unit">
-                    <p>Move along, nothing to see here.</p><br/>
+                    {% if notifications|length > 0 %}
+                        {% for notification in notifications %}
+                            <div class="well">
+
+                                <p>{{ notification.enquiry_type }}</p>
+                                <hr/>
+
+                                <p><strong><a
+                                        href="/taxonomy/{{ notification.taxonomyItem.id }}">{{ notification.taxonomyItem.name }}</a></strong>
+                                </p>
+
+                                <p><i class="icon-arrow-up"></i> {{ notification.taxonomyItem.category }}</p>
+
+                                <p style="font-style: italic; font-size: 1em">{{ notification.additionalNotes }}</p>
+
+                                <p style="font-size: 0.9em">
+                                    Submitted by <a
+                                        href="/profile/{{ notification.requester.username }}">{{ notification.requester.username }}</a>
+                                </p>
+
+
+                            </div>
+                            <div class="clearfix"></div>
+
+                        {% endfor %}
+                    {% else %}
+                        <p>Move along, nothing to see here.</p><br/>
+                    {% endif %}
                 </div>
             </div>
             {#            end approvals section#}
@@ -266,7 +293,8 @@
 
 
                             {% if loggedInUser %}
-                                <a onclick="showConfirmWindow({{ taxonomyItem.id }})" class="btn btn-small btn-danger">Revoke ownership</a>
+                                <a onclick="showConfirmWindow({{ taxonomyItem.id }})" class="btn btn-small btn-danger">Revoke
+                                    ownership</a>
                             {% endif %}
                         </div>
                         <div class="clearfix"></div>

@@ -98,3 +98,12 @@ class OwnershipRequest(models.Model):
 
     def __unicode__(self):
         return self.requester.username + ' - ' + self.taxonomyItem.name
+
+class Enquiry(models.Model):
+
+    requester = models.ForeignKey(User)
+    taxonomyItem = models.ForeignKey(TaxonomyItem)
+    enquiry_type = models.CharField(max_length=256, default="")
+    # optional
+    reference = models.ForeignKey(Reference, null=True)
+    additionalNotes = models.TextField()

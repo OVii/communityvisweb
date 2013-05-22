@@ -10,6 +10,10 @@
         function showConfirmWindow() {
             $('#confirmRemoveModal').modal('show');
         }
+
+        function showSuggestBox() {
+            $('#suggestModal').modal('show');
+        }
     </script>
 {% endblock %}
 
@@ -84,6 +88,43 @@
             </div>
             <div class="modal-footer" id="button">
                 <input name="commit" type="submit" class="btn btn-danger" value="Submit Request">
+            </div>
+        </form>
+    </div>
+
+    <div id="suggestModal" class="modal hide fade" tabindex="-1" role="dialog"
+         aria-labelledby="suggestModal"
+         aria-hidden="true">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3>Suggestions</h3>
+        </div>
+        <form accept-charset="UTF-8" action="/enquiry/{{ taxonomy.id }}/" class="formbody" id="suggestModal"
+              method="post">
+            <div class="modal-body">
+                <div class="modal-body" id="booking">
+                    {% csrf_token %}
+                    <div class="control-group">
+                        <label for="type" class="control-label">What do you want to suggest?</label>
+
+                        <div class="controls">
+                            <select name="type">
+                                <option>Add a new reference</option>
+                                <option>Modify a reference</option>
+                                <option>Other</option>
+                            </select>
+                        </div>
+
+                        <label for="message" class="control-label">What do you want to say?</label>
+
+                        <div class="controls">
+                            <textarea name="message" maxlength="5000" rows=10 class="span6"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" id="button">
+                <input name="commit" type="submit" class="btn btn-danger" value="Submit Suggestion">
             </div>
         </form>
     </div>
