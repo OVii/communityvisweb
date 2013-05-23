@@ -37,13 +37,13 @@
         </div>
 
         <div class="search" style="margin-right:20px">
-            <form id="search" action="/search">
+			<form id="search" action="{% url 'search' %}">
                 <input id="search-text" style="width:80%" type="text" name="q" placeholder="Search References">
             </form>
         </div>
 
         <div class="menu">
-            <a href="/taxonomy/" class="menu-item">
+			<a href="{% url 'taxonomy' %}"" class="menu-item">
                 Taxonomy
             </a>
         </div>
