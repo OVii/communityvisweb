@@ -10,7 +10,7 @@
 <ul>
 
 {% for item in items_owned %}
-	<li><a href="/taxonomy/{{ item.id }}">{{ item.name }}</a></li>
+<li><a href="{% url 'taxonomy'}/{{ item.id }}">{{ item.name }}</a></li>
 {% endfor %}
 
 </ul>

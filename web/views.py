@@ -213,6 +213,12 @@ def account(request):
                               context_instance=RequestContext(request))
 
 
+def login(request):
+    return render_to_response("registration/login.html",context_instance=RequestContext(request))
+
+def logout(request):
+    return render_to_response("registration/logout.html",context_instance=RequestContext(request))
+
 def profile(request):
     requestedUser = None
     loggedInUser = False

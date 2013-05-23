@@ -9,6 +9,7 @@
 </head>
 <body>
 {% load webdesign %}
+{% load url from future %}
 
 <div class="topbar-home">
     <div class="topbar-content" align="center">
@@ -16,10 +17,10 @@
         <div class="user-account">
             {% if user.is_authenticated %}
                 <i class="icon-user"></i> {{ user.username }}
-                <a href="/accounts/profile" class="btn btn-mini account-button"><i class="icon-wrench"></i></a>
-                <a href="/accounts/logout" class="btn btn-mini account-button"><i class="icon-off"></i></a>
+				<a href="{% url 'profile' %}" class="btn btn-mini account-button"><i class="icon-wrench"></i></a>
+				<a href="{% url 'logout' %}" class="btn btn-mini account-button"><i class="icon-off"></i></a>
             {% else %}
-                <a href="/accounts/login" class="btn btn account-button"><i class="icon-user"></i> Sign In</a>
+			<a href="{% url 'login' %}" class="btn btn account-button"><i class="icon-user"></i> Sign In</a>
             {% endif %}
         </div>
 
@@ -60,7 +61,7 @@
 
     <div class="home-content">
         <div class="span10 front-item" align="center">
-            <a href="/taxonomy/"><img src="{{ STATIC_URL }}img/static_img/home/taxonomy.png"></a><br/>
+			<a href="{% url 'taxonomy' %}"><img src="{{ STATIC_URL }}img/static_img/home/taxonomy.png"></a><br/>
         </div>
 
 

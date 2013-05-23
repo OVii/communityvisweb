@@ -1,15 +1,14 @@
 {% extends "templates/base.html" %}
 {% load webdesign %}
+{% load url from future %}
 
-{% block title %}BioSharing | Log in{% endblock %}
+{% block title %}Log in{% endblock %}
 
 {% block head_additional %}
 
 {% endblock %}
 
 {% block content %}
-
-
 
     {% if form.errors %}
         <p>Your username and password didn't match. Please try again.</p>
@@ -22,7 +21,7 @@
         <div class="section-header"><span class="content-section login-section"><span
                 class="header-text"><i class="icon-check"></i> Register</span></span>
         </div>
-        <form accept-charset="UTF-8" action="{% url django.contrib.auth.views.login %}" class="formbody" id="user_edit"
+        <form accept-charset="UTF-8" action="{% url 'django.contrib.auth.views.login' %}" class="formbody" id="user_edit"
               method="post">
             {% csrf_token %}
 
@@ -39,8 +38,8 @@
         </form>
 
         <div class="login-additional">
-            <p><a href="{% url auth_password_reset %}">Forgot</a> your password? <a
-                    href="{% url registration_register %}">Need an account</a>?</p>
+            <p><a href="{% url 'auth_password_reset' %}">Forgot</a> your password? <a
+                    href="{% url 'registration_register' %}">Need an account</a>?</p>
         </div>
 
     </div>

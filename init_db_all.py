@@ -9,7 +9,7 @@ from web.models import TaxonomyItem
 import random
 
 db_file = os.path.join(os.getcwd(), 'visweb.db')
-bibtex_file = os.path.join(os.getcwd(), 'bibtex', 'thesis.bib')
+bibtex_file = os.path.join(os.getcwd(), 'bibtex', 'test.bib')
 
 # delete existing database file
 if os.path.exists(db_file):
