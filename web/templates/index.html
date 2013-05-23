@@ -76,7 +76,7 @@
 
     <div>
         <div class="span12 bubble">
-            <img src="../static/img/static_img/home/volunteer.png" align="center"/><br/>
+			<img src="{{ STATIC_URL }}/img/static_img/home/volunteer.png" align="center"/><br/>
             The development and maintenance of this resource requires the selfless contributions from many
             volunteers in the field. If you wish to help manage a sub-collection of references on a specific subject
             of which you have considerable knowledge of, please let us know. You can click the button below to request
@@ -89,7 +89,7 @@
         <br/>
 
         <div class="span4 front-item offset4">
-            <a href="/contact/"><img src="{{ STATIC_URL }}img/static_img/home/I-want-to-volunteer.png"
+			<a href="{% url 'contact' %}"><img src="{{ STATIC_URL }}img/static_img/home/I-want-to-volunteer.png"
                                      width="250px"></a>
         </div>
 

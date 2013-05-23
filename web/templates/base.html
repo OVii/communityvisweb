@@ -1,4 +1,7 @@
 <!DOCTYPE html>
+
+{% load url from future %}
+
 <html lang="en">
 <head>
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
@@ -24,11 +27,11 @@
         <div class="user-account">
             {% if user.is_authenticated %}
                  {{ user.username }}
-                <a href="/accounts/profile" class="btn btn-mini account-button"><i class="icon-user"></i></a>
-                <a href="/accounts/logout/" class="btn btn-mini account-button"><i class="icon-off"></i></a>
+				 <a href="{% url 'profile' %}" class="btn btn-mini account-button"><i class="icon-user"></i></a>
+				 <a href="{% url 'logout' %}" class="btn btn-mini account-button"><i class="icon-off"></i></a>
             {% else %}
-                <a href="/accounts/register" class="btn btn account-button"><i class="icon-check"></i> Register</a>
-                <a href="/accounts/login" class="btn btn account-button"><i class="icon-user"></i> Sign In</a>
+			<a href="{% url 'register' %}" class="btn btn account-button"><i class="icon-check"></i> Register</a>
+			<a href="{% url 'login' %}"" class="btn btn account-button"><i class="icon-user"></i> Sign In</a>
             {% endif %}
 
         </div>

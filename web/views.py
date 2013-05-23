@@ -219,6 +219,9 @@ def login(request):
 def logout(request):
     return render_to_response("registration/logout.html",context_instance=RequestContext(request))
 
+def register(request):
+    return render_to_response("registration/register.html",context_instance=RequestContext(request))
+
 def profile(request):
     requestedUser = None
     loggedInUser = False

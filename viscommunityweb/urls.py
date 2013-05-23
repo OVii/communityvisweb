@@ -19,6 +19,7 @@ urlpatterns = patterns('',
                        url(r'^accounts/profile', 'web.views.profile', name='profile'),
                        url(r'^accounts/logout', 'web.views.logout', name='logout'),
                        url(r'^accounts/login', 'web.views.login', name='login'),
+                       url(r'^accounts/register', 'web.views.register', name='register'),
 
                        url(r'^taxonomy/$', 'web.views.taxonomy', name='taxonomy'),
                        url(r'^taxonomy_alpha/$', 'web.views.taxonomy_alpha', name='taxonomy_alpha'),

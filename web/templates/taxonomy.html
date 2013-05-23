@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% block title %}Visualization Taxonomy{% endblock %}
+{% load url from future %}
 
 {% load webdesign %}
 
@@ -36,7 +37,7 @@
                         {% else %}
                             <span class="badge badge-important taxonomy-item">
                         {% endif %}
-                    <a href="/taxonomy/{{ item.id }}"
+						<a href="{% url 'taxonomy_detail' item.id %}" "
                        style="color:white">{{ item.name }}</a></span>
                     {% endfor %}
                 </p>
