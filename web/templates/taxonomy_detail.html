@@ -11,7 +11,28 @@
             $('#confirmRemoveModal').modal('show');
         }
 
-        function showSuggestBox() {
+        function showSuggestBox(type, id) {
+
+            if (type === 'taxonomy') {
+                $('#options').html('<div class="controls">' +
+                        '<select name="type">' +
+                        '<option>Modify description</option>' +
+                        '<option>Add a new reference</option>' +
+                        '<option>Modify a reference</option>' +
+                        '<option>Other</option>' +
+                        '</select></div>');
+                $("#suggestForm").attr("action", "/enquiry/{{ taxonomy.id }}/");
+            } else {
+                $('#options').html('<div class="controls">' +
+                        '<select name="type">' +
+                        '<option>Remove reference</option>' +
+                        '<option>Modify reference</option>' +
+                        '<option>Other</option>' +
+                        '</select></div>');
+                $("#suggestForm").attr("action", "/enquiry/{{ taxonomy.id }}/" + id +"/");
+            }
+
+
             $('#suggestModal').modal('show');
         }
     </script>
@@ -99,7 +120,7 @@
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             <h3>Suggestions</h3>
         </div>
-        <form accept-charset="UTF-8" action="/enquiry/{{ taxonomy.id }}/" class="formbody" id="suggestModal"
+        <form accept-charset="UTF-8" action="/enquiry/{{ taxonomy.id }}/" class="formbody" id="suggestForm"
               method="post">
             <div class="modal-body">
                 <div class="modal-body" id="booking">
@@ -107,12 +128,8 @@
                     <div class="control-group">
                         <label for="type" class="control-label">What do you want to suggest?</label>
 
-                        <div class="controls">
-                            <select name="type">
-                                <option>Add a new reference</option>
-                                <option>Modify a reference</option>
-                                <option>Other</option>
-                            </select>
+                        <div id="options">
+                            {#Options will be inserted here#}
                         </div>
 
                         <label for="message" class="control-label">What do you want to say?</label>

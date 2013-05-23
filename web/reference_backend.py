@@ -41,6 +41,7 @@ class SortableReference():
     def __init__(self, ref):
 
         # copy attributes over
+        self.id = ref.id
         self.bibtex = ref.bibtex
         self.entry_key = ref.entry_key
         self.authors = getFormattedAuthorList(ref.authors)

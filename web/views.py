@@ -256,8 +256,6 @@ def profile(request):
         for enquiry in enquiryQueryForTaxonomyItem:
             notifications.append(enquiry)
 
-
-
     return render_to_response("profile.html",
                               {"loggedInUser": loggedInUser, "profile": profile, "gravatar": gravatarMD5,
                                'approvals': approvals, 'taxonomyItems': taxonomyItems, 'notifications': notifications},
@@ -274,15 +272,7 @@ def orcid_profile(request):
     return HttpResponse(response, mimetype='application/json')
 
 
-@login_required
-def handleTaxonomyEnquiry(request, taxonomy_id):
-    type = request.POST['type']
-    message = request.POST['message']
-
-    taxonomyItem = TaxonomyItem.objects.filter(pk=taxonomy_id).get(pk=taxonomy_id)
-    enquiry = Enquiry(taxonomyItem=taxonomyItem, requester=request.user, additionalNotes=message, enquiry_type=type)
-    enquiry.save()
-
+def sendEmailForEnquiry(message, request, taxonomyItem):
     try:
         email_subject = email_prefix + "Message received by " + request.user.username + " for taxonomy item " + taxonomyItem.name
         email_from = request.user.email
@@ -311,3 +301,62 @@ def handleTaxonomyEnquiry(request, taxonomy_id):
                                   {'messageTitle': 'You suggestion for ' + taxonomyItem.name + ' has been lodged.',
                                    'messageBody': "The maintainer will get back to you soon!"},
                                   context_instance=RequestContext(request))
+
+
+@login_required
+def handleTaxonomyEnquiry(request, taxonomy_id):
+    type = request.POST['type']
+    message = request.POST['message']
+
+    taxonomyItem = TaxonomyItem.objects.filter(pk=taxonomy_id).get(pk=taxonomy_id)
+    enquiry = Enquiry(taxonomyItem=taxonomyItem, requester=request.user, additionalNotes=message, enquiry_type=type)
+    enquiry.save()
+
+    return sendEmailForEnquiry(message, request, taxonomyItem)
+
+
+@login_required
+def handleReferenceEnquiry(request, taxonomy_id, reference_id):
+    type = request.POST['type']
+    message = request.POST['message']
+
+    taxonomyItem = TaxonomyItem.objects.filter(pk=taxonomy_id).get(pk=taxonomy_id)
+    referenceItem = Reference.objects.filter(pk=reference_id).get(pk=reference_id)
+
+    enquiry = Enquiry(taxonomyItem=taxonomyItem, requester=request.user, additionalNotes=message, enquiry_type=type,
+                      reference=referenceItem)
+    enquiry.save()
+
+    return sendEmailForEnquiry(message, request, taxonomyItem)
+
+
+@login_required
+def respondToTaxonomyEnquiry(request, decision, enquiry_id):
+    message = request.POST['message']
+
+    enquiryItem = Enquiry.objects.filter(pk=enquiry_id).get(pk=enquiry_id)
+
+    email_subject = email_prefix + "Suggestion for " + enquiryItem.taxonomyItem.name + " " + decision
+
+    email_body_prefix = "Many thanks for your suggestion. Here is the response from the maintainer!\n\n"
+    email_body_reason = message
+
+    try:
+        send_mail(email_subject, email_body_prefix + email_body_reason,
+                  EMAIL_HOST_USER,
+                  [enquiryItem.requester.email], fail_silently=False)
+
+    except Exception, e:
+        return render_to_response("templates/infopage.html",
+                                  {
+                                      'messageTitle': 'Problem encountered sending the message to ' + enquiryItem.requester.email + '.',
+                                      'messageBody': "Here are the details\n." + e.message},
+                                  context_instance=RequestContext(request))
+    finally:
+        enquiryItem.delete()
+
+    return render_to_response("templates/infopage.html",
+                              {
+                                  'messageTitle': 'Response lodged.',
+                                  'messageBody': 'Response lodged and suggester has been emailed at ' + enquiryItem.requester.email + '.'},
+                              context_instance=RequestContext(request))

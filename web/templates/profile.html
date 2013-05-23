@@ -25,6 +25,11 @@
             $('#confirmRemoveModal').modal('show');
         }
 
+        function showEnquiryResponseWindow(response, enquiryId) {
+            $("#queryResponseForm").attr("action", "/enquiry/" + response + "/" + enquiryId + "/");
+            $('#queryResponseModal').modal('show');
+        }
+
         $(document).ready(function () {
             $.ajax({
                 type: 'GET',
@@ -202,46 +207,6 @@
 
         <div class="profile-blocks" id="notification-center">
 
-            {#            start notifications section#}
-            <div class="block span7" id="notifications">
-                <div class="block-head">
-                    Notifications
-                    <hr/>
-                </div>
-
-                <div class="profile-unit">
-                    {% if notifications|length > 0 %}
-                        {% for notification in notifications %}
-                            <div class="well">
-
-                                <p>{{ notification.enquiry_type }}</p>
-                                <hr/>
-
-                                <p><strong><a
-                                        href="/taxonomy/{{ notification.taxonomyItem.id }}">{{ notification.taxonomyItem.name }}</a></strong>
-                                </p>
-
-                                <p><i class="icon-arrow-up"></i> {{ notification.taxonomyItem.category }}</p>
-
-                                <p style="font-style: italic; font-size: 1em">{{ notification.additionalNotes }}</p>
-
-                                <p style="font-size: 0.9em">
-                                    Submitted by <a
-                                        href="/profile/{{ notification.requester.username }}">{{ notification.requester.username }}</a>
-                                </p>
-
-
-                            </div>
-                            <div class="clearfix"></div>
-
-                        {% endfor %}
-                    {% else %}
-                        <p>Move along, nothing to see here.</p><br/>
-                    {% endif %}
-                </div>
-            </div>
-            {#            end approvals section#}
-
             {% if user.is_superuser and approvals|length > 0 %}
                 <div class="clearfix"></div>
                 {#            start notifications section#}
@@ -296,6 +261,41 @@
                                 <a onclick="showConfirmWindow({{ taxonomyItem.id }})" class="btn btn-small btn-danger">Revoke
                                     ownership</a>
                             {% endif %}
+
+                            {% for enquiry in notifications %}
+                                {% ifequal enquiry.taxonomyItem.id taxonomyItem.id %}
+                                    <div class="clearfix"></div>
+                                    <br/>
+                                    <div class="well well-darker">
+
+                                        <p style="font-size: 1.1em">{{ enquiry.enquiry_type }} -
+                                            <a href="/profile/{{ enquiry.requester.username }}">{{ enquiry.requester.username }}</a>
+                                        </p>
+                                        <hr/>
+
+                                         {% if enquiry.reference %}
+                                            <p style="font-size: 1em"><strong>Reference</strong>: {{ enquiry.reference.title }} </p>
+                                        {% endif %}
+
+                                        <p>  {% if enquiry.reference %}<i class="icon-arrow-up"></i>{% endif %}<strong><a
+                                                href="/taxonomy/{{ enquiry.taxonomyItem.id }}">{{ enquiry.taxonomyItem.name }}</a></strong>
+                                        </p>
+
+                                        <p><i class="icon-arrow-up"></i> {{ enquiry.taxonomyItem.category }}</p>
+
+
+
+                                        <p style="font-style: italic; font-size: 1em">{{ enquiry.additionalNotes }}</p>
+
+                                        <a onclick="showEnquiryResponseWindow('approved', '{{ enquiry.id }}')"
+                                           class="btn btn-mini btn-success">Approve</a> <a
+                                            onclick="showEnquiryResponseWindow('rejected', '{{ enquiry.id }}')"
+                                            class="btn btn-mini btn-danger">Reject</a>
+                                    </div>
+                                {% endifequal %}
+
+
+                            {% endfor %}
                         </div>
                         <div class="clearfix"></div>
                     {% endfor %}
@@ -338,6 +338,34 @@
             </div>
             <div class="modal-footer" id="button">
                 <input name="commit" type="submit" class="btn btn-danger" value="Submit Request">
+            </div>
+        </form>
+    </div>
+
+    <div id="queryResponseModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="queryResponse"
+         aria-hidden="true">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3>Response to Suggestion</h3>
+        </div>
+        <form accept-charset="UTF-8" action="" class="formbody" id="queryResponseForm"
+              method="post">
+            <div class="modal-body">
+                <div class="modal-body" id="booking">
+                    {% csrf_token %}
+                    <div class="control-group">
+
+                        <label for="comments" class="control-label">Insert any further information you want to provide
+                            to the requester.</label>
+
+                        <div class="controls">
+                            <textarea name="message" maxlength="5000" rows=10 class="span6"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" id="button">
+                <input name="commit" type="submit" class="btn btn-danger" value="Submit Response">
             </div>
         </form>
     </div>

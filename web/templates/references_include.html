@@ -34,26 +34,32 @@
 
                 </div>
 
-                <div style="padding-top:5px">
+                {% if owners != 0 %}
+                    <div style="padding-top:5px">
                         <a onclick="showSuggestBox('taxonomy')" class="btn">Suggest addition/correction</a>
-                </div>
+                    </div>
+                {% endif %}
 
 
                 <div style="padding-top:5px">
-                    <a href="/taxonomy/{{ taxonomy.id}}/download" class="btn btn-inverse" style="width: 82%">Download Bibtex</a>
+                    <a href="/taxonomy/{{ taxonomy.id }}/download" class="btn btn-inverse" style="width: 82%">Download
+                        Bibtex</a>
                 </div>
             </div>
 
             <div class="span10">
                 {% for reference in references %}
                     <div class="well taxonomy-well reference_box">
+
                         <p class="title">{{ reference.title }}</p>
 
                         <p class="authors">{{ reference.authors }}</p>
 
                         <p><span class="journal">{{ reference.journal }}</span>{% if reference.year > 0 %}
                             <span class="year">, {{ reference.year }}</span>{% endif %} </p>
-                        <a onclick="showBibex({{ reference.bibtex }})" class="btn btn-small">Bibtex</a>
+                        <a onclick="showBibex({{ reference.bibtex }})" class="btn btn-small">Bibtex</a> {% if owners != 0 %}<a
+                            onclick="showSuggestBox('reference', '{{ reference.id }}')"
+                            class="btn btn-danger btn-small">Report error</a>{% endif %}
                     </div>
                 {% endfor %}
             </div>
