@@ -15,23 +15,35 @@ urlpatterns = patterns('',
 
                        url(r'^accounts/', include('registration.backends.default.urls'), name='accounts'),
                        url(r'^profiles/', include('profiles.urls'), name='profiles'),
-                       url(r'^$', 'web.views.index', name='index'),
+
+                       url(r'^$', 'web.views.index', name='community-home'),
                        url(r'^accounts/profile', 'web.views.profile', name='profile'),
+                       url(r'^profile/(\w+)', 'web.views.public_profile', name='pub_profile'),
                        url(r'^accounts/logout', 'web.views.logout', name='logout'),
                        url(r'^accounts/login', 'web.views.login', name='login'),
                        url(r'^accounts/register', 'web.views.register', name='register'),
 
+                       url(r'^taxonomy/add/$', 'web.views.taxonomy_add', name='add_taxonomy'),
+                       url(r'^taxonomy/edit/(?P<taxonomy_id>\d+)/$', 'web.views.taxonomy_edit', name='edit_taxonomy'),
+
+                       url(r'^taxonomy/add/action/$', 'web.views.taxonomy_add_action', name='add_taxonomy_action'),
+                       url(r'^taxonomy/edit/action/$', 'web.views.taxonomy_edit_action', name='edit_taxonomy_action'),
+
+                       url(r'^reference/add/file$', 'web.views.reference_add_upload_file', name='upload_bibtex'),
+                       url(r'^reference/add/text$', 'web.views.reference_add_upload_text', name='upload_bibtex_text'),
+
                        url(r'^taxonomy/$', 'web.views.taxonomy', name='taxonomy'),
                        url(r'^taxonomy_alpha/$', 'web.views.taxonomy_alpha', name='taxonomy_alpha'),
                        url(r'^taxonomy/(?P<taxonomy_id>\d+)/$', 'web.views.taxonomy_detail', name='taxonomy_detail'),
-                       url(r'^taxonomy/(?P<taxonomy_id>\d+)/download$', 'web.views.taxonomy_download', name='taxonomy_download'),
+                       url(r'^taxonomy/download/(\d+)/$', 'web.views.taxonomy_download', name='taxonomy_download'),
+
                        url(r'^request_ownership/(?P<taxonomy_id>\d+)$', 'web.views.request_ownership_send', name='request_ownership'),
                        url(r'^request_ownership/response/(?P<approval_id>\d+)$', 'web.views.request_ownership_response', name='request_ownership_response'),
                        url(r'^revoke_ownership/(?P<taxonomy_id>\d+)$', 'web.views.revoke_ownership', name='revoke_ownership'),
 
                        url(r'^enquiry/(?P<taxonomy_id>\d+)/$', 'web.views.handleTaxonomyEnquiry', name='enquiry'),
-                       url(r'^enquiry/(?P<taxonomy_id>\d+)/(?P<reference_id>\d+)/$', 'web.views.handleReferenceEnquiry', name='enquiry'),
-                       url(r'^enquiry/(?P<decision>\w+)/(?P<enquiry_id>\d+)/$', 'web.views.respondToTaxonomyEnquiry', name='enquiry'),
+                       url(r'^enquiry/(?P<taxonomy_id>\d+)/(?P<reference_id>\d+)/$', 'web.views.handleReferenceEnquiry', name='enquiry_reference'),
+                       url(r'^enquiry/(?P<decision>\w+)/(?P<enquiry_id>\d+)/$', 'web.views.respondToTaxonomyEnquiry', name='enquiry_decision'),
 
                        url(r'^contact/$', 'web.views.contact', name='contact'),
                        url(r'^references/$', 'web.views.references', name='references'),
@@ -42,5 +54,5 @@ urlpatterns = patterns('',
                        #url(r'^web/references/(?P<reference_id>\d+)/$', 'web.views.reference_detail')
 
                        # Uncomment the next line to enable the admin:
-                       url(r'^admin/', include(admin.site.urls)),
+                       url(r'^admin/', include(admin.site.urls), name='admin'),
 )

@@ -4,46 +4,52 @@
 
         <div class="row-fluid">
             <div class="span2">
-                <div class="well well-small">
-                    <!-- sort -->
-                    <div>
-                        <p><h4>Search &amp; Filter</h4></p>
-                        <div class="btn-group">
-                            <a class="btn dropdown-toggle span12" data-toggle="dropdown" href="#" align="right">
-                                Sort by
-                                <span class="caret"></span>
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li><a href="{{ request.path }}?sort=authors">Author list</a></li>
-                                <li><a href="{{ request.path }}?sort=year">Year</a></li>
-                                <li><a href="{{ request.path }}?sort=journal">Journal</a></li>
-                                <li><a href="{{ request.path }}?sort=title">Title</a></li>
-                            </ul>
+                <div id="controls">
+                    <div class="well well-small">
+                        <!-- sort -->
+                        <div>
+                            <p><h4>Search &amp; Filter</h4></p>
+                            <div class="btn-group">
+                                <a class="btn dropdown-toggle span12" data-toggle="dropdown" href="#" align="right">
+                                    Sort by
+                                    <span class="caret"></span>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="{{ request.path }}?sort=authors">Author list</a></li>
+                                    <li><a href="{{ request.path }}?sort=year">Year</a></li>
+                                    <li><a href="{{ request.path }}?sort=journal">Journal</a></li>
+                                    <li><a href="{{ request.path }}?sort=title">Title</a></li>
+                                </ul>
+                            </div>
+                            <!-- filter -->
+                            <div style="padding-top:5px">
+                                <br/><br/>
+
+                                <form id="search" action="/search">
+                                    <input id="referencefilter" style="width:90%;" type="text" name="q"
+                                           placeholder="Type to filter...">
+                                </form>
+                            </div>
                         </div>
-                        <!-- filter -->
+                        <!-- note -->
+
+                    </div>
+
+                    {% if owners != 0 %}
                         <div style="padding-top:5px">
-                            <br/><br/>
 
-                            <form id="search" action="/search">
-                                <input id="referencefilter" style="width:90%;" type="text" name="q"
-                                       placeholder="Type to filter...">
-                            </form>
+                            {% url 'enquiry' taxonomy.id as suggest_url %}
+                            <a onclick="showSuggestBox('taxonomy', '{{ suggest_url }}')" class="btn">Suggest
+                                addition/correction</a>
                         </div>
-                    </div>
-                    <!-- note -->
+                    {% endif %}
 
-                </div>
 
-                {% if owners != 0 %}
                     <div style="padding-top:5px">
-                        <a onclick="showSuggestBox('taxonomy')" class="btn">Suggest addition/correction</a>
+
+                        <a href="{% url 'taxonomy_download' taxonomy.id %}" class="btn btn-inverse" style="width: 82%">Download
+                            Bibtex</a>
                     </div>
-                {% endif %}
-
-
-                <div style="padding-top:5px">
-                    <a href="/taxonomy/{{ taxonomy.id }}/download" class="btn btn-inverse" style="width: 82%">Download
-                        Bibtex</a>
                 </div>
             </div>
 
@@ -56,10 +62,17 @@
                         <p class="authors">{{ reference.authors }}</p>
 
                         <p><span class="journal">{{ reference.journal }}</span>{% if reference.year > 0 %}
-                            <span class="year">, {{ reference.year }}</span>{% endif %} </p>
-                        <a onclick="showBibex({{ reference.bibtex }})" class="btn btn-small">Bibtex</a> {% if owners != 0 %}<a
-                            onclick="showSuggestBox('reference', '{{ reference.id }}')"
-                            class="btn btn-danger btn-small">Report error</a>{% endif %}
+                            <span class="year">{% if reference.journal %}
+                                , {% endif %}{{ reference.year }}</span>{% endif %} </p>
+
+                        {% if reference.url %}
+                            <a href="{{ reference.url }}" target="_blank" class="btn btn-small">View Paper</a>
+                        {% endif %}
+                        <a onclick="showBibex({{ reference.bibtex }})" class="btn btn-small">Bibtex</a>
+                        {% if owners != 0 %}
+                            {% url 'enquiry_reference' taxonomy.id reference.id as suggest_reference_url %}
+                            <a onclick="showSuggestBox('reference', '{{ suggest_reference_url }}')"
+                               class="btn btn-danger btn-small">Report error</a>{% endif %}
                     </div>
                 {% endfor %}
             </div>

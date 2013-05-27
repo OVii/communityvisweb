@@ -1,15 +1,18 @@
 """
  Views - see urls.py for the mappings from URLs to the defs here.
 """
+from datetime import datetime
 import hashlib
 import urllib2
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 from django.contrib.sites.models import Site
 
 from django.http import HttpResponse, HttpResponseRedirect
-from django.template import Context, RequestContext, loader
+from django.template import RequestContext
 from viscommunityweb.settings import EMAIL_HOST_USER, SITE_ID
-from web.models import TaxonomyArea, TaxonomyCategory, TaxonomyItem, Reference, UserProfile, OwnershipRequest, Enquiry
+from web.bibtex_utils.import_utils import saveFile, saveTextToFile
+from web.models import TaxonomyCategory, TaxonomyItem, Reference, UserProfile, OwnershipRequest, Enquiry
 from django.shortcuts import render_to_response, get_object_or_404
 from django.core.mail import send_mail
 import os
@@ -18,6 +21,8 @@ import taxonomy_backend, reference_backend
 import json
 
 # couple of globals
+from web.reference_import import bibtex_import
+
 os.environ['DJANGO_SETTINGS_MODULE'] = "viscommunityweb.settings"
 email_prefix = "[OXVIS] "
 email_to = "eamonn.maguire@oerc.ox.ac.uk"
@@ -25,7 +30,7 @@ email_to = "eamonn.maguire@oerc.ox.ac.uk"
 
 # index page
 def index(request):
-    recent_items = TaxonomyItem.objects.order_by('last_updated')[:3]
+    recent_items = TaxonomyItem.objects.order_by('-last_updated')[:3]
     return render_to_response("templates/index.html", {'recent_taxonomy_items': recent_items},
                               context_instance=RequestContext(request))
 
@@ -214,13 +219,56 @@ def account(request):
 
 
 def login(request):
-    return render_to_response("registration/login.html",context_instance=RequestContext(request))
+    return render_to_response("registration/login.html", context_instance=RequestContext(request))
+
 
 def logout(request):
-    return render_to_response("registration/logout.html",context_instance=RequestContext(request))
+    return render_to_response("registration/logout.html", context_instance=RequestContext(request))
+
 
 def register(request):
-    return render_to_response("registration/register.html",context_instance=RequestContext(request))
+    return render_to_response("registration/register.html", context_instance=RequestContext(request))
+
+
+def public_profile(request, username):
+    userQuery = User.objects.filter(username=username)
+
+    requestedUser = None
+    loggedInUser = False
+
+    if len(userQuery) > 0:
+        requestedUser = userQuery.get(username=username)
+        loggedInUser = (requestedUser == request.user)
+    else:
+        return render_to_response("information.html",
+                                  {"header": "User does not exist",
+                                   "message": "No user with the username " + username + " exists."},
+                                  context_instance=RequestContext(request))
+
+    profile = None
+
+    try:
+        if not requestedUser.get_profile() is None:
+            profile = requestedUser.get_profile()
+    except:
+        profile = UserProfile(user=requestedUser)
+        profile.save()
+
+    gravatarMD5 = None
+    if profile.gravatarEmail:
+        gravatarMD5 = hashlib.md5(profile.gravatarEmail).hexdigest()
+
+    taxonomyItems = []
+
+    taxonomyItemsForUser = TaxonomyItem.objects.filter(owners__username=requestedUser.username)
+    for userTaxonomyItem in taxonomyItemsForUser:
+        taxonomyItems.append(userTaxonomyItem)
+
+    return render_to_response("profile.html",
+                              {"loggedInUser": loggedInUser, "profile": profile, "gravatar": gravatarMD5,
+                               'approvals': [], 'taxonomyItems': taxonomyItems, 'notifications': []},
+                              context_instance=RequestContext(request))
+
 
 def profile(request):
     requestedUser = None
@@ -369,3 +417,99 @@ def respondToTaxonomyEnquiry(request, decision, enquiry_id):
                                   'messageTitle': 'Response lodged.',
                                   'messageBody': 'Response lodged and suggester has been emailed at ' + enquiryItem.requester.email + '.'},
                               context_instance=RequestContext(request))
+
+
+def taxonomy_add(request):
+    categories = TaxonomyCategory.objects.all()
+    return render_to_response("templates/taxonomy_edit_base.html", {'categories': categories},
+                              context_instance=RequestContext(request))
+
+
+def taxonomy_edit(request, taxonomy_id):
+    categories = TaxonomyCategory.objects.all()
+    taxonomyItem = TaxonomyItem.objects.filter(pk=taxonomy_id).get(pk=taxonomy_id)
+    return render_to_response("templates/taxonomy_edit_base.html", {'taxonomy': taxonomyItem, 'categories': categories},
+                              context_instance=RequestContext(request))
+
+
+@login_required()
+def taxonomy_add_action(request):
+    name = request.POST.get('taxonomy_name', None)
+    category = request.POST.get('category_name', None)
+    detail = request.POST.get('description', None)
+
+    print 'Name ' + name + " - Category " + category
+
+    categoryObject, existed = TaxonomyCategory.objects.get_or_create(name=category)
+    taxonomy = TaxonomyItem(name=name, category=categoryObject, detail=detail, last_updated=datetime.now())
+    taxonomy.last_updated_by = request.user
+
+    taxonomy.save()
+
+    return taxonomy_detail(request, taxonomy.id)
+
+
+@login_required()
+def taxonomy_edit_action(request):
+    taxonomyId = request.POST.get('taxonomy_id', None)
+    name = request.POST.get('taxonomy_name', None)
+    category = request.POST.get('category_name', None)
+    detail = request.POST.get('description', None)
+
+    categoryObject, existed = TaxonomyCategory.objects.get_or_create(name=category)
+
+    taxonomyItem = TaxonomyItem.objects.filter(pk=taxonomyId).get(pk=taxonomyId)
+    taxonomyItem.name = name
+    taxonomyItem.category = categoryObject
+    taxonomyItem.detail = detail
+    taxonomyItem.last_updated = datetime.now()
+    taxonomyItem.last_updated_by = request.user
+
+    taxonomyItem.save()
+
+    return taxonomy_detail(request, taxonomyId)
+
+
+def reference_add_upload_file(request):
+    taxonomy_id = request.POST.get('taxonomy_id', None)
+
+    taxonomyItem = TaxonomyItem.objects.filter(pk=taxonomy_id).get(pk=taxonomy_id)
+
+    bibtex_file_upload = request.FILES['bibtex_file']
+
+    try:
+        bibtextFile = saveFile(bibtex_file_upload)
+        bibtex_import(bibtextFile, taxonomyItem)
+        taxonomyItem.last_updated = datetime.now()
+        taxonomyItem.save()
+        return HttpResponseRedirect("/taxonomy/" + taxonomy_id)
+    except Exception, e:
+        return render_to_response("templates/infopage.html",
+                                  {
+                                      'messageTitle': 'Error in bibtex import.',
+                                      'messageBody': 'We\'ve not been able to import the file you selected. Please ensure it\'s valid.\n\n' + e.message},
+                                  context_instance=RequestContext(request))
+
+
+def reference_add_upload_text(request):
+    taxonomy_id = request.POST.get('taxonomy_id', None)
+
+    taxonomyItem = TaxonomyItem.objects.filter(pk=taxonomy_id).get(pk=taxonomy_id)
+
+    bibtex_contents = request.POST.get('bibtex', '')
+
+    try:
+        bibtextFile = saveTextToFile(bibtex_contents)
+        bibtex_import(bibtextFile, taxonomyItem)
+        taxonomyItem.last_updated = datetime.now()
+        taxonomyItem.save()
+        return HttpResponseRedirect("/taxonomy/" + taxonomy_id)
+
+    except Exception, e:
+        return render_to_response("templates/infopage.html",
+                                  {
+                                      'messageTitle': 'Error in bibtex import.',
+                                      'messageBody': 'We\'ve not been able to import the text you entered. Please ensure it\'s valid bibtex.\n\n' + e.message},
+                                  context_instance=RequestContext(request))
+
+

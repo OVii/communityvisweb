@@ -36,6 +36,7 @@ class Reference(models.Model):
     title = models.TextField(default="")
     journal = models.CharField(max_length=256, default="")
     year = models.IntegerField(max_length=4, null=True)
+    url = models.CharField(max_length=256, default="")
 
     authors = models.ManyToManyField(ReferenceAuthor, related_name="authors+")
     bibtex = models.CharField(max_length=2048)

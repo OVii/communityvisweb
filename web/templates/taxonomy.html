@@ -18,6 +18,7 @@
 
         <p>
             <button class="btn btn-large" type="button">I have a suggestion</button>
+            <a href="{% url 'add_taxonomy' %}" class="btn btn-large" type="button">Add a new taxonomy</a>
         </p>
     </div>
 
@@ -37,7 +38,7 @@
                         {% else %}
                             <span class="badge badge-important taxonomy-item">
                         {% endif %}
-						<a href="{% url 'taxonomy_detail' item.id %}" "
+						<a href="{% url 'taxonomy_detail' item.id %}"
                        style="color:white">{{ item.name }}</a></span>
                     {% endfor %}
                 </p>

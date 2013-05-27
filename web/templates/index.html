@@ -108,7 +108,7 @@
             <strong>Recently updated taxonomy items</strong>
             <ul class="recent-items">
                 {% for item in recent_taxonomy_items %}
-                    <li>{{ item }} : <i>{{ item.short_description }}</i></li>
+                    <li><a href="{% url 'taxonomy_detail' item.id %}">{{ item }} </a>  - {{ item.short_description }}</li>
                 {% endfor %}
             </ul>
         </div>

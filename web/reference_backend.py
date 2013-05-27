@@ -48,6 +48,7 @@ class SortableReference():
         self.title = ref.title
         self.journal = ref.journal
         self.year = ref.year
+        self.url = ref.url
 
         # get list of attribute objects for reference
         self.attrs = dict()

@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <br/>
+    <div class="hero-unit">
+        <h4>New taxonomy item</h4>
+
+        <form action="{% if taxonomy %}{% url 'edit_taxonomy_action' %}{% else %}{% url 'add_taxonomy_action' %}{% endif %}"
+              class="formbody" method="post">
+            {% csrf_token %}
+
+            <input id="taxonomy_id" class="text form-text span6" name="taxonomy_id" size="20" type="hidden"
+                   value="{{ taxonomy.id }}">
+            <input name="utf8" type="hidden" class="text" value="✓"><input
+                name="_method" type="hidden" value="put"><input name="authenticity_token" type="hidden">
+
+            <div><label for="taxonomy_name">Name</label>
+                <input id="taxonomy_name" class="text form-text span6" name="taxonomy_name" size="20" type="text"
+                       value="{{ taxonomy.name }}">
+            </div>
+
+            <div><label for="category_name">Parent Category</label>
+                <select id="category_name" name="category_name" class="span6">
+                    {% for category in categories %}
+                        <option {% ifequal taxonomy.category.name category.name %}selected {% endifequal %}>{{ category.name }} </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div><label for="description">Description</label>
+                <textarea id="description" name="description" class="span6" rows="5">{{ taxonomy.detail }}</textarea>
+            </div>
+
+            <div><input name="commit" type="submit" class="btn btn-inverse" value="{% if taxonomy %}Update{% else %}Add{% endif %} Taxonomy Item"></div>
+        </form>
+    </div>
+{% endblock %}

@@ -12,117 +12,116 @@
         }
     </style>
 
-    {% ifnotequal profile.orcid "" %}
-        <script type="text/javascript">
 
-        function showResponse(approvalId) {
-            $("#responseForm").attr("action", "/request_ownership/response/" + approvalId);
+    <script type="text/javascript">
+
+        function showResponseWindow(url) {
+            $("#responseForm").attr("action", url);
             $('#responseModal').modal('show');
         }
 
-        function showConfirmWindow(taxonomyId) {
-            $("#confirmRemove").attr("action", "/revoke_ownership/" + taxonomyId);
+        function showRevokeConfirmWindow(url) {
+            $("#confirmRemove").attr("action", url);
             $('#confirmRemoveModal').modal('show');
         }
 
-        function showEnquiryResponseWindow(response, enquiryId) {
-            $("#queryResponseForm").attr("action", "/enquiry/" + response + "/" + enquiryId + "/");
+        function showEnquiryResponseWindow(url) {
+            $("#queryResponseForm").attr("action", url);
             $('#queryResponseModal').modal('show');
         }
+        {% ifnotequal profile.orcid "" %}
+            $(document).ready(function () {
+                $.ajax({
+                    type: 'GET',
+                    url: '{% url 'orcid' %}?orcid={{ profile.orcid }}',
+                    dataType: 'json'
+                }).done(function (res) {
 
-        $(document).ready(function () {
-            $.ajax({
-                type: 'GET',
-                url: '/orcid?orcid={{ profile.orcid }}',
-                dataType: 'json'
-            }).done(function (res) {
+                            var html = '<div class="profile-unit" id="orcid"><p>';
 
-                        var html = '<div class="profile-unit" id="orcid"><p>';
+                            var orcidBio = res["orcid-profile"]["orcid-bio"];
+                            var personalDetails = orcidBio["personal-details"];
 
-                        var orcidBio = res["orcid-profile"]["orcid-bio"];
-                        var personalDetails = orcidBio["personal-details"];
-
-                        html += personalDetails["given-names"].value + ' ' + personalDetails["family-name"].value + '<br/>';
-
-
-                        var biography = '<p>No biography information available.</p>';
-                        if (orcidBio["biography"]) {
-                            biography = orcidBio["biography"]["value"];
-                        }
+                            html += personalDetails["given-names"].value + ' ' + personalDetails["family-name"].value + '<br/>';
 
 
-                        html += '<span style="font-size:0.7em">' + biography + "</span><br/>";
-                        if (orcidBio['researcher-urls']) {
-                            var urls = orcidBio['researcher-urls']["researcher-url"];
-
-                            if (urls.length > 0) {
-                                html += '<p><i class="icon-globe"></i> Websites</p>'
+                            var biography = '<p>No biography information available.</p>';
+                            if (orcidBio["biography"]) {
+                                biography = orcidBio["biography"]["value"];
                             }
 
-                            for (var urlIndex in urls) {
-                                researchURL = urls[urlIndex];
-                                var url = researchURL.url.value;
-                                if (url.indexOf("http") == -1) {
-                                    url = "http://" + url;
+
+                            html += '<span style="font-size:0.7em">' + biography + "</span><br/>";
+                            if (orcidBio['researcher-urls']) {
+                                var urls = orcidBio['researcher-urls']["researcher-url"];
+
+                                if (urls.length > 0) {
+                                    html += '<p><i class="icon-globe"></i> Websites</p>'
                                 }
-                                html += '<a href="' + url + '" target="_blank" class="btn btn-small btn-link">' + researchURL["url-name"].value + '</a> <br/>';
-                            }
 
-                        }
-
-                        html += '<br/><br/><p><a href="http://orcid.org/{{ profile.orcid }}" target="_blank">View ' + personalDetails["given-names"].value + 's profile on ORCID.' + '</a></p><br/>';
-
-                        html += '</p></div>';
-
-                        $("#profile-spinner").hide();
-                        $("#orcid").append(html);
-
-                        var publicationHTML = '<div class="profile-unit" id="publication-content">';
-
-                        if (res["orcid-profile"]["orcid-activities"]) {
-                            var orcidWorks = res["orcid-profile"]["orcid-activities"]["orcid-works"]["orcid-work"];
-
-                            var count = 0;
-                            for (var publicationIndex in orcidWorks) {
-                                var publicationTitle = orcidWorks[publicationIndex]["work-title"]["title"]["value"];
-                                var externalLinks = orcidWorks[publicationIndex]["work-external-identifiers"]["work-external-identifier"];
-                                publicationHTML += '<p>' + publicationTitle;
-
-                                for (var linkIndex in externalLinks) {
-                                    if (externalLinks[linkIndex]["work-external-identifier-type"] === "DOI") {
-                                        publicationHTML += '<br/><a href="http://dx.doi.org/' + externalLinks[linkIndex]["work-external-identifier-id"]["value"] + '" class="" target="_blank">Read the paper</a>';
+                                for (var urlIndex in urls) {
+                                    researchURL = urls[urlIndex];
+                                    var url = researchURL.url.value;
+                                    if (url.indexOf("http") == -1) {
+                                        url = "http://" + url;
                                     }
+                                    html += '<a href="' + url + '" target="_blank" class="btn btn-small btn-link">' + researchURL["url-name"].value + '</a> <br/>';
                                 }
-
-                                publicationHTML += '</p><hr/>';
-
-
-                                if (count >= 2) {
-                                    publicationHTML += '<p><a href="http://orcid.org/{{ profile.orcid }}" target="_blank">View the rest here</a></p>';
-                                    break;
-                                }
-                                count += 1;
 
                             }
-                        } else {
-                            publicationHTML += '<p>No publications available in this ORCID profile.</p>'
-                        }
 
-                        publicationHTML += '</div>';
-                        $("#publication-spinner").hide();
-                        $("#publication-content").append(publicationHTML);
+                            html += '<br/><br/><p><a href="http://orcid.org/{{ profile.orcid }}" target="_blank">View ' + personalDetails["given-names"].value + 's profile on ORCID.' + '</a></p><br/>';
+
+                            html += '</p></div>';
+
+                            $("#profile-spinner").hide();
+                            $("#orcid").append(html);
+
+                            var publicationHTML = '<div class="profile-unit" id="publication-content">';
+
+                            if (res["orcid-profile"]["orcid-activities"]) {
+                                var orcidWorks = res["orcid-profile"]["orcid-activities"]["orcid-works"]["orcid-work"];
+
+                                var count = 0;
+                                for (var publicationIndex in orcidWorks) {
+                                    var publicationTitle = orcidWorks[publicationIndex]["work-title"]["title"]["value"];
+                                    var externalLinks = orcidWorks[publicationIndex]["work-external-identifiers"]["work-external-identifier"];
+                                    publicationHTML += '<p>' + publicationTitle;
+
+                                    for (var linkIndex in externalLinks) {
+                                        if (externalLinks[linkIndex]["work-external-identifier-type"] === "DOI") {
+                                            publicationHTML += '<br/><a href="http://dx.doi.org/' + externalLinks[linkIndex]["work-external-identifier-id"]["value"] + '" class="" target="_blank">Read the paper</a>';
+                                        }
+                                    }
+
+                                    publicationHTML += '</p><hr/>';
+
+                                    if (count >= 4) {
+                                        publicationHTML += '<p><a href="http://orcid.org/{{ profile.orcid }}" target="_blank">View the rest here</a></p>';
+                                        break;
+                                    }
+                                    count += 1;
+
+                                }
+                            } else {
+                                publicationHTML += '<p>No publications available in this ORCID profile.</p>'
+                            }
+
+                            publicationHTML += '</div>';
+                            $("#publication-spinner").hide();
+                            $("#publication-content").append(publicationHTML);
 
 
-                    }).
-                    fail(function (res) {
-                        console.log('Failed to get ORCID Profile for {{ profile.orcid }}.');
-                        console.log(res)
-                    })
+                        }).
+                        fail(function (res) {
+                            console.log('Failed to get ORCID Profile for {{ profile.orcid }}.');
+                            console.log(res)
+                        })
 
-        });
-    {% endifnotequal %}
+            });
+        {% endifnotequal %}
 
-</script>
+    </script>
 {% endblock %}
 {% block content %}
 
@@ -132,17 +131,19 @@
         </div>
 
         <div id="username">
-            {{ user.username }}
+            {{ profile.user.username }}
         </div>
 
         <div class="pull-right" id="options">
-            <a class="btn btn-info" href='/profiles/edit'>Expand Profile</a>
-            <a class="btn" href='/profile/{{ user.username }}'>Public Profile</a>
-            <a class="btn" href='/accounts/password/reset/'>Reset Password
-            </a>
+            {% if loggedInUser %}
+                <a class="btn btn-info" href='/profiles/edit'>Expand Profile</a>
+                <a class="btn" href='/profile/{{ profile.user.username }}'>Public Profile</a>
+                <a class="btn" href='/accounts/password/reset/'>Reset Password
+                </a>
+            {% endif %}
 
-            {% if profile.user.is_authenticated and profile.user.is_superuser %}
-                <a class="btn" href='/admin/'>Administration pages</a>
+            {% if user.is_authenticated and user.is_superuser %}
+                <a class="btn" href='/admin'>Administration pages</a>
             {% endif %}
 
         </div>
@@ -158,7 +159,7 @@
                 <div id="orcid">
                     {% ifnotequal profile.orcid "" %}
                         <span id="profile-spinner" align="center">
-                            <p><img align="center" src="{{ STATIC_URL }}img/static_img/profile/spinner.gif"/><br/><br/>
+                            <p><img align="center" src="{{ STATIC_URL }}img/static_img/profile/ajax-loader.gif"/><br/><br/>
                                 Loading profile from ORCID
                             </p>
                         </span>
@@ -185,7 +186,7 @@
                 <div id="publication-content">
                     {% ifnotequal profile.orcid "" %}
                         <span id="publication-spinner" align="center">
-                    <p><img align="center" src="{{ STATIC_URL }}img/static_img/profile/spinner.gif"/><br/><br/>
+                    <p><img align="center" src="{{ STATIC_URL }}img/static_img/profile/ajax-loader.gif"/><br/><br/>
                         Loading publications from ORCID</p>
                 </span>
                     {% else %}
@@ -230,7 +231,9 @@
 
                                 <a href="/taxonomy/{{ approval.taxonomyItem.id }}" target="_blank" class="btn">View
                                     Taxonomy Item</a>
-                                <a onclick="showResponse({{ approval.id }})" class="btn btn-success">Respond</a>
+                                {% url 'request_ownership_response' approval.id as approval_url %}
+                                <a onclick="showResponseWindow('{{ approval_url }}')"
+                                   class="btn btn-success">Respond</a>
                             </div>
                             <div class="clearfix"></div>
                         {% endfor %}
@@ -258,7 +261,8 @@
 
 
                             {% if loggedInUser %}
-                                <a onclick="showConfirmWindow({{ taxonomyItem.id }})" class="btn btn-small btn-danger">Revoke
+                                {% url 'revoke_ownership' taxonomyItem.id as revoke_url %}
+                                <a onclick="showRevokeConfirmWindow({{ revoke_url }})" class="btn btn-small btn-danger">Revoke
                                     ownership</a>
                             {% endif %}
 
@@ -273,23 +277,24 @@
                                         </p>
                                         <hr/>
 
-                                         {% if enquiry.reference %}
-                                            <p style="font-size: 1em"><strong>Reference</strong>: {{ enquiry.reference.title }} </p>
+                                        {% if enquiry.reference %}
+                                            <p style="font-size: 1em">
+                                                <strong>Reference</strong>: {{ enquiry.reference.title }} </p>
                                         {% endif %}
 
-                                        <p>  {% if enquiry.reference %}<i class="icon-arrow-up"></i>{% endif %}<strong><a
-                                                href="/taxonomy/{{ enquiry.taxonomyItem.id }}">{{ enquiry.taxonomyItem.name }}</a></strong>
+                                        <p>{% if enquiry.reference %}<i class="icon-arrow-up"></i>{% endif %}<strong><a
+                                                href="/taxonomy/{{ enquiry.taxonomyItem.id }}">{{ enquiry.taxonomyItem.name }}</a>
+                                        </strong>
                                         </p>
 
                                         <p><i class="icon-arrow-up"></i> {{ enquiry.taxonomyItem.category }}</p>
 
 
-
                                         <p style="font-style: italic; font-size: 1em">{{ enquiry.additionalNotes }}</p>
 
-                                        <a onclick="showEnquiryResponseWindow('approved', '{{ enquiry.id }}')"
+                                        <a onclick="showEnquiryResponseWindow('{% url 'enquiry_decision' decision="approved" enquiry_id=enquiry.id %}')"
                                            class="btn btn-mini btn-success">Approve</a> <a
-                                            onclick="showEnquiryResponseWindow('rejected', '{{ enquiry.id }}')"
+                                            onclick="showEnquiryResponseWindow('{% url 'enquiry_decision' decision="rejected" enquiry_id=enquiry.id %}')"
                                             class="btn btn-mini btn-danger">Reject</a>
                                     </div>
                                 {% endifequal %}
