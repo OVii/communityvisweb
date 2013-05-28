@@ -19,7 +19,7 @@ urlpatterns = patterns('',
                        url(r'^$', 'web.views.index', name='community-home'),
                        url(r'^accounts/profile', 'web.views.profile', name='profile'),
                        url(r'^profile/(\w+)', 'web.views.public_profile', name='pub_profile'),
-                       url(r'^accounts/logout', 'web.views.logout', name='logout'),
+                       url(r'^accounts/logout', 'web.views.do_logout', name='logout'),
                        url(r'^accounts/login', 'web.views.login', name='login'),
                        url(r'^accounts/register', 'web.views.register', name='register'),
 
