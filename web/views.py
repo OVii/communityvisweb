@@ -126,6 +126,7 @@ def request_ownership_response(request, approval_id):
     responseDetail = request.POST['responseDetail']
     urlRequestedFrom = request.POST.get('postedFrom', '/')
 
+    print 'Requested from ' + urlRequestedFrom
     ownershipRequest = OwnershipRequest.objects.filter(pk=approval_id).get(pk=approval_id)
 
     taxonomyItem = ownershipRequest.taxonomyItem
@@ -157,7 +158,7 @@ def request_ownership_response(request, approval_id):
     finally:
         ownershipRequest.delete()
 
-    return HttpResponseRedirect("/community" + urlRequestedFrom)
+    return HttpResponseRedirect(urlRequestedFrom)
 
 
 @login_required
@@ -440,8 +441,8 @@ def taxonomy_add_action(request):
     name = request.POST.get('taxonomy_name', None)
     category = request.POST.get('category_name', None)
     detail = request.POST.get('description', None)
+    urlRequestedFrom = request.POST.get('postedFrom', '/')
 
-    print 'Name ' + name + " - Category " + category
 
     categoryObject, existed = TaxonomyCategory.objects.get_or_create(name=category)
     taxonomy = TaxonomyItem(name=name, category=categoryObject, detail=detail, last_updated=datetime.now())
@@ -449,7 +450,7 @@ def taxonomy_add_action(request):
 
     taxonomy.save()
 
-    return taxonomy_detail(request, taxonomy.id)
+    return HttpResponseRedirect(urlRequestedFrom)
 
 
 @login_required()
@@ -458,6 +459,7 @@ def taxonomy_edit_action(request):
     name = request.POST.get('taxonomy_name', None)
     category = request.POST.get('category_name', None)
     detail = request.POST.get('description', None)
+    urlRequestedFrom = request.POST.get('postedFrom', '/')
 
     categoryObject, existed = TaxonomyCategory.objects.get_or_create(name=category)
 
@@ -470,7 +472,7 @@ def taxonomy_edit_action(request):
 
     taxonomyItem.save()
 
-    return taxonomy_detail(request, taxonomyId)
+    return HttpResponseRedirect(urlRequestedFrom)
 
 
 def reference_add_upload_file(request):
@@ -487,7 +489,7 @@ def reference_add_upload_file(request):
         taxonomyItem.last_updated = datetime.now()
         taxonomyItem.save()
 
-        return HttpResponseRedirect("/community" + urlRequestedFrom)
+        return HttpResponseRedirect(urlRequestedFrom)
     except Exception, e:
         return render_to_response("templates/infopage.html",
                                   {
@@ -509,7 +511,7 @@ def reference_add_upload_text(request):
         bibtex_import(bibtextFile, taxonomyItem)
         taxonomyItem.last_updated = datetime.now()
         taxonomyItem.save()
-        return HttpResponseRedirect("/community" + urlRequestedFrom)
+        return HttpResponseRedirect(urlRequestedFrom)
 
     except Exception, e:
         return render_to_response("templates/infopage.html",
