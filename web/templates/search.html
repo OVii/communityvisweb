@@ -5,7 +5,7 @@
     <div class="home-content">
         <div class="row-fluid">
             <div class="search-wrapper">
-                <form id="search" action="{% url 'search' %}">
+                <form id="search" action="{{ URL_PREPENDER }}/search">
                     <input id="search-text" type="text" name="q" placeholder="Search">
                 </form>
             </div
@@ -13,29 +13,31 @@
 
         <div class="clearfix"></div>
 
-        <p>You searched for {{ searchTerm }}. There are {{ size }} results!</p>
+        <div class="hero-unit">
+            <p>You searched for <strong>{{ searchTerm }}</strong>. There are <strong>{{ size }}</strong> results!</p>
+        </div>
 
 
-              {% for reference in searchResults %}
-                 <div class="well taxonomy-well reference_box">
+        {% for reference in searchResults %}
+            <div class="well taxonomy-well reference_box">
 
-                        <p class="title">{{ reference.title }}</p>
+                <p class="title">{{ reference.title }}</p>
 
-                        <p class="authors">{{ reference.authors }}</p>
+                <p class="authors">{{ reference.authors }}</p>
 
-                        <p><span class="journal">{{ reference.journal }}</span>{% if reference.year > 0 %}
-                            <span class="year">{% if reference.journal %}
-                                , {% endif %}{{ reference.year }}</span>{% endif %} </p>
+                <p><span class="journal">{{ reference.journal }}</span>{% if reference.year > 0 %}
+                    <span class="year">{% if reference.journal %}
+                        , {% endif %}{{ reference.year }}</span>{% endif %} </p>
 
 
-                        {% if reference.url %}
-                            <a href="{{ reference.url }}" target="_blank" class="btn btn-small">View Paper</a>
-                        {% endif %}
-                        <a onclick="showBibex({{ reference.bibtex }})" class="btn btn-small">Bibtex</a>
+                {% if reference.url %}
+                    <a href="{{ reference.url }}" target="_blank" class="btn btn-small btn-yellow">Read Paper</a>
+                {% endif %}
+            <a href="{{ URL_PREPENDER }}/reference/{{ reference.id }}" class="btn btn-small">View Reference</a>
 
-                    </div>
-                {% endfor %}
 
+            </div>
+        {% endfor %}
 
 
     </div>

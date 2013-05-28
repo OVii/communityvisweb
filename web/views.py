@@ -8,6 +8,7 @@ from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib.sites.models import Site
+from django.db.models import Q
 
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext
@@ -205,12 +206,17 @@ def references(request):
 
 # search
 def search(request):
-    searchTerm = request.GET['q']
-    allReferences = Reference.objects.all()
+    searchOn = request.GET['q']
+    references = Reference.objects.filter(
+        Q(title__icontains=searchOn) |
+        Q(journal__icontains=searchOn) |
+        Q(year__icontains=searchOn) |
+        Q(bibtex__icontains=searchOn))
 
-    references = [reference_backend.SortableReference(x) for x in allReferences]
+
+    result = [reference_backend.SortableReference(x) for x in references]
     return render_to_response("templates/search.html",
-                              {"searchTerm": searchTerm, "size": len(references), "searchResults": references},
+                              {"searchTerm": searchOn, "size": len(result), "searchResults": result},
                               context_instance=RequestContext(request))
 
 
