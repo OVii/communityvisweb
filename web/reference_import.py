@@ -26,7 +26,7 @@ def get_ref(ref_key, title, bibtex):
     if not created:
         ref_key = generate_nonduplicate_key(ref_key)
         ref.entry_key = ref_key
-        ref.bibtex = bibtex
+    ref.bibtex = bibtex
     return ref
 
 

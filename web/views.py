@@ -492,8 +492,6 @@ def reference_add_upload_file(request):
     taxonomy_id = request.POST.get('taxonomy_id', None)
     urlRequestedFrom = request.POST.get('postedFrom', '/')
 
-    urlRequestedFrom = trimURL(urlRequestedFrom, 'edit') + taxonomy_id
-
     taxonomyItem = TaxonomyItem.objects.filter(pk=taxonomy_id).get(pk=taxonomy_id)
 
     bibtex_file_upload = request.FILES['bibtex_file']
