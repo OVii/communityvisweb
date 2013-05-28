@@ -1,4 +1,5 @@
 {% extends "registration/registration_base.html" %}
+
 {% block title %}{% if account %}Activation complete{% else %}Activation problem{% endif %}{% endblock %}
 {% block body %}
 
@@ -9,7 +10,7 @@
             <h1>Thanks, activation complete!</h1>
             <p>You may now login using the username and password you set at registration.</p>
             <p>
-                <a class="btn btn-info btn-large" href='{% url auth_login %}'>Login
+                <a class="btn btn-info btn-large" href='{{ URL_PREPENDER }}/accounts/login/'>Login
                 </a>
             </p>
 
