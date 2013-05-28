@@ -13,17 +13,14 @@ urlpatterns = patterns('',
                        # Uncomment the admin/doc line below to enable admin documentation:
                        # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 
-                       url(r'^accounts/', include('registration.backends.default.urls'), name='accounts'),
+                       url(r'^accounts/', include('registration.backends.default.urls')),
                        url(r'^profiles/', include('profiles.urls'), name='profiles'),
 
                        url(r'^$', 'web.views.index', name='community-home'),
                        url(r'^accounts/profile', 'web.views.profile', name='profile'),
                        url(r'^profile/(\w+)', 'web.views.public_profile', name='pub_profile'),
-                       url(r'^accounts/logout', 'web.views.do_logout', name='logout'),
-                       url(r'^accounts/login', 'web.views.login', name='login'),
-                       url(r'^accounts/register', 'web.views.register', name='register'),
 
-                       url(r'^contact/send', 'web.views.contact_send', name='contact_send'),
+
 
                        url(r'^taxonomy/add/$', 'web.views.taxonomy_add', name='add_taxonomy'),
                        url(r'^taxonomy/edit/(?P<taxonomy_id>\d+)/$', 'web.views.taxonomy_edit', name='edit_taxonomy'),
@@ -48,7 +45,8 @@ urlpatterns = patterns('',
                        url(r'^enquiry/(?P<decision>\w+)/(?P<enquiry_id>\d+)/$', 'web.views.respondToTaxonomyEnquiry', name='enquiry_decision'),
 
                        url(r'^contact/$', 'web.views.contact', name='contact'),
-                       url(r'^references/$', 'web.views.references', name='references'),
+                       url(r'^contact/send', 'web.views.contact_send', name='contact_send'),
+
                        url(r'^search/$', 'web.views.search', name='search'),
                        url(r'^account/$', 'web.views.account', name='account'),
                        url(r'^orcid$', 'web.views.orcid_profile', name='orcid'),

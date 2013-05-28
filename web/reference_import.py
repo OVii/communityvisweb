@@ -1,8 +1,11 @@
+import logging
 from pybtex.bibtex.utils import bibtex_purify
 from pybtex.database.input import bibtex as bib_in
 from pybtex.database.output import bibtex as bib_out
 from web.models import Reference, ReferenceColumn, ReferenceAttribute, ReferenceAuthor
 import StringIO
+
+logger = logging.getLogger(__name__)
 
 
 def generate_nonduplicate_key(ref_key):
@@ -73,7 +76,12 @@ def bibtex_import(filename, taxonomyItem):
                 ref_obj.journal = bibtex_purify(value)
             elif 'year' in field.lower():
                 ref_obj.year = int(value)
-            elif 'url' in field.lower():
+            elif 'url' in field.lower() or 'doi' in field.lower():
+                ref_obj.url = value
+            elif 'doi' in field.lower():
+                doiPrepender = 'http://dx.doi.org/'
+                if not value.startswith(doiPrepender):
+                    value = doiPrepender + value
                 ref_obj.url = value
 
             attr = ReferenceAttribute(column=col, value=value)
@@ -88,7 +96,12 @@ def bibtex_import(filename, taxonomyItem):
                 last = person.get_part_as_text('last')
                 lineage = person.get_part_as_text('lineage')
 
-                author, created = ReferenceAuthor.objects.get_or_create(first_name=first, last_name=last)
+                try:
+                    author, created = ReferenceAuthor.objects.get_or_create(first_name=first, last_name=last)
+                except Exception, e:
+                    logger.debug('Author ' + first + ' ' + last + ' exists in multiple places. Error is ' + e.message)
+                    author = ReferenceAuthor.objects.filter(first_name=first).filter(last_name=last).__getitem__(0)
+                    created = False
 
                 if created:
                     author.middle_name = middle
@@ -96,7 +109,7 @@ def bibtex_import(filename, taxonomyItem):
                     author.lineage = lineage
                     author.save()
 
-                if not author in ref_obj.authors:
+                if not author in ref_obj.authors.all():
                     ref_obj.authors.add(author)
 
         ref_obj.save()

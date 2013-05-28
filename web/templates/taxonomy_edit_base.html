@@ -1,12 +1,37 @@
 {% extends 'base.html' %}
 
+{% block head_additional %}
+    <script type="text/javascript">
+        function validate() {
+            var name = document.forms["taxonomy_detail_form"]["taxonomy_name"].value;
+            var details = document.forms["taxonomy_detail_form"]["description"].value;
+
+            console.log("Name" + name);
+            console.log("Details" + details);
+
+            blankName = (name === "");
+            blankDescription = (details === "");
+
+            $("#name_group").toggleClass("control-group error", blankName);
+            $("#name_help").toggleClass("hide", !blankName);
+
+            $("#description_group").toggleClass("control-group error", blankDescription);
+            $("#description_help").toggleClass("hide", !blankDescription);
+
+            return !(blankName || blankDescription);
+
+        }
+    </script>
+{% endblock %}
+
 {% block content %}
     <br/>
     <div class="hero-unit">
         <h4>New taxonomy item</h4>
 
-        <form action="{% if taxonomy %}{% url 'edit_taxonomy_action' %}{% else %}{% url 'add_taxonomy_action' %}{% endif %}"
-              class="formbody" method="post">
+        <form action="{% if taxonomy %}{{ URL_PREPENDER }}/taxonomy/edit/action/
+            {% else %}{{ URL_PREPENDER }}/taxonomy/add/action/{% endif %}"
+              class="formbody" method="post" onsubmit="return validate()" id="taxonomy_detail_form">
             {% csrf_token %}
 
             <input id="taxonomy_id" class="text form-text span6" name="taxonomy_id" size="20" type="hidden"
@@ -14,12 +39,13 @@
             <input name="utf8" type="hidden" class="text" value="✓"><input
                 name="_method" type="hidden" value="put"><input name="authenticity_token" type="hidden">
 
-            <div><label for="taxonomy_name">Name</label>
+            <div id="name_group"><label for="taxonomy_name">Name</label>
                 <input id="taxonomy_name" class="text form-text span6" name="taxonomy_name" size="20" type="text"
                        value="{{ taxonomy.name }}">
+                <span id="name_help" class="help-inline hide">Please enter a name</span>
             </div>
 
-            <div><label for="category_name">Parent Category</label>
+            <div ><label for="category_name">Parent Category</label>
                 <select id="category_name" name="category_name" class="span6">
                     {% for category in categories %}
                         <option {% ifequal taxonomy.category.name category.name %}selected {% endifequal %}>{{ category.name }} </option>
@@ -27,11 +53,13 @@
                 </select>
             </div>
 
-            <div><label for="description">Description</label>
+            <div id="description_group"><label for="description">Description</label>
                 <textarea id="description" name="description" class="span6" rows="5">{{ taxonomy.detail }}</textarea>
+                <span id="description_help" class="help-inline hide" style="vertical-align: top">Please enter a description</span>
             </div>
 
-            <div><input name="commit" type="submit" class="btn btn-inverse" value="{% if taxonomy %}Update{% else %}Add{% endif %} Taxonomy Item"></div>
+            <div><input name="commit" type="submit" class="btn btn-inverse"
+                        value="{% if taxonomy %}Update{% else %}Add{% endif %} Taxonomy Item"></div>
         </form>
     </div>
 {% endblock %}

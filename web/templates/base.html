@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-{% load url from future %}
+
 <html lang="en">
 <head>
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
     <script type="text/javascript" src="{{ STATIC_URL }}bootstrap/js/bootstrap.min.js"></script>
-    <link rel="stylesheet" href="{{ STATIC_URL }}bootstrap/css/bootstrap.css"/>
+    <link rel="stylesheet" href="{{ STATIC_URL }}bootstrap/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="{{ STATIC_URL }}css/style.css"/>
     {% block head_additional %} {% endblock %}
     <title>{% block title %}Community-driven Visualization Resource Website{% endblock %}</title>
@@ -18,30 +18,30 @@
 <body {% block body_attributes %}{% endblock %}>
 <div class="topbar">
     <div class="topbar-content" align="center">
-        <a href="{% url 'community-home' %}">
+        <a href="{{ URL_PREPENDER }}/">
             <div class="logo">Home</div>
         </a>
 
         <div class="user-account">
             {% if user.is_authenticated %}
                  {{ user.username }}
-				 <a href="{% url 'profile' %}" class="btn btn-mini account-button"><i class="icon-user"></i></a>
-				 <a href="{% url 'logout' %}" class="btn btn-mini account-button btn-yellow"><i class="icon-off icon-white"></i></a>
+				 <a href="{{ URL_PREPENDER }}/accounts/profile" class="btn btn-mini account-button"><i class="icon-user"></i></a>
+				 <a href="{{ URL_PREPENDER }}/accounts/logout" class="btn btn-mini account-button btn-yellow"><i class="icon-off icon-white"></i></a>
             {% else %}
-			<a href="{% url 'register' %}" class="btn btn account-button"><i class="icon-check"></i> Register</a>
-			<a href="{% url 'login' %}" class="btn btn account-button"><i class="icon-user"></i> Sign In</a>
+			<a href="{{ URL_PREPENDER }}/accounts/register" class="btn btn account-button"><i class="icon-check"></i> Register</a>
+			<a href="{{ URL_PREPENDER }}/accounts/login" class="btn btn account-button"><i class="icon-user"></i> Sign In</a>
             {% endif %}
 
         </div>
 
         <div class="search" style="margin-right:20px">
-			<form id="search" action="{% url 'search' %}">
+			<form id="search" action="{{ URL_PREPENDER }}/search">
                 <input id="search-text" style="width:80%" type="text" name="q" placeholder="Search References">
             </form>
         </div>
 
         <div class="menu">
-			<a href="{% url 'taxonomy' %}"" class="menu-item">
+			<a href="{{ URL_PREPENDER }}/taxonomy" class="menu-item">
                 Taxonomy
             </a>
         </div>

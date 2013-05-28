@@ -1,12 +1,6 @@
 {% extends "templates/base.html" %}
-{% load webdesign %}
-{% load url from future %}
 
 {% block title %}Log in{% endblock %}
-
-{% block head_additional %}
-
-{% endblock %}
 
 {% block content %}
 
@@ -14,19 +8,21 @@
         <p>Your username and password didn't match. Please try again.</p>
     {% endif %}
 
-    <div id="login" class="login_form" id="user_edit"  xmlns="http://www.w3.org/1999/html">
+    <div id="login" class="login_form" id="user_edit" xmlns="http://www.w3.org/1999/html">
 
         {% block alert %}
         {% endblock %}
         <div class="section-header"><span class="content-section login-section"><span
                 class="header-text"><i class="icon-user"></i> Log in</span></span>
         </div>
-        <form accept-charset="UTF-8" action="{% url 'django.contrib.auth.views.login' %}" class="formbody" id="user_edit"
+        <form accept-charset="UTF-8" action="{{ URL_PREPENDER }}/accounts/login/" class="formbody"
+              id="user_edit"
               method="post">
             {% csrf_token %}
 
             <input name="utf8" type="hidden" class="text" value="✓"><input
                 name="_method" type="hidden" value="put"><input name="authenticity_token" type="hidden">
+
             <div><label for="username">Username</label>
                 <input id="username" class="text form-text span5" name="username" size="20" type="text" value="">
             </div>
@@ -38,8 +34,8 @@
         </form>
 
         <div class="login-additional">
-            <p><a href="{% url 'auth_password_reset' %}">Forgot</a> your password? <a
-                    href="{% url 'registration_register' %}">Need an account</a>?</p>
+            <p><a href="{{ URL_PREPENDER }}/accounts/password/reset/">Forgot</a> your password? <a
+                    href="{{ URL_PREPENDER }}/accounts/register/">Need an account</a>?</p>
         </div>
 
     </div>

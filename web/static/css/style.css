@@ -131,6 +131,10 @@ body {
     border: 1px solid #D8DEE2;
 }
 
+.error-text {
+    background-color: #e9322d;
+}
+
 .login_form form input.text, .login_form form textarea, .login_form form input[type="checkbox"] {
     padding: 5px;
     border: 1px solid #D8DEE2;

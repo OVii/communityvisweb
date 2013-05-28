@@ -9,7 +9,6 @@
 </head>
 <body>
 {% load webdesign %}
-{% load url from future %}
 
 <div class="topbar-home">
     <div class="topbar-content" align="center">
@@ -17,10 +16,10 @@
         <div class="user-account">
             {% if user.is_authenticated %}
                 {{ user.username }}
-				<a href="{% url 'profile' %}" class="btn btn-mini account-button"><i class="icon-user"></i></a>
-				<a href="{% url 'logout' %}" class="btn btn-mini btn-yellow account-button"><i class="icon-off icon-white"></i></a>
+				<a href="{{ URL_PREPENDER }}/accounts/profile/" class="btn btn-mini account-button"><i class="icon-user"></i></a>
+				<a href="{{ URL_PREPENDER }}/accounts/logout/" class="btn btn-mini btn-yellow account-button"><i class="icon-off icon-white"></i></a>
             {% else %}
-			<a href="{% url 'login' %}" class="btn btn-yellow account-button"><i class="icon-user icon-white"></i> Sign In</a>
+			<a href="{{ URL_PREPENDER }}/accounts/login/" class="btn btn-yellow account-button"><i class="icon-user icon-white"></i> Sign In</a>
             {% endif %}
         </div>
 
@@ -51,7 +50,7 @@
 
     <div class="row-fluid">
         <div class="search-wrapper">
-            <form id="search" action="{% url 'search' %}">
+            <form id="search" action="{{ URL_PREPENDER }}/search">
                 <input id="search-text" type="text" name="q" placeholder="Search">
             </form>
         </div
@@ -61,7 +60,7 @@
 
     <div class="home-content">
         <div class="span10 front-item" align="center">
-			<a href="{% url 'taxonomy' %}"><img src="{{ STATIC_URL }}img/static_img/home/taxonomy.png"></a><br/>
+			<a href="{{ URL_PREPENDER }}/taxonomy"><img src="{{ STATIC_URL }}img/static_img/home/taxonomy.png"></a><br/>
         </div>
 
 
@@ -89,7 +88,7 @@
         <br/>
 
         <div class="span4 front-item offset4">
-			<a href="{% url 'contact' %}"><img src="{{ STATIC_URL }}img/static_img/home/I-want-to-volunteer.png"
+			<a href="{{ URL_PREPENDER }}/contact"><img src="{{ STATIC_URL }}img/static_img/home/I-want-to-volunteer.png"
                                      width="250px"></a>
         </div>
 
@@ -108,7 +107,7 @@
             <strong>Recently updated taxonomy items</strong>
             <ul class="recent-items">
                 {% for item in recent_taxonomy_items %}
-                    <li><a href="{% url 'taxonomy_detail' item.id %}">{{ item }} </a>  - {{ item.short_description }}</li>
+                    <li><a href="{{ URL_PREPENDER }}/taxonomy/{{ item.id }}">{{ item }} </a>  - {{ item.short_description }}</li>
                 {% endfor %}
             </ul>
         </div>

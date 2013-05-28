@@ -1,5 +1,4 @@
 # Django settings for viscommunityweb project.
-import dj_database_url
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -13,8 +12,8 @@ AUTH_PROFILE_MODULE='web.UserProfile'
 
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'biosharing.project@gmail.com'
-EMAIL_HOST_PASSWORD = 'c67WFmlu'
+EMAIL_HOST_USER = 'communityvis@gmail.com'
+EMAIL_HOST_PASSWORD = 'community_vis'
 EMAIL_PORT = 587
 EMAIL_SUBJECT_PREFIX = "[OXVIS]"
 
@@ -26,6 +25,8 @@ TEMPLATE_DIRS = (
 #"/Users/sim/Documents/VisWeb/viscommunityweb/web/"
 "/var/www/community/web/",
 )
+
+URL_PREPENDER = "/community"
 
 MANAGERS = ADMINS
 
@@ -40,6 +41,8 @@ DATABASES = {
         'PORT': '', # Set to empty string for default.
     }
 }
+
+LOGIN_REDIRECT_URL = "/community/accounts/profile/"
 
 """
 DATABASES = {'default': dj_database_url.config(default='postgres://localhost')}

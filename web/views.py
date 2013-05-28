@@ -78,7 +78,12 @@ def taxonomy_download(request, taxonomy_id):
         bibtex += reference.bibtex + "\n"
 
     response = HttpResponse(bibtex, mimetype='application/text')
-    response['Content-Disposition'] = 'attachment; filename=' + taxonomy.name + ".bib"
+
+    # this is required in Chrome due to problems with spaces and commas in file names
+    modifiedTaxonomyName = taxonomy.name.replace(r'\s', '_')
+    modifiedTaxonomyName = modifiedTaxonomyName.replace(',', '')
+
+    response['Content-Disposition'] = 'attachment; filename=' + modifiedTaxonomyName + ".bib"
     return response
 
 
@@ -334,7 +339,7 @@ def sendEmailForEnquiry(message, request, taxonomyItem):
         url = Site.objects.filter(id=SITE_ID).get(id=SITE_ID).domain
 
         email_body = "You can view this taxonomy item <a href=" + url + "/taxonomy/" \
-                     + taxonomyItem.id + ">here</a>.\n\n"
+                     + str(taxonomyItem.id) + ">here</a>.\n\n"
 
         email_body += message
 
@@ -352,7 +357,7 @@ def sendEmailForEnquiry(message, request, taxonomyItem):
                                   context_instance=RequestContext(request))
     else:
         return render_to_response("templates/infopage.html",
-                                  {'messageTitle': 'You suggestion for ' + taxonomyItem.name + ' has been lodged.',
+                                  {'messageTitle': 'Your suggestion for ' + taxonomyItem.name + ' has been lodged.',
                                    'messageBody': "The maintainer will get back to you soon!"},
                                   context_instance=RequestContext(request))
 
@@ -511,7 +516,6 @@ def reference_add_upload_text(request):
 
 
 def contact_send(request):
-
     email_subject = email_prefix + "Contact"
     email_from = request.POST['email']
     email_name = request.POST['name']
@@ -523,8 +527,8 @@ def contact_send(request):
     except:
         return render_to_response("templates/contact.html",
                                   {
-                                  'error_message': "There was a problem sending the email. Please ensure all fields are filled in correctly. Please contact " +
-                                                   settings.ADMINS[0][1] + " if the problem continues."},
+                                      'error_message': "There was a problem sending the email. Please ensure all fields are filled in correctly. Please contact " +
+                                                       settings.ADMINS[0][1] + " if the problem continues."},
                                   context_instance=RequestContext(request))
     else:
         return render_to_response("templates/contact.html", {'success_message': 'Your request was sent successfully!'},

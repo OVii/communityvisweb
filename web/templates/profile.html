@@ -33,7 +33,7 @@
             $(document).ready(function () {
                 $.ajax({
                     type: 'GET',
-                    url: '{% url 'orcid' %}?orcid={{ profile.orcid }}',
+                    url: '{{ URL_PREPENDER }}/orcid?orcid={{ profile.orcid }}',
                     dataType: 'json'
                 }).done(function (res) {
 
@@ -136,14 +136,14 @@
 
         <div class="pull-right" id="options">
             {% if loggedInUser %}
-                <a class="btn btn-yellow" href='/community/profiles/edit'>Expand Profile</a>
-                <a class="btn" href='/community/profile/{{ profile.user.username }}'>Public Profile</a>
-                <a class="btn" href='/community/accounts/password/reset/'>Reset Password
+                <a class="btn btn-yellow" href='{{ URL_PREPENDER }}/profiles/edit'>Expand Profile</a>
+                <a class="btn" href='{{ URL_PREPENDER }}/profile/{{ profile.user.username }}'>Public Profile</a>
+                <a class="btn" href='{{ URL_PREPENDER }}/accounts/password/reset/'>Reset Password
                 </a>
             {% endif %}
 
             {% if user.is_authenticated and user.is_superuser %}
-                <a class="btn" href='/admin'>Administration pages</a>
+                <a class="btn" href='{{ URL_PREPENDER }}/admin'>Administration pages</a>
             {% endif %}
 
         </div>
@@ -194,7 +194,7 @@
                             {% if loggedInUser %}
                                 <p><a href="http://www.orcid.org" target="_blank">Register</a> for orcid then enter your
                                     orcid <a
-                                            href="/profiles/edit">here</a> to integrate your profile information.</p>
+                                            href="{{ URL_PREPENDER }}/profiles/edit">here</a> to integrate your profile information.</p>
                             {% else %}
                                 <p>{{ profile.user.username }} has not registered their ORCID, so this panel is blank.
                                     Learn
@@ -224,15 +224,15 @@
                                 <p><strong>{{ approval.taxonomyItem.name }}</strong></p>
 
                                 <p style="font-size:1em; font-weight: bolder">Request by <a
-                                        href="/profiles/"{{ approval.requester.username }}>{{ approval.requester.username }}</a>
+                                        href="{{ URL_PREPENDER }}/profiles/"{{ approval.requester.username }}>{{ approval.requester.username }}</a>
                                 </p>
 
                                 <p style="font-size:0.8em; font-weight: lighter">{{ approval.additionalNotes }}</p>
 
-                                <a href="/taxonomy/{{ approval.taxonomyItem.id }}" target="_blank" class="btn">View
+                                <a href="{{ URL_PREPENDER }}/taxonomy/{{ approval.taxonomyItem.id }}" target="_blank" class="btn">View
                                     Taxonomy Item</a>
-                                {% url 'request_ownership_response' approval.id as approval_url %}
-                                <a onclick="showResponseWindow('{{ approval_url }}')"
+
+                                <a onclick="showResponseWindow('{{ URL_PREPENDER }}/request_ownership/response/{{ approval.id }}')"
                                    class="btn btn-success">Respond</a>
                             </div>
                             <div class="clearfix"></div>
@@ -254,15 +254,15 @@
                     {% for taxonomyItem in taxonomyItems %}
                         <div class="well">
 
-                            <p><strong><a href="/taxonomy/{{ taxonomyItem.id }}">{{ taxonomyItem.name }}</a></strong>
+                            <p><strong><a href="{{ URL_PREPENDER }}/taxonomy/{{ taxonomyItem.id }}">{{ taxonomyItem.name }}</a></strong>
                             </p>
 
                             <p><i class="icon-arrow-up"></i> {{ taxonomyItem.category }}</p>
 
 
                             {% if loggedInUser %}
-                                {% url 'revoke_ownership' taxonomyItem.id as revoke_url %}
-                                <a onclick="showRevokeConfirmWindow({{ revoke_url }})" class="btn btn-small btn-danger">Revoke
+
+                                <a onclick="showRevokeConfirmWindow('{{ URL_PREPENDER }}/revoke_ownership/{{ taxonomyItem.id }}')" class="btn btn-small btn-danger">Revoke
                                     ownership</a>
                             {% endif %}
 
@@ -273,7 +273,7 @@
                                     <div class="well well-darker">
 
                                         <p style="font-size: 1.1em">{{ enquiry.enquiry_type }} -
-                                            <a href="/profile/{{ enquiry.requester.username }}">{{ enquiry.requester.username }}</a>
+                                            <a href="{{ URL_PREPENDER }}/profile/{{ enquiry.requester.username }}">{{ enquiry.requester.username }}</a>
                                         </p>
                                         <hr/>
 
@@ -283,7 +283,7 @@
                                         {% endif %}
 
                                         <p>{% if enquiry.reference %}<i class="icon-arrow-up"></i>{% endif %}<strong><a
-                                                href="/taxonomy/{{ enquiry.taxonomyItem.id }}">{{ enquiry.taxonomyItem.name }}</a>
+                                                href="{{ URL_PREPENDER }}/taxonomy/{{ enquiry.taxonomyItem.id }}">{{ enquiry.taxonomyItem.name }}</a>
                                         </strong>
                                         </p>
 
@@ -292,9 +292,9 @@
 
                                         <p style="font-style: italic; font-size: 1em">{{ enquiry.additionalNotes }}</p>
 
-                                        <a onclick="showEnquiryResponseWindow('{% url 'enquiry_decision' decision="approved" enquiry_id=enquiry.id %}')"
+                                        <a onclick="showEnquiryResponseWindow('{{ URL_PREPENDER }}/enquiry/approved/{{ enquiry.id }}/')"
                                            class="btn btn-mini btn-success">Approve</a> <a
-                                            onclick="showEnquiryResponseWindow('{% url 'enquiry_decision' decision="rejected" enquiry_id=enquiry.id %}')"
+                                            onclick="showEnquiryResponseWindow('{{ URL_PREPENDER }}/enquiry/rejected/{{ enquiry.id }}/')"
                                             class="btn btn-mini btn-danger">Reject</a>
                                     </div>
                                 {% endifequal %}

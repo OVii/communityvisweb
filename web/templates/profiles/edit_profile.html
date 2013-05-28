@@ -8,15 +8,11 @@
 {% load i18n %}
 
 {% block content %}
+    <br/>
     <div class="hero-unit">
-
-        <p>
-
         <h3>Hello {{ user.username }}</h3>
 
         <p>Edit your profile here...</p>
-
-        </p>
 
         {% if form.errors %}
             <p class="errorlist">{% trans "Sorry there are corrections needed in your form below:" %} {{ form.non_field_errors }}</p>
@@ -31,7 +27,7 @@
             Exising email: {{ profile.email }}<br><br>
         {% endif %}
         {% csrf_token %}
-        <input type="submit" class="btn btn-info" value="Save"/>
+        <input type="submit" class="btn btn-yellow" value="Save"/>
         </form>
     </div>
 {% endblock %}

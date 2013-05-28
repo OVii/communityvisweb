@@ -1,57 +1,67 @@
-
 {% extends "base.html" %}
 {% load webdesign %}
 
 {% block title %}View Taxonomy Item{% endblock %}
- 
+
 {% block content %}
 
-{% load url from future %}
+    {% load url from future %}
 
-<h1>Contact Us</h1>
-<p>
-Please fill out the below form to contact our team, and we'll get back to you as soon as we can.
-</p>
 
-<div>
-{% if error_message %}
-	<div class="alert alert-error">
-		<button type="button" class="close" data-dismiss="alert">×</button>
-		<strong>Warning!</strong> {{ error_message }}
-	</div>
-{% endif %}
-{% if success_message %}<span class="well">{{ success_message }}</span>{% endif %}
-</div>
+    <div>
+        {% if error_message %}
+            <div class="alert alert-error">
+                <button type="button" class="close" data-dismiss="alert">×</button>
+                <strong>Warning!</strong> {{ error_message }}
+            </div>
+        {% endif %}
 
-<div>
-<form action="{% url 'contact_send' %}" method="post" class="form-horizontal">
-{% csrf_token %}
+        {% if success_message %}
+            <div class="alert alert-success">{{ success_message }}
+            </div>{% endif %}
 
-	<div class="control-group">
-		<label for="name" class="control-label">Name</label>
-  		<div class="controls">
-			<input type="text" name="name" class="input-xlarge">
-		</div>
-	</div>
-	<div class="control-group">
-  		<label for="email" class="control-label">Email Address</label>
-  		<div class="controls">
-  			<input type="text" name="email" class="input-xlarge">
-		</div>
-	</div>
-	<div class="control-group">
-		<label for="comments" class="control-label">Comments</label>
-  		<div class="controls">
-  			<textarea  name="comments" maxlength="5000" rows=10 class="span4">{% if taxonomy %}I wish to take ownership of taxonomy item "{{ taxonomy.name }}". I include relevant details of my expertise in the area.
-	{% endif %}</textarea>
-		</div>
-	</div>
-  	<div class="control-group">
-		<div class="controls">
-			<input type="submit" class="btn btn-primary" value="Submit">  
-		</div>
-	</div>
-</form>
-</div>
+    </div>
+
+    <div class="clearfix"></div>
+
+
+    <div id="login" class="login_form">
+        <div class="section-header"><span class="content-section login-section"><span
+                class="header-text"><i class="icon-envelope"></i> Contact us</span></span>
+        </div>
+        <form action="{{ URL_PREPENDER }}/contact/send" method="post" class="formbody">
+            {% csrf_token %}
+
+            <div class="control-group">
+                <label for="name" class="control-label">Name</label>
+
+                <div class="controls">
+                    <input type="text" name="name" class="input-xlarge">
+                </div>
+            </div>
+            <div class="control-group">
+                <label for="email" class="control-label">Email Address</label>
+
+                <div class="controls">
+                    <input type="text" name="email" class="input-xlarge">
+                </div>
+            </div>
+            <div class="control-group">
+                <label for="comments" class="control-label">Comments</label>
+
+                <div class="controls">
+                    <textarea name="comments" maxlength="5000" rows=10 class="span4">{% if taxonomy %}I wish to take
+                        ownership of taxonomy item "{{ taxonomy.name }}". I include relevant details of my expertise in
+                        the area.
+                    {% endif %}</textarea>
+                </div>
+            </div>
+            <div class="control-group">
+                <div class="controls">
+                    <input type="submit" class="btn btn-yellow" value="Submit">
+                </div>
+            </div>
+        </form>
+    </div>
 
 {% endblock %}

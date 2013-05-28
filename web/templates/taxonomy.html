@@ -1,6 +1,5 @@
 {% extends "base.html" %}
 {% block title %}Visualization Taxonomy{% endblock %}
-{% load url from future %}
 
 {% load webdesign %}
 
@@ -17,8 +16,9 @@
         </p>
 
         <p>
-            <button class="btn btn-large" type="button">I have a suggestion</button>
-            <a href="{% url 'add_taxonomy' %}" class="btn btn-large btn-yellow" type="button">Add a new taxonomy</a>
+            <a href="{{ URL_PREPENDER }}/contact" class="btn btn-large" type="button">I have a suggestion</a>
+
+            <a href="{{ URL_PREPENDER }}/taxonomy/add" class="btn btn-large btn-yellow" type="button">Add a new taxonomy</a>
         </p>
     </div>
 
@@ -41,7 +41,7 @@
                         {% else %}
                             <span class="badge badge-dark-grey taxonomy-item">
                         {% endif %}
-						<a href="{% url 'taxonomy_detail' item.id %}"
+						<a href="{{ URL_PREPENDER }}/taxonomy/{{ item.id }}"
                        style="color:white">{{ item.name }}</a></span>
                     {% endfor %}
                 </p>
