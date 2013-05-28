@@ -28,6 +28,7 @@ def get_ref(ref_key, title, bibtex):
         ref.bibtex = bibtex
     return ref
 
+
 def get_column(column_name):
     col = None
     try:
@@ -86,13 +87,17 @@ def bibtex_import(filename, taxonomyItem):
                 prelast = person.get_part_as_text('prelast')
                 last = person.get_part_as_text('last')
                 lineage = person.get_part_as_text('lineage')
-                auth = ReferenceAuthor(first_name=first,
-                                       middle_name=middle,
-                                       prelast_name=prelast,
-                                       last_name=last,
-                                       lineage=lineage)
-                auth.save()
-                ref_obj.authors.add(auth)
+
+                author, created = ReferenceAuthor.objects.get_or_create(first_name=first, last_name=last)
+
+                if created:
+                    author.middle_name = middle
+                    author.prelast_name = prelast
+                    author.lineage = lineage
+                    author.save()
+
+                if not author in ref_obj.authors:
+                    ref_obj.authors.add(author)
 
         ref_obj.save()
         if not ref_obj in taxonomyItem.references.all():

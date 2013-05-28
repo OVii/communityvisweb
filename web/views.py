@@ -199,16 +199,11 @@ def references(request):
 # search
 def search(request):
     searchTerm = request.GET['q']
-    references = Reference.objects.all()
+    allReferences = Reference.objects.all()
 
-    searchResult = []
-
-    for reference in references:
-        if searchTerm in reference.bibtex:
-            searchResult.append(reference)
-
+    references = [reference_backend.SortableReference(x) for x in allReferences]
     return render_to_response("templates/search.html",
-                              {"searchTerm": searchTerm, "size": len(searchResult), "searchResults": searchResult},
+                              {"searchTerm": searchTerm, "size": len(references), "searchResults": references},
                               context_instance=RequestContext(request))
 
 

@@ -2,30 +2,42 @@
 {% block title %}Register{% endblock %}
 {% block content %}
 
-    {% block head_additional %}
-        <script type="text/javascript" src="{{ STATIC_URL }}js/bibtex_js.js"></script>
-    {% endblock %}
-
-
     <div class="home-content">
         <div class="row-fluid">
             <div class="search-wrapper">
-                <form id="search" action="/search">
+                <form id="search" action="{% url 'search' %}">
                     <input id="search-text" type="text" name="q" placeholder="Search">
                 </form>
             </div
         </div>
 
         <div class="clearfix"></div>
-        You searched for {{ searchTerm }}. There are {{ size }} results!
 
-        <textarea id="bibtex_input" style="display:none">
-            {% for searchResult in searchResults %}
-                {{ searchResult.bibtex }}
-            {% endfor %}
-        </textarea>
+        <p>You searched for {{ searchTerm }}. There are {{ size }} results!</p>
 
-        <div id="bibtex_display"></div>
+
+              {% for reference in searchResults %}
+                 <div class="well taxonomy-well reference_box">
+
+                        <p class="title">{{ reference.title }}</p>
+
+                        <p class="authors">{{ reference.authors }}</p>
+
+                        <p><span class="journal">{{ reference.journal }}</span>{% if reference.year > 0 %}
+                            <span class="year">{% if reference.journal %}
+                                , {% endif %}{{ reference.year }}</span>{% endif %} </p>
+
+
+                        {% if reference.url %}
+                            <a href="{{ reference.url }}" target="_blank" class="btn btn-small">View Paper</a>
+                        {% endif %}
+                        <a onclick="showBibex({{ reference.bibtex }})" class="btn btn-small">Bibtex</a>
+
+                    </div>
+                {% endfor %}
+
+
+
     </div>
 
 
