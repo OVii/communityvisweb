@@ -47,7 +47,7 @@
 
                     <div style="padding-top:5px">
 
-                        <a href="{% url 'taxonomy_download' taxonomy.id %}" class="btn btn-inverse" style="width: 82%">Download
+                        <a href="{% url 'taxonomy_download' taxonomy.id %}" class="btn btn-blue" style="width: 82%">Download
                             Bibtex</a>
                     </div>
                 </div>
@@ -65,6 +65,7 @@
                             <span class="year">{% if reference.journal %}
                                 , {% endif %}{{ reference.year }}</span>{% endif %} </p>
 
+
                         {% if reference.url %}
                             <a href="{{ reference.url }}" target="_blank" class="btn btn-small">View Paper</a>
                         {% endif %}
@@ -72,7 +73,10 @@
                         {% if owners != 0 %}
                             {% url 'enquiry_reference' taxonomy.id reference.id as suggest_reference_url %}
                             <a onclick="showSuggestBox('reference', '{{ suggest_reference_url }}')"
-                               class="btn btn-danger btn-small">Report error</a>{% endif %}
+                               class="btn btn-yellow btn-small"><i class="icon-exclamation-sign icon-white"></i> Report error</a>{% endif %}
+                        {% if user.is_superuser or ownerLoggedIn %}
+                            <a href="" class="btn btn-small btn-danger"><i class="icon-remove-sign icon-white"></i> Delete</a>
+                        {% endif %}
                     </div>
                 {% endfor %}
             </div>
