@@ -38,6 +38,7 @@
                    value="{{ taxonomy.id }}">
             <input name="utf8" type="hidden" class="text" value="✓"><input
                 name="_method" type="hidden" value="put"><input name="authenticity_token" type="hidden">
+            <input type="hidden" name="postedFrom" value="{{ request.path }}"/>
 
             <div id="name_group"><label for="taxonomy_name">Name</label>
                 <input id="taxonomy_name" class="text form-text span6" name="taxonomy_name" size="20" type="text"
@@ -45,7 +46,7 @@
                 <span id="name_help" class="help-inline hide">Please enter a name</span>
             </div>
 
-            <div ><label for="category_name">Parent Category</label>
+            <div><label for="category_name">Parent Category</label>
                 <select id="category_name" name="category_name" class="span6">
                     {% for category in categories %}
                         <option {% ifequal taxonomy.category.name category.name %}selected {% endifequal %}>{{ category.name }} </option>
