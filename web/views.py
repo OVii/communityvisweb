@@ -4,6 +4,7 @@
 from datetime import datetime
 import hashlib
 import urllib2
+from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib.sites.models import Site
@@ -222,12 +223,13 @@ def login(request):
     return render_to_response("registration/login.html", context_instance=RequestContext(request))
 
 
-def logout(request):
+def do_logout(request):
+    logout(request)
     return render_to_response("registration/logout.html", context_instance=RequestContext(request))
 
 
 def register(request):
-    return render_to_response("registration/register.html", context_instance=RequestContext(request))
+    return render_to_response("registration/registration_form.html", context_instance=RequestContext(request))
 
 
 def public_profile(request, username):
