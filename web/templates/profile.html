@@ -159,7 +159,8 @@
                 <div id="orcid">
                     {% ifnotequal profile.orcid "" %}
                         <span id="profile-spinner" align="center">
-                            <p><img align="center" src="{{ STATIC_URL }}img/static_img/profile/ajax-loader.gif"/><br/><br/>
+                            <p><img align="center"
+                                    src="{{ STATIC_URL }}img/static_img/profile/ajax-loader.gif"/><br/><br/>
                                 Loading profile from ORCID
                             </p>
                         </span>
@@ -167,7 +168,8 @@
                         <div class="standard-unit">
                             {% if loggedInUser %}
                                 <p><a href="http://www.orcid.org" target="_blank">Register</a> for orcid then enter your
-                                    ORCID <a href="{{ URL_PREPENDER }}/profiles/edit">here</a> to integrate your profile information.</p>
+                                    ORCID <a href="{{ URL_PREPENDER }}/profiles/edit">here</a> to integrate your profile
+                                    information.</p>
                             {% else %}
                                 <p>{{ profile.user.username }} has not registered their ORCID, so this panel is blank.
                                     Learn
@@ -194,7 +196,8 @@
                             {% if loggedInUser %}
                                 <p><a href="http://www.orcid.org" target="_blank">Register</a> for orcid then enter your
                                     orcid <a
-                                            href="{{ URL_PREPENDER }}/profiles/edit">here</a> to integrate your profile information.</p>
+                                            href="{{ URL_PREPENDER }}/profiles/edit">here</a> to integrate your profile
+                                    information.</p>
                             {% else %}
                                 <p>{{ profile.user.username }} has not registered their ORCID, so this panel is blank.
                                     Learn
@@ -229,7 +232,8 @@
 
                                 <p style="font-size:0.8em; font-weight: lighter">{{ approval.additionalNotes }}</p>
 
-                                <a href="{{ URL_PREPENDER }}/taxonomy/{{ approval.taxonomyItem.id }}" target="_blank" class="btn">View
+                                <a href="{{ URL_PREPENDER }}/taxonomy/{{ approval.taxonomyItem.id }}" target="_blank"
+                                   class="btn">View
                                     Taxonomy Item</a>
 
                                 <a onclick="showResponseWindow('{{ URL_PREPENDER }}/request_ownership/response/{{ approval.id }}')"
@@ -254,7 +258,8 @@
                     {% for taxonomyItem in taxonomyItems %}
                         <div class="well">
 
-                            <p><strong><a href="{{ URL_PREPENDER }}/taxonomy/{{ taxonomyItem.id }}">{{ taxonomyItem.name }}</a></strong>
+                            <p><strong><a
+                                    href="{{ URL_PREPENDER }}/taxonomy/{{ taxonomyItem.id }}">{{ taxonomyItem.name }}</a></strong>
                             </p>
 
                             <p><i class="icon-arrow-up"></i> {{ taxonomyItem.category }}</p>
@@ -262,7 +267,8 @@
 
                             {% if loggedInUser %}
 
-                                <a onclick="showRevokeConfirmWindow('{{ URL_PREPENDER }}/revoke_ownership/{{ taxonomyItem.id }}')" class="btn btn-small btn-danger">Revoke
+                                <a onclick="showRevokeConfirmWindow('{{ URL_PREPENDER }}/revoke_ownership/{{ taxonomyItem.id }}')"
+                                   class="btn btn-small btn-danger">Revoke
                                     ownership</a>
                             {% endif %}
 
@@ -331,7 +337,7 @@
                             <option>Rejected</option>
                         </select>
 
-
+                        <input type="hidden" name="postedFrom" value="{{ request.path }}"/>
                         <label for="comments" class="control-label">Insert any further information you want to add and
                             send to the volunteer here?</label>
 

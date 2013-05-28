@@ -124,6 +124,7 @@ def request_ownership_send(request, taxonomy_id):
 def request_ownership_response(request, approval_id):
     response = request.POST['type']
     responseDetail = request.POST['responseDetail']
+    urlRequestedFrom = request.POST.get('postedFrom', '/')
 
     ownershipRequest = OwnershipRequest.objects.filter(pk=approval_id).get(pk=approval_id)
 
@@ -156,7 +157,7 @@ def request_ownership_response(request, approval_id):
     finally:
         ownershipRequest.delete()
 
-    return HttpResponseRedirect("/accounts/profile")
+    return HttpResponseRedirect(urlRequestedFrom)
 
 
 @login_required
@@ -474,6 +475,8 @@ def taxonomy_edit_action(request):
 
 def reference_add_upload_file(request):
     taxonomy_id = request.POST.get('taxonomy_id', None)
+    urlRequestedFrom = request.POST.get('postedFrom', '/')
+
 
     taxonomyItem = TaxonomyItem.objects.filter(pk=taxonomy_id).get(pk=taxonomy_id)
 
@@ -484,7 +487,8 @@ def reference_add_upload_file(request):
         bibtex_import(bibtextFile, taxonomyItem)
         taxonomyItem.last_updated = datetime.now()
         taxonomyItem.save()
-        return HttpResponseRedirect("/taxonomy/" + taxonomy_id)
+
+        return HttpResponseRedirect(urlRequestedFrom)
     except Exception, e:
         return render_to_response("templates/infopage.html",
                                   {
@@ -495,6 +499,7 @@ def reference_add_upload_file(request):
 
 def reference_add_upload_text(request):
     taxonomy_id = request.POST.get('taxonomy_id', None)
+    urlRequestedFrom = request.POST.get('postedFrom', '/')
 
     taxonomyItem = TaxonomyItem.objects.filter(pk=taxonomy_id).get(pk=taxonomy_id)
 
@@ -505,7 +510,7 @@ def reference_add_upload_text(request):
         bibtex_import(bibtextFile, taxonomyItem)
         taxonomyItem.last_updated = datetime.now()
         taxonomyItem.save()
-        return HttpResponseRedirect("/taxonomy/" + taxonomy_id)
+        return HttpResponseRedirect(urlRequestedFrom)
 
     except Exception, e:
         return render_to_response("templates/infopage.html",

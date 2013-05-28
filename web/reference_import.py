@@ -23,9 +23,7 @@ def generate_nonduplicate_key(ref_key):
 
 def get_ref(ref_key, title, bibtex):
     ref, created = Reference.objects.get_or_create(title=title)
-    print title + ' - ' + str(created)
     if not created:
-        print 'This record didn\'t exist: ' + title
         ref_key = generate_nonduplicate_key(ref_key)
         ref.entry_key = ref_key
         ref.bibtex = bibtex
@@ -61,7 +59,6 @@ def bibtex_import(filename, taxonomyItem):
         writer.write_entry(key, bib_data.entries[key], stream)
 
         title = getTitle(bib_data.entries[key].fields)
-        print 'title ' + title
 
         ref_obj = get_ref(key, title, stream.getvalue())
         ref_obj.save()
