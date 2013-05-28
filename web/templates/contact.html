@@ -24,7 +24,7 @@ Please fill out the below form to contact our team, and we'll get back to you as
 </div>
 
 <div>
-<form action="/request_ownership/send/" method="post" class="form-horizontal">
+<form action="{% url 'contact_send' %}" method="post" class="form-horizontal">
 {% csrf_token %}
 
 	<div class="control-group">

@@ -510,3 +510,22 @@ def reference_add_upload_text(request):
                                   context_instance=RequestContext(request))
 
 
+def contact_send(request):
+
+    email_subject = email_prefix + "Contact"
+    email_from = request.POST['email']
+    email_name = request.POST['name']
+    email_body = request.POST['comments']
+
+    try:
+        send_mail(email_subject, email_body, email_from,
+                  [item[1] for item in settings.ADMINS], fail_silently=False)
+    except:
+        return render_to_response("templates/contact.html",
+                                  {
+                                  'error_message': "There was a problem sending the email. Please ensure all fields are filled in correctly. Please contact " +
+                                                   settings.ADMINS[0][1] + " if the problem continues."},
+                                  context_instance=RequestContext(request))
+    else:
+        return render_to_response("templates/contact.html", {'success_message': 'Your request was sent successfully!'},
+                                  context_instance=RequestContext(request))

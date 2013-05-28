@@ -23,6 +23,8 @@ urlpatterns = patterns('',
                        url(r'^accounts/login', 'web.views.login', name='login'),
                        url(r'^accounts/register', 'web.views.register', name='register'),
 
+                       url(r'^contact/send', 'web.views.contact_send', name='contact_send'),
+
                        url(r'^taxonomy/add/$', 'web.views.taxonomy_add', name='add_taxonomy'),
                        url(r'^taxonomy/edit/(?P<taxonomy_id>\d+)/$', 'web.views.taxonomy_edit', name='edit_taxonomy'),
 
