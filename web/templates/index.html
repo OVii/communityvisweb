@@ -18,9 +18,9 @@
             {% if user.is_authenticated %}
                 <i class="icon-user"></i> {{ user.username }}
 				<a href="{% url 'profile' %}" class="btn btn-mini account-button"><i class="icon-wrench"></i></a>
-				<a href="{% url 'logout' %}" class="btn btn-mini account-button"><i class="icon-off"></i></a>
+				<a href="{% url 'logout' %}" class="btn btn-mini btn-yellow account-button"><i class="icon-off icon-white"></i></a>
             {% else %}
-			<a href="{% url 'login' %}" class="btn btn account-button"><i class="icon-user"></i> Sign In</a>
+			<a href="{% url 'login' %}" class="btn btn-yellow account-button"><i class="icon-user icon-white"></i> Sign In</a>
             {% endif %}
         </div>
 
