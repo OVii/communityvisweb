@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <div class="profile-content">
+
+
+        <div class="profile-blocks span6">
+            <div class="reference-block span5">
+                <div class="block-head">
+                    Article information
+                    <hr/>
+                </div>
+                <div class="profile-unit">
+                    <p><strong>{{ reference.title }}</strong></p>
+
+                    <p style="font-size: 1em">
+                        {% for author in reference.authors.all %}
+                            {{ author.first_name }} {{ author.last_name }}
+                        {% endfor %}
+                    </p>
+
+                    <p style="font-size: 1em; color:#efa700">{{ reference.journal }}</p>
+
+                    <p style="font-size: 1em; font-weight:bold">{{ reference.year }}</p>
+
+
+                    <br/><br/>
+                    {% if reference.url %}
+                        <a href="{{ reference.url }}" target="_blank" class="btn">Read the paper</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="profile-blocks span6">
+            <div class="reference-block span5">
+                <div class="block-head">
+                    Bibtex
+                    <hr/>
+                </div>
+                <div class="profile-unit">
+                    <p style="font-size: 1em">
+                        {{ reference.bibtex }}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

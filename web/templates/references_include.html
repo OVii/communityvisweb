@@ -47,7 +47,8 @@
 
                     <div style="padding-top:5px">
 
-                        <a href="{{ URL_PREPENDER }}/taxonomy/download/{{ taxonomy.id }}" class="btn btn-blue" style="width: 82%">Download
+                        <a href="{{ URL_PREPENDER }}/taxonomy/download/{{ taxonomy.id }}" class="btn btn-blue"
+                           style="width: 82%">Download
                             Bibtex</a>
                     </div>
                 </div>
@@ -62,19 +63,25 @@
                         <p class="authors">{{ reference.authors }}</p>
 
                         <p><span class="journal">{{ reference.journal }}</span>{% if reference.year > 0 %}
-                            <span class="year">{% if reference.journal %}
-                                , {% endif %}{{ reference.year }}</span>{% endif %} </p>
+                            <span class="year">{% if reference.journal %} {% endif %}{{ reference.year }}</span>{% endif %}
+                        </p>
 
 
                         {% if reference.url %}
                             <a href="{{ reference.url }}" target="_blank" class="btn btn-small">View Paper</a>
                         {% endif %}
 
+
+                        <a href="{{ URL_PREPENDER }}/reference/{{ reference.id }}" class="btn btn-small">View Reference</a>
+
+
                         {% if owners != 0 %}
                             <a onclick="showSuggestBox('reference', '{{ URL_PREPENDER }}/enquiry/{{ taxonomy.id }}/{{ reference.id }}/')"
-                               class="btn btn-yellow btn-small"><i class="icon-exclamation-sign icon-white"></i> Report error</a>{% endif %}
+                               class="btn btn-yellow btn-small"><i class="icon-exclamation-sign icon-white"></i> Report
+                                error</a>{% endif %}
                         {% if user.is_superuser or ownerLoggedIn %}
-                            <a onclick="showDeleteWindow({{ reference.id }})" class="btn btn-small btn-danger"><i class="icon-remove-sign icon-white"></i> Delete</a>
+                            <a onclick="showDeleteWindow({{ reference.id }})" class="btn btn-small btn-danger"><i
+                                    class="icon-remove-sign icon-white"></i> Delete</a>
                         {% endif %}
                     </div>
                 {% endfor %}

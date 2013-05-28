@@ -551,7 +551,6 @@ def contact_send(request):
 
 
 def reference_remove(request, taxonomy_id, reference_id):
-
     urlRequestedFrom = request.POST.get('postedFrom', '/')
 
     taxonomyItem = TaxonomyItem.objects.filter(pk=taxonomy_id).get(pk=taxonomy_id)
@@ -560,6 +559,15 @@ def reference_remove(request, taxonomy_id, reference_id):
     taxonomyItem.references.remove(referenceItem)
 
     return HttpResponseRedirect(urlRequestedFrom)
+
+
+def reference_detail(request, reference_id):
+    try:
+        referenceItem = Reference.objects.filter(pk=reference_id).get(pk=reference_id)
+    except:
+        referenceItem = {}
+    return render_to_response("templates/reference.html", {'reference': referenceItem},
+                              context_instance=RequestContext(request))
 
 
 

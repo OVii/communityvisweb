@@ -528,7 +528,6 @@ body {
 
 
 .profile-blocks {
-
     margin: 0 auto;
     margin-top: 30px;
     float:left;
@@ -960,4 +959,22 @@ body > .container.tabs-right.tabbable-bodered > .tab-content {
 .badge-dark{
     background-color: #414241;
     text-shadow: none;
+}
+
+
+.reference-block {
+    margin: 0 auto;
+    margin-top: 30px;
+    float:left;
+}
+
+.reference-block {
+    background-color: #f8f8f8;
+    min-height: 100px;
+    border-bottom: 1px solid #ccc;
+
+    padding: 10px;
+    margin-left: 40px;
+    margin-bottom: 20px;
+    float:left;
 }

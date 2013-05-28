@@ -32,7 +32,7 @@ urlpatterns = patterns('',
                        url(r'^reference/add/text$', 'web.views.reference_add_upload_text', name='upload_bibtex_text'),
 
                        url(r'^reference/remove/(?P<taxonomy_id>\d+)/(?P<reference_id>\d+)/$', 'web.views.reference_remove', name='remove_reference'),
-
+                       url(r'^reference/(?P<reference_id>\d+)/$', 'web.views.reference_detail', name='reference_detail'),
 
                        url(r'^taxonomy/$', 'web.views.taxonomy', name='taxonomy'),
                        url(r'^taxonomy_alpha/$', 'web.views.taxonomy_alpha', name='taxonomy_alpha'),
