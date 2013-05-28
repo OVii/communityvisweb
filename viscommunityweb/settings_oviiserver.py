@@ -26,7 +26,7 @@ TEMPLATE_DIRS = (
 "/var/www/community/web/",
 )
 
-URL_PREPENDER = "/community"
+URL_PREPENDER = '/community'
 
 MANAGERS = ADMINS
 
@@ -36,7 +36,7 @@ DATABASES = {
         # The following settings are not used with sqlite3:
         'USER': 'postgres',
         'PASSWORD': 'oerc60971',
-	'NAME': 'viscommunityweb',
+	    'NAME': 'viscommunityweb',
         'HOST': 'localhost', # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
         'PORT': '', # Set to empty string for default.
     }
@@ -187,3 +187,15 @@ LOGGING = {
         },
     }
 }
+
+
+TEMPLATE_CONTEXT_PROCESSORS = (
+ 	'django.core.context_processors.debug',
+    'django.core.context_processors.i18n',
+    'django.core.context_processors.media',
+    'django.core.context_processors.static',
+	'django.core.context_processors.request',
+    'django.contrib.auth.context_processors.auth',
+    'django.contrib.messages.context_processors.messages',
+    'viscommunityweb.custom_context_processor.url_prepender',
+)

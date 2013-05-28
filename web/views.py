@@ -11,7 +11,7 @@ from django.contrib.sites.models import Site
 
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext
-from viscommunityweb.settings import EMAIL_HOST_USER, SITE_ID
+from viscommunityweb.settings import EMAIL_HOST_USER, SITE_ID, URL_PREPENDER
 from web.bibtex_utils.import_utils import saveFile, saveTextToFile
 from web.models import TaxonomyCategory, TaxonomyItem, Reference, UserProfile, OwnershipRequest, Enquiry
 from django.shortcuts import render_to_response, get_object_or_404
