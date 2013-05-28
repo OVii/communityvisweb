@@ -23,9 +23,9 @@
 						{% for item in items %}
 							<p>
 							{% if item.3 %}
-								<span class="badge badge-success">
+								<span class="badge badge-yellow">
 							{% else %}
-								<span class="badge badge-important">
+								<span class="badge">
 							{% endif %}
 							<i class="icon-white icon-chevron-right"></i></span>
 							<a href="/taxonomy/{{ item.0 }}">{{ item.1 }}</a> <span class="label">{{ item.2 }}</span>
