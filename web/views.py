@@ -450,7 +450,14 @@ def taxonomy_add_action(request):
 
     taxonomy.save()
 
+
+    print urlRequestedFrom.find('edit')
+
     return HttpResponseRedirect(urlRequestedFrom)
+
+
+def trimURL(urlRequestedFrom, find):
+    return urlRequestedFrom[0:urlRequestedFrom.find(find)]
 
 
 @login_required()
@@ -460,6 +467,8 @@ def taxonomy_edit_action(request):
     category = request.POST.get('category_name', None)
     detail = request.POST.get('description', None)
     urlRequestedFrom = request.POST.get('postedFrom', '/')
+
+    urlRequestedFrom = trimURL(urlRequestedFrom, 'edit') + taxonomyId
 
     categoryObject, existed = TaxonomyCategory.objects.get_or_create(name=category)
 
@@ -478,6 +487,8 @@ def taxonomy_edit_action(request):
 def reference_add_upload_file(request):
     taxonomy_id = request.POST.get('taxonomy_id', None)
     urlRequestedFrom = request.POST.get('postedFrom', '/')
+
+    urlRequestedFrom = trimURL(urlRequestedFrom, 'edit') + taxonomy_id
 
     taxonomyItem = TaxonomyItem.objects.filter(pk=taxonomy_id).get(pk=taxonomy_id)
 
