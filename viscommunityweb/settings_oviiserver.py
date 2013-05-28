@@ -8,7 +8,7 @@ ADMINS = (
     ('Eamonn Maguire', 'eamonn.maguire@st-annes.ox.ac.uk')
 )
 
-AUTH_PROFILE_MODULE='web.UserProfile'
+AUTH_PROFILE_MODULE = 'web.UserProfile'
 
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
@@ -21,9 +21,9 @@ ACCOUNT_ACTIVATION_DAYS = 7
 
 # Change below for your own machine. This is the only per-machine def. 
 TEMPLATE_DIRS = (
-#"/Users/eamonnmaguire/git/ovii/communityvisweb/web/",
-#"/Users/sim/Documents/VisWeb/viscommunityweb/web/"
-"/var/www/community/web/",
+    #"/Users/eamonnmaguire/git/ovii/communityvisweb/web/",
+    #"/Users/sim/Documents/VisWeb/viscommunityweb/web/"
+    "/var/www/community/web/",
 )
 
 URL_PREPENDER = '/community'
@@ -36,7 +36,7 @@ DATABASES = {
         # The following settings are not used with sqlite3:
         'USER': 'postgres',
         'PASSWORD': 'oerc60971',
-	    'NAME': 'viscommunityweb',
+        'NAME': 'viscommunityweb',
         'HOST': 'localhost', # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
         'PORT': '', # Set to empty string for default.
     }
@@ -115,13 +115,13 @@ TEMPLATE_LOADERS = (
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
-'django.core.context_processors.debug',
-'django.core.context_processors.i18n',
-'django.core.context_processors.media',
-'django.core.context_processors.static',
-'django.core.context_processors.request',
-'django.contrib.auth.context_processors.auth',
-'django.contrib.messages.context_processors.messages',
+    'django.core.context_processors.debug',
+    'django.core.context_processors.i18n',
+    'django.core.context_processors.media',
+    'django.core.context_processors.static',
+    'django.core.context_processors.request',
+    'django.contrib.auth.context_processors.auth',
+    'django.contrib.messages.context_processors.messages',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -147,12 +147,8 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.webdesign',
-
-    # Uncomment the next line to enable the admin:
-    'django.contrib.admin',
-    # Uncomment the next line to enable admin documentation:
-    # 'django.contrib.admindocs',
     'web',
+    'django.contrib.admin',
     'registration',
     'django_evolution',
     'profiles',
@@ -188,14 +184,13 @@ LOGGING = {
     }
 }
 
-
 TEMPLATE_CONTEXT_PROCESSORS = (
- 	'django.core.context_processors.debug',
-    'django.core.context_processors.i18n',
-    'django.core.context_processors.media',
-    'django.core.context_processors.static',
-	'django.core.context_processors.request',
-    'django.contrib.auth.context_processors.auth',
-    'django.contrib.messages.context_processors.messages',
-    'viscommunityweb.custom_context_processor.url_prepender',
+'django.core.context_processors.debug',
+'django.core.context_processors.i18n',
+'django.core.context_processors.media',
+'django.core.context_processors.static',
+'django.core.context_processors.request',
+'django.contrib.auth.context_processors.auth',
+'django.contrib.messages.context_processors.messages',
+'viscommunityweb.custom_context_processor.url_prepender',
 )

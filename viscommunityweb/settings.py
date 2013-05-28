@@ -5,29 +5,24 @@ DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
-    ('Simon Walton', 'simon.walton@oerc.ox.ac.uk'),
+    ('Eamonn Maguire 2', 'eamonn.maguire@oerc.ox.ac.uk'),
     ('Eamonn Maguire', 'eamonn.maguire@st-annes.ox.ac.uk')
 )
 
-AUTH_PROFILE_MODULE='web.UserProfile'
+AUTH_PROFILE_MODULE = 'web.UserProfile'
 
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'biosharing.project@gmail.com'
+EMAIL_HOST_USER = 'eamonnmag@gmail.com'
 EMAIL_HOST_PASSWORD = 'c67WFmlu'
 EMAIL_PORT = 587
 EMAIL_SUBJECT_PREFIX = "[OXVIS]"
 
 ACCOUNT_ACTIVATION_DAYS = 7
 
-# Change below for your own machine. This is the only per-machine def.
-TEMPLATE_DIRS = (
-#"/Users/eamonnmaguire/git/ovii/communityvisweb/web/",
-"/Users/sim/Documents/communityvisweb/web/",
-"/app/web/"
-)
-
 MANAGERS = ADMINS
+
+URL_PREPENDER = '/community'
 
 DATABASES = {
     'default': {
@@ -76,6 +71,8 @@ MEDIA_ROOT = ''
 # Examples: "http://example.com/media/", "http://media.example.com/"
 MEDIA_URL = ''
 
+URL_PREPENDER = ''
+
 # Absolute path to the directory static files should be collected to.
 # Don't put anything in this directory yourself; store your static files
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
@@ -111,14 +108,11 @@ TEMPLATE_LOADERS = (
     #     'django.template.loaders.eggs.Loader',
 )
 
-TEMPLATE_CONTEXT_PROCESSORS = (
-'django.core.context_processors.debug',
-'django.core.context_processors.i18n',
-'django.core.context_processors.media',
-'django.core.context_processors.static',
-'django.core.context_processors.request',
-'django.contrib.auth.context_processors.auth',
-'django.contrib.messages.context_processors.messages',
+# Change below for your own machine. This is the only per-machine def.
+TEMPLATE_DIRS = (
+    "/Users/eamonnmaguire/git/ovii/communityvisweb/web/",
+    "/Users/sim/Documents/communityvisweb/web/",
+    "/app/web/"
 )
 
 MIDDLEWARE_CLASSES = (
@@ -136,6 +130,7 @@ ROOT_URLCONF = 'viscommunityweb.urls'
 # Python dotted path to the WSGI application used by Django's runserver.
 WSGI_APPLICATION = 'viscommunityweb.wsgi.application'
 
+
 INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -144,12 +139,13 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.webdesign',
-
+    'django.contrib.humanize',
     # Uncomment the next line to enable the admin:
+    'web',
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
-    'web',
+
     'registration',
     'django_evolution',
     'profiles',
@@ -184,3 +180,14 @@ LOGGING = {
         },
     }
 }
+
+TEMPLATE_CONTEXT_PROCESSORS = (
+ 	'django.core.context_processors.debug',
+    'django.core.context_processors.i18n',
+    'django.core.context_processors.media',
+    'django.core.context_processors.static',
+	'django.core.context_processors.request',
+    'django.contrib.auth.context_processors.auth',
+    'django.contrib.messages.context_processors.messages',
+)
+

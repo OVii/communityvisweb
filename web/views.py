@@ -157,7 +157,7 @@ def request_ownership_response(request, approval_id):
     finally:
         ownershipRequest.delete()
 
-    return HttpResponseRedirect(urlRequestedFrom)
+    return HttpResponseRedirect("/community" + urlRequestedFrom)
 
 
 @login_required
@@ -477,7 +477,6 @@ def reference_add_upload_file(request):
     taxonomy_id = request.POST.get('taxonomy_id', None)
     urlRequestedFrom = request.POST.get('postedFrom', '/')
 
-
     taxonomyItem = TaxonomyItem.objects.filter(pk=taxonomy_id).get(pk=taxonomy_id)
 
     bibtex_file_upload = request.FILES['bibtex_file']
@@ -488,7 +487,7 @@ def reference_add_upload_file(request):
         taxonomyItem.last_updated = datetime.now()
         taxonomyItem.save()
 
-        return HttpResponseRedirect(urlRequestedFrom)
+        return HttpResponseRedirect("/community" + urlRequestedFrom)
     except Exception, e:
         return render_to_response("templates/infopage.html",
                                   {
@@ -510,7 +509,7 @@ def reference_add_upload_text(request):
         bibtex_import(bibtextFile, taxonomyItem)
         taxonomyItem.last_updated = datetime.now()
         taxonomyItem.save()
-        return HttpResponseRedirect(urlRequestedFrom)
+        return HttpResponseRedirect("/community" + urlRequestedFrom)
 
     except Exception, e:
         return render_to_response("templates/infopage.html",
