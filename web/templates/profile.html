@@ -167,7 +167,7 @@
                         <div class="standard-unit">
                             {% if loggedInUser %}
                                 <p><a href="http://www.orcid.org" target="_blank">Register</a> for orcid then enter your
-                                    ORCID <a href="/profiles/edit">here</a> to integrate your profile information.</p>
+                                    ORCID <a href="{{ URL_PREPENDER }}/profiles/edit">here</a> to integrate your profile information.</p>
                             {% else %}
                                 <p>{{ profile.user.username }} has not registered their ORCID, so this panel is blank.
                                     Learn
