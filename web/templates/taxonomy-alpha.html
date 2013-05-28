@@ -10,14 +10,8 @@
 
 
 <div class="row-fluid">
-	<div class="span1 navbar alphanav">
-		<ul class="nav nav-pills" id="navbar">
-			{% for item in index %}
-				<li><a href="#{{ item }}">{{ item }}</a></li>
-			{% endfor %}
-		</ul>
-	</div>
-	<div class="span11">
+
+	<div>
         {% include "taxonomy-header.html" %}
 
         {% if index %}
