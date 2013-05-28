@@ -7,6 +7,13 @@
             $('#taxonomyRequestModal').modal('show');
         }
 
+        function showDeleteWindow(referenceId) {
+            $('#deleteModal').modal('show');
+            $("#deleteModalForm").attr("action", '{{ URL_PREPENDER }}/reference/remove/{{ taxonomy.id }}/' + referenceId + '/');
+        }
+
+
+
         function showConfirmWindow() {
             $('#confirmRemoveModal').modal('show');
         }
@@ -120,6 +127,27 @@
     {% if references %}
         {% include "references_include.html" %}
     {% endif %}
+
+
+    <div id="deleteModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="deleteModalForm"
+         aria-hidden="true">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3>Delete Reference</h3>
+        </div>
+        <form accept-charset="UTF-8" action="" class="formbody" id="deleteModalForm" method="post">
+            <div class="modal-body">
+                <div class="modal-body">
+                    {% csrf_token %}
+                    <div class="control-group">
+                        <input type="hidden" name="postedFrom" value="{{ request.path }}"/>
+                        <label for="comments" class="control-label">Are you sure?</label><input name="commit" type="submit" class="btn btn-danger" value="Yes">
+                    </div>
+                </div>
+            </div>
+
+        </form>
+    </div>
 
     <div id="taxonomyRequestModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="taxonomyRequest"
          aria-hidden="true">

@@ -443,13 +443,11 @@ def taxonomy_add_action(request):
     detail = request.POST.get('description', None)
     urlRequestedFrom = request.POST.get('postedFrom', '/')
 
-
     categoryObject, existed = TaxonomyCategory.objects.get_or_create(name=category)
     taxonomy = TaxonomyItem(name=name, category=categoryObject, detail=detail, last_updated=datetime.now())
     taxonomy.last_updated_by = request.user
 
     taxonomy.save()
-
 
     print urlRequestedFrom.find('edit')
 
@@ -550,3 +548,18 @@ def contact_send(request):
     else:
         return render_to_response("templates/contact.html", {'success_message': 'Your request was sent successfully!'},
                                   context_instance=RequestContext(request))
+
+
+def reference_remove(request, taxonomy_id, reference_id):
+
+    urlRequestedFrom = request.POST.get('postedFrom', '/')
+
+    taxonomyItem = TaxonomyItem.objects.filter(pk=taxonomy_id).get(pk=taxonomy_id)
+    referenceItem = Reference.objects.filter(pk=reference_id).get(pk=reference_id)
+
+    taxonomyItem.references.remove(referenceItem)
+
+    return HttpResponseRedirect(urlRequestedFrom)
+
+
+
