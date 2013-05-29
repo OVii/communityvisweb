@@ -65,7 +65,7 @@
                 return true;
             }
 
-            alert("Please upload a file with the bib or bibtex extension!");
+            alert("Please upload a file with the bib or BibTeX extension!");
             return false;
         }
     </script>
@@ -220,15 +220,15 @@
 
         <br/>
         <ul class="nav nav-tabs" id="myTab">
-            <li class="active"><a href="#upload" data-toggle="tab">Upload Bibtex</a></li>
-            <li><a href="#paste" data-toggle="tab">Paste Bibtex</a></li>
+            <li class="active"><a href="#upload" data-toggle="tab">Upload BibTeX</a></li>
+            <li><a href="#paste" data-toggle="tab">Paste BibTeX</a></li>
         </ul>
 
         <div class="tab-content">
             <div class="tab-pane active" id="upload">
                 <div class="reference-block-addition-section">
                     <div align="center">
-                        <h4>Upload a Bibtex file...</h4>
+                        <h4>Upload a BibTeX file...</h4>
 
                         <form action="{{ URL_PREPENDER }}/reference/add/file"
                               id="bibtex_upload_form" enctype="multipart/form-data" method="post" onsubmit="return validateForm()">
@@ -264,7 +264,7 @@
             </div>
             <div class="tab-pane" id="paste">
                 <div class="reference-block-addition-section" align="center">
-                    <h4>Paste a Bibtex file...</h4>
+                    <h4>Paste a BibTeX file...</h4>
 
                     <form accept-charset="UTF-8" action="{{ URL_PREPENDER }}/reference/add/text" class="formbody"
                           id="addReferenceForm"
