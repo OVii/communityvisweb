@@ -1,4 +1,5 @@
 import logging
+from django.db import connection
 from pybtex.bibtex.utils import bibtex_purify
 from pybtex.database.input import bibtex as bib_in
 from pybtex.database.output import bibtex as bib_out
@@ -61,56 +62,62 @@ def bibtex_import(filename, taxonomyItem):
         title = getTitle(bib_data.entries[key].fields)
 
         ref_obj = get_ref(key, title, stream.getvalue())
-        ref_obj.save()
 
-        for field in bib_data.entries[key].fields:
-            value = bib_data.entries[key].fields[field]
-            col = get_column(field)
+        try:
+            ref_obj.save()
 
-            if 'title' in field.lower():
-                ref_obj.title = title
-            elif 'journal' in field.lower():
-                ref_obj.journal = bibtex_purify(value)
-            elif 'year' in field.lower():
-                ref_obj.year = int(value)
-            elif 'url' in field.lower() or 'doi' in field.lower():
-                ref_obj.url = value
-            elif 'doi' in field.lower():
-                doiPrepender = 'http://dx.doi.org/'
-                if not value.startswith(doiPrepender):
-                    value = doiPrepender + value
-                ref_obj.url = value
+            for field in bib_data.entries[key].fields:
+                value = bib_data.entries[key].fields[field]
+                col = get_column(field)
 
-            attr = ReferenceAttribute(column=col, value=value)
-            attr.save()
+                if 'title' in field.lower():
+                    ref_obj.title = title
+                elif 'journal' in field.lower():
+                    ref_obj.journal = bibtex_purify(value)
+                elif 'year' in field.lower():
+                    ref_obj.year = int(value)
+                elif 'url' in field.lower() or 'doi' in field.lower():
+                    ref_obj.url = value
+                elif 'doi' in field.lower():
+                    doiPrepender = 'http://dx.doi.org/'
+                    if not value.startswith(doiPrepender):
+                        value = doiPrepender + value
+                    ref_obj.url = value
 
-            ref_obj.referenceAttributes.add(attr)
-        if bib_data.entries[key].persons:
-            for person in bib_data.entries[key].persons['author']:
-                first = person.get_part_as_text('first')
-                middle = person.get_part_as_text('middle')
-                prelast = person.get_part_as_text('prelast')
-                last = person.get_part_as_text('last')
-                lineage = person.get_part_as_text('lineage')
+                attr = ReferenceAttribute(column=col, value=value)
+                attr.save()
 
-                try:
-                    author, created = ReferenceAuthor.objects.get_or_create(first_name=first, last_name=last)
-                except Exception, e:
-                    logger.debug('Author ' + first + ' ' + last + ' exists in multiple places. Error is ' + e.message)
-                    author = ReferenceAuthor.objects.filter(first_name=first).filter(last_name=last).__getitem__(0)
-                    created = False
+                ref_obj.referenceAttributes.add(attr)
+            if bib_data.entries[key].persons:
+                for person in bib_data.entries[key].persons['author']:
+                    first = person.get_part_as_text('first')
+                    middle = person.get_part_as_text('middle')
+                    prelast = person.get_part_as_text('prelast')
+                    last = person.get_part_as_text('last')
+                    lineage = person.get_part_as_text('lineage')
 
-                if created:
-                    author.middle_name = middle
-                    author.prelast_name = prelast
-                    author.lineage = lineage
-                    author.save()
+                    try:
+                        author, created = ReferenceAuthor.objects.get_or_create(first_name=first, last_name=last)
+                    except Exception, e:
+                        logger.debug('Author ' + first + ' ' + last + ' exists in multiple places. Error is ' + e.message)
+                        author = ReferenceAuthor.objects.filter(first_name=first).filter(last_name=last).__getitem__(0)
+                        created = False
 
-                if not author in ref_obj.authors.all():
-                    ref_obj.authors.add(author)
+                    if created:
+                        author.middle_name = middle
+                        author.prelast_name = prelast
+                        author.lineage = lineage
+                        author.save()
 
-        ref_obj.save()
-        if not ref_obj in taxonomyItem.references.all():
-            taxonomyItem.references.add(ref_obj)
+                    if not author in ref_obj.authors.all():
+                        ref_obj.authors.add(author)
+
+            ref_obj.save()
+
+            if not ref_obj in taxonomyItem.references.all():
+                taxonomyItem.references.add(ref_obj)
+        except Exception, e:
+            logger.log(e.message)
+            connection._rollback()
 
     print "Imported %i BibTeX references." % len(bib_data.entries)
