@@ -12,7 +12,7 @@
 
     {% for profile in object_list %}
         <p>
-            <a href="{{ site }}/profiles/{{ profile.user }}">{{ profile.user }}</a>
+            <a href="{{ URL_PREPENDER }}/profiles/{{ profile.user }}">{{ profile.user }}</a>
         </p>
     {% endfor %}
 

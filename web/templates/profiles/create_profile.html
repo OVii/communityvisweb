@@ -27,12 +27,12 @@
 
         <div class="pull-right" id="options">
 
-            <a class="btn" href='/accounts/profile'>Your Profile</a>
-            <a class="btn" href='/accounts/password/reset/'>Reset Password
+            <a class="btn" href='{{ URL_PREPENDER }}/accounts/profile'>Your Profile</a>
+            <a class="btn" href='{{ URL_PREPENDER }}/accounts/password/reset/'>Reset Password
             </a>
 
             {% if profile.user.is_authenticated and profile.user.is_superuser %}
-                <a class="btn" href='/admin/'>Administration pages</a>
+                <a class="btn" href='{{ URL_PREPENDER }}/admin/'>Administration pages</a>
             {% endif %}
 
         </div>
