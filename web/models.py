@@ -39,7 +39,7 @@ class Reference(models.Model):
     url = models.CharField(max_length=256, default="")
 
     authors = models.ManyToManyField(ReferenceAuthor, related_name="authors+")
-    bibtex = models.TextField(max_length=2048)
+    bibtex = models.TextField()
     referenceAttributes = models.ManyToManyField(ReferenceAttribute, related_name="attributes+")
 
     def __unicode__(self):
