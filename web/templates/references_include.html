@@ -35,7 +35,7 @@
 
                     </div>
 
-                    {% if owners != 0 %}
+                    {% if owners != 0 and user.is_authenticated %}
                         <div style="padding-top:5px">
 
                             {% url 'enquiry' taxonomy.id as suggest_url %}
