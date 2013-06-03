@@ -5,6 +5,7 @@
         <div class="row-fluid">
             <div class="span2">
                 <div id="controls">
+
                     <div class="well well-small">
                         <!-- sort -->
                         <div>
@@ -51,10 +52,13 @@
                            style="width: 82%">Download
                             BibTeX</a>
                     </div>
+                <div class="clearfix"></div><br/>
+                <p>Reference list last updated on {{ taxonomy.last_updated }}</p>
                 </div>
             </div>
 
             <div class="span10">
+
                 {% for reference in references %}
                     <div class="well taxonomy-well reference_box">
 
