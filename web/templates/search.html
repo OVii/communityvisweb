@@ -5,7 +5,7 @@
     <div class="home-content">
         <div class="row-fluid">
             <div class="search-wrapper">
-                <form id="search" action="{{ URL_PREPENDER }}/search">
+                <form id="search" action="{{ URL_PREPENDER }}/search" onsubmit="return validateSearchInput()">
                     <input id="search-text" type="text" name="q" placeholder="Search">
                 </form>
             </div

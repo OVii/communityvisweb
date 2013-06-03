@@ -13,6 +13,7 @@
             color: #EBB77B;
         }
     </style>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/validation.js"></script>
 </head>
 
 <body {% block body_attributes %}{% endblock %}>
@@ -24,24 +25,28 @@
 
         <div class="user-account">
             {% if user.is_authenticated %}
-                 {{ user.username }}
-				 <a href="{{ URL_PREPENDER }}/accounts/profile" class="btn btn-mini account-button"><i class="icon-user"></i></a>
-				 <a href="{{ URL_PREPENDER }}/accounts/logout" class="btn btn-mini account-button btn-yellow"><i class="icon-off icon-white"></i></a>
+                {{ user.username }}
+                <a href="{{ URL_PREPENDER }}/accounts/profile" class="btn btn-mini account-button"><i
+                        class="icon-user"></i></a>
+                <a href="{{ URL_PREPENDER }}/accounts/logout" class="btn btn-mini account-button btn-yellow"><i
+                        class="icon-off icon-white"></i></a>
             {% else %}
-			<a href="{{ URL_PREPENDER }}/accounts/register" class="btn btn account-button"><i class="icon-check"></i> Register</a>
-			<a href="{{ URL_PREPENDER }}/accounts/login" class="btn btn account-button"><i class="icon-user"></i> Sign In</a>
+                <a href="{{ URL_PREPENDER }}/accounts/register" class="btn btn account-button"><i
+                        class="icon-check"></i> Register</a>
+                <a href="{{ URL_PREPENDER }}/accounts/login" class="btn btn account-button"><i class="icon-user"></i>
+                    Sign In</a>
             {% endif %}
 
         </div>
 
         <div class="search" style="margin-right:20px">
-			<form id="search" action="{{ URL_PREPENDER }}/search">
+            <form id="search" action="{{ URL_PREPENDER }}/search" onsubmit="return validateSearchInput()">
                 <input id="search-text" style="width:80%" type="text" name="q" placeholder="Search References">
             </form>
         </div>
 
         <div class="menu">
-			<a href="{{ URL_PREPENDER }}/taxonomy" class="menu-item">
+            <a href="{{ URL_PREPENDER }}/taxonomy" class="menu-item">
                 Taxonomy
             </a>
         </div>
@@ -52,7 +57,7 @@
 
 <div class="container-fluid content">
 
-    	{% block content %}{% endblock %}
+    {% block content %}{% endblock %}
 
 </div>
 
@@ -92,12 +97,15 @@
         <div class="footer_container">
             <div class="additional-information" align="center">
                 {% block social_network %}
-                <span class='st_facebook_hcount' displayText='Facebook'></span>
-                <span class='st_twitter_hcount' displayText='Tweet'></span>
-                <span class='st_linkedin_hcount' displayText='LinkedIn'></span>
-                <br/><br/>
+                    <span class='st_facebook_hcount' displayText='Facebook'></span>
+                    <span class='st_twitter_hcount' displayText='Tweet'></span>
+                    <span class='st_linkedin_hcount' displayText='LinkedIn'></span>
+                    <br/><br/>
                 {% endblock %}
-                © Community Resource: Visualization 2013-Present | Licensed under <a href="http://creativecommons.org/licenses/by/3.0/" alt="View License" target="_blank">Creative Commons by 3.0 Unported</a> | Designed by <a href="http://www.antarctic-design.co.uk" target="_blank">Antarctic Design</a>
+                © Community Resource: Visualization 2013-Present | Licensed under <a
+                    href="http://creativecommons.org/licenses/by/3.0/" alt="View License" target="_blank">Creative
+                Commons by 3.0 Unported</a> | Designed by <a href="http://www.antarctic-design.co.uk" target="_blank">Antarctic
+                Design</a>
 
             </div>
 
