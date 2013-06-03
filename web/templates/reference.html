@@ -24,11 +24,20 @@
 
                     <p style="font-size: 1em; font-weight:bold">{{ reference.year }}</p>
 
-
-                    <br/><br/>
                     {% if reference.url %}
-                        <a href="{{ reference.url }}" target="_blank" class="btn">Read the paper</a>
+                        <p><a href="{{ reference.url }}" target="_blank" class="btn">Read the paper</a></p>
                     {% endif %}
+
+
+                    <hr/>
+
+                    <p>Associated with the following categories</p>
+                    {% for taxonomyItem in taxonomy_items.all %}
+                        <div>
+                            <i class="icon-arrow-up"></i><a
+                                href="{{ URL_PREPENDER }}/taxonomy/{{ taxonomyItem.id }}/">{{ taxonomyItem.name }}</a>
+                        </div>
+                    {% endfor %}
                 </div>
             </div>
         </div>
