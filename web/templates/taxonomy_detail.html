@@ -41,7 +41,6 @@
         </div>
         <div class="btn-group pull-right">
 
-
             {% if user.is_superuser or ownerLoggedIn %}
                 <a class="btn" href="{{ URL_PREPENDER }}/taxonomy/edit/{{ taxonomy.id }}">Edit Record</a>
                 <a class="btn btn-blue" onclick="showReferenceAdditionWindow()">Add References</a>

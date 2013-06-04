@@ -576,13 +576,16 @@ def reference_remove(request, taxonomy_id, reference_id):
 
 
 def reference_detail(request, reference_id):
+
+    currentPage = request.GET.get('currentPage', '')
+
     try:
         referenceItem = Reference.objects.filter(pk=reference_id).get(pk=reference_id)
         assignedTaxonomyItems = referenceItem.taxonomyitem_set
     except:
         referenceItem = {}
     return render_to_response("templates/reference.html",
-                              {'reference': referenceItem, 'taxonomy_items': assignedTaxonomyItems},
+                              {'reference': referenceItem, 'taxonomy_items': assignedTaxonomyItems, 'previousPage': currentPage},
                               context_instance=RequestContext(request))
 
 

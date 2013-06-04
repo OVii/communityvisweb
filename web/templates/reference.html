@@ -1,6 +1,27 @@
 {% extends "base.html" %}
 
+{% block head_additional %}
+    <style>
+        .nav-pills>.active>a, .nav-pills>.active>a:hover, .nav-pills>.active>a:focus {
+            color: #fff;
+           background-color: #EBB77B;
+        }
+
+
+    </style>
+{% endblock %}
 {% block content %}
+
+    <div class="clearfix"></div>
+    <div class="row-fluid">
+
+        <ul class="nav nav-pills">
+            <br/>
+            <li class="active">
+                <a href="{{ previousPage }}">← Previous</a>
+            </li>
+        </ul>
+    </div>
 
     <div class="profile-content">
 

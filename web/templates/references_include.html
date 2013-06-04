@@ -76,7 +76,7 @@
                         {% endif %}
 
 
-                        <a href="{{ URL_PREPENDER }}/reference/{{ reference.id }}" class="btn btn-small">View Reference</a>
+                        <a href="{{ URL_PREPENDER }}/reference/{{ reference.id }}?currentPage={{ request.path }}" class="btn btn-small">View Reference</a>
 
 
                         {% if owners != 0 %}
