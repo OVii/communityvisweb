@@ -12,8 +12,6 @@
             $("#deleteModalForm").attr("action", '{{ URL_PREPENDER }}/reference/remove/{{ taxonomy.id }}/' + referenceId + '/');
         }
 
-
-
         function showConfirmWindow() {
             $('#confirmRemoveModal').modal('show');
         }
@@ -22,53 +20,10 @@
             $('#addReferenceModal').modal('show');
         }
 
-        function showSuggestBox(type, url) {
-
-            if (type === 'taxonomy') {
-                $('#options').html('<div class="controls">' +
-                        '<select name="type">' +
-                        '<option>Modify description</option>' +
-                        '<option>Add a new reference</option>' +
-                        '<option>Modify a reference</option>' +
-                        '<option>Other</option>' +
-                        '</select></div>');
-
-                $("#suggestForm").attr("action", url);
-            } else {
-                $('#options').html('<div class="controls">' +
-                        '<select name="type">' +
-                        '<option>Remove reference</option>' +
-                        '<option>Modify reference</option>' +
-                        '<option>Other</option>' +
-                        '</select></div>');
-
-                $("#suggestForm").attr("action", url);
-            }
-
-            $('#suggestModal').modal('show');
-        }
 
 
-        function validateForm() {
-            var fileName = document.forms["bibtex_upload_form"]["bibtex_file"].value.toLowerCase();
-
-            console.log('Filename: ' + fileName);
-
-            if (fileName === "") {
-                alert("Please select a file!");
-                return false;
-            }
-            var extension = fileName.substring(fileName.lastIndexOf("."));
-            console.log(extension)
-            if (extension === ".bib" || extension === '.bibtex') {
-                $("#upload-area").html('<img align="center" src="{{ STATIC_URL }}img/static_img/profile/spinner.gif"/></br>');
-                return true;
-            }
-
-            alert("Please upload a file with the bib or BibTeX extension!");
-            return false;
-        }
     </script>
+
 {% endblock %}
 
 {% block content %}
@@ -128,171 +83,11 @@
         {% include "references_include.html" %}
     {% endif %}
 
-
-    <div id="deleteModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="deleteModalForm"
-         aria-hidden="true">
-        <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-            <h3>Delete Reference</h3>
-        </div>
-        <form accept-charset="UTF-8" action="" class="formbody" id="deleteModalForm" method="post">
-            <div class="modal-body">
-                <div class="modal-body">
-                    {% csrf_token %}
-                    <div class="control-group">
-                        <input type="hidden" name="postedFrom" value="{{ request.path }}"/>
-                        <label for="comments" class="control-label">Are you sure?</label><input name="commit" type="submit" class="btn btn-danger" value="Yes">
-                    </div>
-                </div>
-            </div>
-
-        </form>
-    </div>
-
-    <div id="taxonomyRequestModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="taxonomyRequest"
-         aria-hidden="true">
-        <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-            <h3>Taxonomy Request</h3>
-        </div>
-        <form accept-charset="UTF-8" action="{{ URL_PREPENDER }}/request_ownership/{{ taxonomy.id }}" class="formbody"
-              id="bookingForm"
-              method="post">
-            <div class="modal-body">
-                <div class="modal-body" id="booking">
-                    {% csrf_token %}
-                    <div class="control-group">
-                        <label for="comments" class="control-label">Tell us why you want to maintain this item?</label>
-
-                        <div class="controls">
-                            <textarea name="comments" maxlength="5000" rows=10 class="span6"></textarea>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer" id="button">
-                <input name="commit" type="submit" class="btn btn-yellow" value="Submit Request">
-            </div>
-        </form>
-    </div>
-
-    <div id="suggestModal" class="modal hide fade" tabindex="-1" role="dialog"
-         aria-labelledby="suggestModal"
-         aria-hidden="true">
-        <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-            <h3>Suggestions</h3>
-        </div>
-        <form accept-charset="UTF-8" action="{{ URL_PREPENDER }}/enquiry/{{ taxonomy.id }}/" class="formbody"
-              id="suggestForm"
-              method="post">
-            <div class="modal-body">
-                <div class="modal-body" id="booking">
-                    {% csrf_token %}
-                    <div class="control-group">
-                        <label for="type" class="control-label">What do you want to suggest?</label>
-
-                        <div id="options">
-                            {#Options will be inserted here#}
-                        </div>
-
-                        <label for="message" class="control-label">What do you want to say?</label>
-
-                        <div class="controls">
-                            <textarea name="message" maxlength="5000" rows=10 class="span6"></textarea>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer" id="button">
-                <input name="commit" type="submit" class="btn btn-yellow" value="Submit Suggestion">
-            </div>
-        </form>
-    </div>
-
-    <div id="addReferenceModal" class="modal hide fade" tabindex="-1" role="dialog"
-         aria-labelledby="suggestModal"
-         aria-hidden="true">
-        <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-            <h3>Add References</h3>
-        </div>
-
-        <br/>
-        <ul class="nav nav-tabs" id="myTab">
-            <li class="active"><a href="#upload" data-toggle="tab">Upload BibTeX</a></li>
-            <li><a href="#paste" data-toggle="tab">Paste BibTeX</a></li>
-        </ul>
-
-        <div class="tab-content">
-            <div class="tab-pane active" id="upload">
-                <div class="reference-block-addition-section">
-                    <div align="center">
-                        <h4>Upload a BibTeX file...</h4>
-
-                        <form action="{{ URL_PREPENDER }}/reference/add/file"
-                              id="bibtex_upload_form" enctype="multipart/form-data" method="post" onsubmit="return validateForm()">
-
-                            {% csrf_token %}
-
-                            <input type="hidden" name="taxonomy_id" value="{{ taxonomy.id }}"/>
-
-                            <input type="hidden" name="postedFrom" value="{{ request.path }}"/>
-
-                            <div class="fileupload fileupload-new" data-provides="fileupload">
-                                <div class="input-append">
-                                    <div class="uneditable-input span3"><i
-                                            class="icon-file fileupload-exists"></i> <span
-                                            class="fileupload-preview"></span></div>
-                                <span class="btn btn-file"><span class="fileupload-new">Select file</span>
-                                    <span class="fileupload-exists">Change</span><input type="file" name="bibtex_file"/></span>
-                                    <a href="#" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
-                                </div>
-                            </div>
-
-                            <div id="upload-area" align="center"></div>
-                            <div>
-                                <input name="commit" type="submit" class="btn btn-yellow" value="Upload">
-                            </div>
-                        </form>
-                    </div>
-                    <br/><br/>
-
-
-                </div>
-
-            </div>
-            <div class="tab-pane" id="paste">
-                <div class="reference-block-addition-section" align="center">
-                    <h4>Paste a BibTeX file...</h4>
-
-                    <form accept-charset="UTF-8" action="{{ URL_PREPENDER }}/reference/add/text" class="formbody"
-                          id="addReferenceForm"
-                          method="post">
-                        {% csrf_token %}
-                        <div class="modal-body">
-                            <div class="modal-body" id="booking">
-                                <input type="hidden" name="postedFrom" value="{{ request.path }}"/>
-                                <input type="hidden" name="taxonomy_id" value="{{ taxonomy.id }}"/>
-                                <textarea id="bibtex" name="bibtex" class="span6"
-                                          rows="5"></textarea>
-                            </div>
-                        </div>
-
-                        <div id="upload-area"></div>
-                        <input name="commit" type="submit" class="btn btn-yellow" value="Load">
-
-                    </form>
-
-                </div>
-            </div>
-
-
-        </div>
-
-    </div>
-
     {% include 'fragments/removeModal.html' %}
+    {% include 'fragments/suggestModal.html' %}
+    {% include 'fragments/taxonomyRequestModal.html' %}
+    {% include 'fragments/addReferenceModal.html' %}
+    {% include 'fragments/deleteReferenceModal.html' %}
 
 
     <script type="text/javascript">

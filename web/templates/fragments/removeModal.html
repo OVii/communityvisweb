@@ -6,14 +6,14 @@
         <h3>Are you sure?</h3>
     </div>
     <form accept-charset="UTF-8" action="{{ URL_PREPENDER }}/revoke_ownership/{{ taxonomy.id }}" class="formbody" id="confirmRemove"
-          method="post">
+          method="post" onclick="return validateRevokeForm()">
         <div class="modal-body">
             <div class="modal-body" id="booking">
                 {% csrf_token %}
-                <div class="control-group">
-                    <label for="comments" class="control-label">If you can spare some time, please tell us why you're
-                        going?</label>
+                <div id="revoke_errors"></div>
 
+                <div id="removal_detail_group" class="control-group">
+                    <label for="comments" class="control-label">Please tell us why you're leaving?</label>
                     <div class="controls">
                         <textarea name="comments" maxlength="5000" rows=10 class="span6"></textarea>
                     </div>
@@ -25,3 +25,19 @@
         </div>
     </form>
 </div>
+
+<script type="text/javascript">
+    function validateRevokeForm() {
+            var message = document.forms["confirmRemove"]["comments"].value;
+            blankMessage = (message === "");
+            var errorHTML = "";
+            if (blankMessage) {
+                errorHTML += '<div class="alert alert-error">Please enter a message!</div>'
+            }
+
+            $("#revoke_errors").html(errorHTML);
+
+            $("#removal_detail_group").toggleClass("control-group error", blankMessage);
+            return !(blankMessage);
+        }
+</script>

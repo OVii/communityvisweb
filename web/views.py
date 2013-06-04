@@ -97,7 +97,7 @@ def contact(request):
 def request_ownership_send(request, taxonomy_id):
     email_subject = email_prefix + "Request for taxonomy ownership by " + request.user.username
     email_from = request.user.email
-    email_body = request.POST['comments']
+    email_body = request.POST['message']
 
     taxonomyItem = TaxonomyItem.objects.filter(pk=taxonomy_id).get(pk=taxonomy_id)
 
@@ -345,8 +345,8 @@ def sendEmailForEnquiry(message, request, taxonomyItem):
 
         url = Site.objects.filter(id=SITE_ID).get(id=SITE_ID).domain
 
-        email_body = "You can view this taxonomy item <a href=" + url + "/taxonomy/" \
-                     + str(taxonomyItem.id) + ">here</a>.\n\n"
+        email_body = 'You can view this taxonomy item <a href=\"' + url + '/taxonomy/' + str(
+            taxonomyItem.id) + '\">here</a>.\n\n'
 
         email_body += message
 

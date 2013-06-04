@@ -317,69 +317,8 @@
         </div>
     </div>
 
-    <div id="responseModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="taxonomyRequest"
-         aria-hidden="true">
-        <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-            <h3>Response to Taxonomy Moderation Request</h3>
-        </div>
-        <form accept-charset="UTF-8" action="/request_ownership/response/" class="formbody" id="responseForm"
-              method="post">
-            <div class="modal-body">
-                <div class="modal-body" id="booking">
-                    {% csrf_token %}
-                    <div class="control-group">
-
-                        <label for="response" class="control-label">Reponse</label>
-                        <select name="type">
-                            <option>Approved</option>
-                            <option>Rejected</option>
-                        </select>
-
-                        <input type="hidden" name="postedFrom" value="{{ request.path }}"/>
-                        <label for="comments" class="control-label">Insert any further information you want to add and
-                            send to the volunteer here?</label>
-
-                        <div class="controls">
-                            <textarea name="responseDetail" maxlength="5000" rows=10 class="span6"></textarea>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer" id="button">
-                <input name="commit" type="submit" class="btn btn-danger" value="Submit Request">
-            </div>
-        </form>
-    </div>
-
-    <div id="queryResponseModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="queryResponse"
-         aria-hidden="true">
-        <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-            <h3>Response to Suggestion</h3>
-        </div>
-        <form accept-charset="UTF-8" action="" class="formbody" id="queryResponseForm"
-              method="post">
-            <div class="modal-body">
-                <div class="modal-body" id="booking">
-                    {% csrf_token %}
-                    <div class="control-group">
-
-                        <label for="comments" class="control-label">Insert any further information you want to provide
-                            to the requester.</label>
-
-                        <div class="controls">
-                            <textarea name="message" maxlength="5000" rows=10 class="span6"></textarea>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer" id="button">
-                <input name="commit" type="submit" class="btn btn-danger" value="Submit Response">
-            </div>
-        </form>
-    </div>
-
+    {% include 'fragments/suggestionResponseModal.html' %}
+    {% include 'fragments/taxonomyModerationRequestModal.html' %}
     {% include 'fragments/removeModal.html' %}
 
 {% endblock %}
