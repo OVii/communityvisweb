@@ -279,7 +279,7 @@ def public_profile(request, username):
                                'approvals': [], 'taxonomyItems': taxonomyItems, 'notifications': []},
                               context_instance=RequestContext(request))
 
-
+@login_required
 def profile(request):
     requestedUser = None
     loggedInUser = False
