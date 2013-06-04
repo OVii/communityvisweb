@@ -58,13 +58,18 @@ def taxonomy_detail(request, taxonomy_id):
 
     refer = reference_backend.sorted_reference_list(request, references)
 
+    ownershipRequested = False
+    if request.user.is_authenticated():
+        existingOwnershipRequestQuery = OwnershipRequest.objects.filter(requester=request.user).filter(taxonomyItem=taxonomy)
+        if len(existingOwnershipRequestQuery) > 0:
+            ownershipRequested = True
     ownerLoggedIn = False
     if request.user in taxonomy.owners.all():
         ownerLoggedIn = True
 
     return render_to_response("templates/taxonomy_detail.html",
                               {'taxonomy': taxonomy, 'owners': len(taxonomy.owners.all()),
-                               'ownerLoggedIn': ownerLoggedIn, 'references': refer},
+                               'ownerLoggedIn': ownerLoggedIn, 'ownershipRequested': ownershipRequested, 'references': refer},
                               context_instance=RequestContext(request))
 
 
@@ -323,9 +328,11 @@ def profile(request):
         for enquiry in enquiryQueryForTaxonomyItem:
             notifications.append(enquiry)
 
+    requestedTaxonomyItemsForUser = OwnershipRequest.objects.filter(requester__username=requestedUser.username)
+
     return render_to_response("profile.html",
                               {"loggedInUser": loggedInUser, "profile": profile, "gravatar": gravatarMD5,
-                               'approvals': approvals, 'taxonomyItems': taxonomyItems, 'notifications': notifications},
+                               'approvals': approvals, 'taxonomyItems': taxonomyItems, 'requested': requestedTaxonomyItemsForUser, 'notifications': notifications},
                               context_instance=RequestContext(request))
 
 

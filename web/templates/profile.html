@@ -254,6 +254,17 @@
                 </div>
 
                 <div class="profile-unit">
+                    {% for taxonomyItem in requested %}
+                        <div class="well">
+                            <div class="alert alert-info">Awaiting approval for ownership</div>
+                            <p><strong><a
+                                    href="{{ URL_PREPENDER }}/taxonomy/{{ taxonomyItem.taxonomyItem.id }}">{{ taxonomyItem.taxonomyItem.name }}</a></strong>
+                            </p>
+
+                            <p><i class="icon-arrow-up"></i> {{ taxonomyItem.taxonomyItem.category }}</p>
+                        </div>
+                    {% endfor %}
+
                     {% for taxonomyItem in taxonomyItems %}
                         <div class="well">
 
