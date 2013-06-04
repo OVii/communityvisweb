@@ -174,7 +174,8 @@ def revoke_ownership(request, taxonomy_id):
         email_subject = email_prefix + "Ownership revoked by " + request.user.username + " for " + taxonomyItem.name
         email_from = request.user.email
         email_name = request.user.username
-        email_body = request.POST['comments']
+        email_body = email_name + ' has revoked their ownership of ' + taxonomyItem.name
+        email_body += request.POST['comments']
 
         send_mail(email_subject, email_body, email_from,
                   [EMAIL_HOST_USER], fail_silently=False)
@@ -283,7 +284,7 @@ def profile(request):
     requestedUser = None
     loggedInUser = False
 
-    if request.user.is_authenticated:
+    if request.user.is_authenticated():
         requestedUser = request.user
         loggedInUser = True
     else:
@@ -369,7 +370,6 @@ def sendEmailForEnquiry(message, request, taxonomyItem):
                                   context_instance=RequestContext(request))
 
 
-@login_required
 def handleTaxonomyEnquiry(request, taxonomy_id):
     type = request.POST['type']
     message = request.POST['message']
@@ -381,7 +381,6 @@ def handleTaxonomyEnquiry(request, taxonomy_id):
     return sendEmailForEnquiry(message, request, taxonomyItem)
 
 
-@login_required
 def handleReferenceEnquiry(request, taxonomy_id, reference_id):
     type = request.POST['type']
     message = request.POST['message']
@@ -396,7 +395,6 @@ def handleReferenceEnquiry(request, taxonomy_id, reference_id):
     return sendEmailForEnquiry(message, request, taxonomyItem)
 
 
-@login_required
 def respondToTaxonomyEnquiry(request, decision, enquiry_id):
     message = request.POST['message']
 
@@ -441,7 +439,6 @@ def taxonomy_edit(request, taxonomy_id):
                               context_instance=RequestContext(request))
 
 
-@login_required()
 def taxonomy_add_action(request):
     name = request.POST.get('taxonomy_name', None)
     category = request.POST.get('category_name', None)
