@@ -3,10 +3,47 @@
 
 {% block title %}View Taxonomy Item{% endblock %}
 
+{% block head_additional %}
+    <script type="text/javascript">
+        function validate() {
+            var name = document.forms["contact-form"]["name"].value;
+            var email = document.forms["contact-form"]["email"].value;
+            var comments = document.forms["contact-form"]["comments"].value;
+
+            blankName = (name === "");
+            blankEmail = (email === "");
+            blankDetails = (comments === "");
+
+            var errorHTML = "";
+
+            if(blankName) {
+                errorHTML += '<div class="alert alert-error">Please enter a name!</div>'
+            }
+            if(blankEmail) {
+                errorHTML += '<div class="alert alert-error">Please enter your email address!</div>'
+            }
+            if(blankDetails) {
+                errorHTML += '<div class="alert alert-error">Please enter a message!</div>'
+            }
+
+            $("#errors").html(errorHTML);
+
+            $("#name_group").toggleClass("control-group error", blankName);
+            $("#name_help").toggleClass("hide", !blankName);
+
+            $("#email_group").toggleClass("control-group error", blankEmail);
+            $("#email_help").toggleClass("hide", !blankEmail);
+
+            $("#comments_group").toggleClass("control-group error", blankDetails);
+            $("#description_help").toggleClass("hide", !blankDetails);
+
+            return !(blankName || blankEmail || blankDetails);
+
+        }
+    </script>
+{% endblock %}
+
 {% block content %}
-
-    {% load url from future %}
-
 
     <div>
         {% if error_message %}
@@ -29,28 +66,35 @@
         <div class="section-header"><span class="content-section login-section"><span
                 class="header-text"><i class="icon-envelope"></i> Contact us</span></span>
         </div>
-        <form action="{{ URL_PREPENDER }}/contact/send" method="post" class="formbody">
+
+
+
+        <div class="clearfix"></div>
+        <form action="{{ URL_PREPENDER }}/contact/send" method="post" id="contact-form" class="formbody"
+              onsubmit="return validate();">
+
+        <div id="errors">
+        </div>
             {% csrf_token %}
 
-            <div class="control-group">
+            <div id="name_group" class="control-group">
                 <label for="name" class="control-label">Name</label>
 
                 <div class="controls">
-                    <input type="text" name="name" class="input-xlarge">
+                    <input id="name" type="text" name="name" class="input-xlarge">
                 </div>
             </div>
-            <div class="control-group">
+            <div id="email_group" class="control-group">
                 <label for="email" class="control-label">Email Address</label>
-
-                <div class="controls">
-                    <input type="text" name="email" class="input-xlarge">
-                </div>
+                <input id="email" type="email" name="email" class="input-xlarge">
             </div>
-            <div class="control-group">
+
+            <div id="comments_group" class="control-group">
                 <label for="comments" class="control-label">Comments</label>
 
                 <div class="controls">
-                    <textarea name="comments" maxlength="5000" rows=10 class="span4">{% if taxonomy %}I wish to take
+                    <textarea id="comments" name="comments" maxlength="5000" rows=10 class="span4">{% if taxonomy %}I
+                        wish to take
                         ownership of taxonomy item "{{ taxonomy.name }}". I include relevant details of my expertise in
                         the area.
                     {% endif %}</textarea>
