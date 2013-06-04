@@ -21,7 +21,6 @@
         }
 
 
-
     </script>
 
 {% endblock %}
@@ -53,10 +52,14 @@
             {% endif %}
 
             {% if owners == 0 %}
-                {% if user.is_authenticated %}
-                    <a onclick="showRequestWindow()" class="btn btn-yellow">Volunteer to maintain</a>
+                {% if ownershipRequested %}
+                    <a class="btn disabled btn-yellow">Volunteer request lodged</a>
                 {% else %}
-                    <a href="{{ URL_PREPENDER }}/accounts/login" class="btn btn-yellow">Volunteer to maintain</a>
+                    {% if user.is_authenticated %}
+                        <a onclick="showRequestWindow()" class="btn btn-yellow">Volunteer to maintain</a>
+                    {% else %}
+                        <a href="{{ URL_PREPENDER }}/accounts/login" class="btn btn-yellow">Volunteer to maintain</a>
+                    {% endif %}
                 {% endif %}
             {% else %}
                 <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
