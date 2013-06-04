@@ -43,6 +43,7 @@ DATABASES = {
 }
 
 LOGIN_REDIRECT_URL = "/community/accounts/profile/"
+LOGIN_URL= "/community/accounts/login"
 
 """
 DATABASES = {'default': dj_database_url.config(default='postgres://localhost')}

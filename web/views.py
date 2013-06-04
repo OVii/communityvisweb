@@ -381,6 +381,7 @@ def handleTaxonomyEnquiry(request, taxonomy_id):
     return sendEmailForEnquiry(message, request, taxonomyItem)
 
 
+@login_required
 def handleReferenceEnquiry(request, taxonomy_id, reference_id):
     type = request.POST['type']
     message = request.POST['message']
@@ -395,6 +396,7 @@ def handleReferenceEnquiry(request, taxonomy_id, reference_id):
     return sendEmailForEnquiry(message, request, taxonomyItem)
 
 
+@login_required
 def respondToTaxonomyEnquiry(request, decision, enquiry_id):
     message = request.POST['message']
 
@@ -439,6 +441,7 @@ def taxonomy_edit(request, taxonomy_id):
                               context_instance=RequestContext(request))
 
 
+@login_required()
 def taxonomy_add_action(request):
     name = request.POST.get('taxonomy_name', None)
     category = request.POST.get('category_name', None)
@@ -462,6 +465,7 @@ def trimURL(urlRequestedFrom, find):
 
 @login_required()
 def taxonomy_edit_action(request):
+
     taxonomyId = request.POST.get('taxonomy_id', None)
     name = request.POST.get('taxonomy_name', None)
     category = request.POST.get('category_name', None)
@@ -484,6 +488,7 @@ def taxonomy_edit_action(request):
     return HttpResponseRedirect(urlRequestedFrom)
 
 
+@login_required
 def reference_add_upload_file(request):
     taxonomy_id = request.POST.get('taxonomy_id', None)
     urlRequestedFrom = request.POST.get('postedFrom', '/')
@@ -507,6 +512,7 @@ def reference_add_upload_file(request):
                                   context_instance=RequestContext(request))
 
 
+@login_required
 def reference_add_upload_text(request):
     taxonomy_id = request.POST.get('taxonomy_id', None)
     urlRequestedFrom = request.POST.get('postedFrom', '/')
@@ -550,6 +556,7 @@ def contact_send(request):
                                   context_instance=RequestContext(request))
 
 
+@login_required
 def reference_remove(request, taxonomy_id, reference_id):
     urlRequestedFrom = request.POST.get('postedFrom', '/')
 
