@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+{% load webdesign %}
+
+{% block title %}Volunteer{% endblock %}
+
+{% block head_additional %}
+    <script type="text/javascript">
+        function validate() {
+            var name = document.forms["volunteer-form"]["name"].value;
+            var comments = document.forms["volunteer-form"]["message"].value;
+
+            blankName = (name === "");
+            blankDetails = (comments === "");
+
+            var errorHTML = "";
+
+            if (blankName) {
+                errorHTML += '<div class="alert alert-error">Please enter a name!</div>'
+
+                if (blankDetails) {
+                    errorHTML += '<div class="alert alert-error">Please enter a message!</div>'
+                }
+
+                $("#errors").html(errorHTML);
+
+                $("#name_group").toggleClass("control-group error", blankName);
+
+                $("#comments_group").toggleClass("control-group error", blankDetails);
+
+                return !(blankName || blankDetails);
+            }
+        }
+
+        function updateAction() {
+            var taxonomyId = document.forms["volunteer-form"]["taxonomyItem"].value;
+
+            console.log('Taxonomy id is ' + taxonomyId);
+
+            $("#volunteer-form").attr("action", '{{ URL_PREPENDER }}/request_ownership/' + taxonomyId);
+        }
+    </script>
+{% endblock %}
+
+{% block content %}
+
+
+    {% if error_message %}
+        <div class="clearfix"></div>
+        <div class="alert alert-error">
+            <button type="button" class="close" data-dismiss="alert">×</button>
+            <strong>Warning!</strong> {{ error_message }}
+        </div>
+        <div class="clearfix"></div>
+    {% endif %}
+
+    {% if success_message %}
+        <div class="clearfix"></div>
+        <div class="alert alert-success">{{ success_message }}
+        </div>
+        <div class="clearfix"></div>
+    {% endif %}
+
+    <div id="login" class="login_form">
+        <div class="section-header"><span class="content-section login-section"><span
+                class="header-text"><i class="icon-question-sign"></i> Tell us why you wish to volunteer</span></span>
+        </div>
+
+        <div class="clearfix"></div>
+        <form action="" method="post" id="volunteer-form" class="formbody"
+              onsubmit="return validate();">
+
+            <div align="center">
+                <img src="{{ STATIC_URL }}img/static_img/home/I-want-to-volunteer.png" width="250px">
+            </div>
+            <div id="errors">
+            </div>
+            {% csrf_token %}
+
+            <div id="name_group" class="control-group">
+                <label for="name" class="control-label">Name</label>
+
+                <div class="controls">
+                    <input id="name" type="text" name="name" class="span5 input-xlarge">
+                </div>
+            </div>
+
+
+            <label for="availableItems" class="control-label">Select an Available Taxonomy Item</label>
+            <select name="availableItems" id="taxonomyItem" class="span5" onchange="updateAction()">
+
+                {% for category, taxonomyItems in available.items %}
+                    <optgroup label="{{ category }}">
+                        {% for taxonomyItem in taxonomyItems %}
+                            <option value="{{ taxonomyItem.id }}">{{ taxonomyItem.name }}</option>
+                        {% endfor %}
+                    </optgroup>
+                {% endfor %}
+            </select>
+
+
+            <div id="comments_group" class="control-group">
+                <label for="comments" class="control-label">Tell us why you should maintain this item. Please provide as
+                    much information as possible to enable our fast processing of your request!</label>
+
+                <div class="controls">
+                    <textarea id="message" name="message" maxlength="5000" rows=10 class="span5"
+                              placeholder="I wish to take ownership of the above taxonomy item. I include relevant details of my expertise in the area."></textarea>
+                </div>
+            </div>
+
+            <div class="controls">
+                <input type="submit" class="btn btn-yellow pull-right" value="Submit Volunteer Request">
+            </div>
+
+        </form>
+    </div>
+
+{% endblock %}

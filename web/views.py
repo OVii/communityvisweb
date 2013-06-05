@@ -60,7 +60,8 @@ def taxonomy_detail(request, taxonomy_id):
 
     ownershipRequested = False
     if request.user.is_authenticated():
-        existingOwnershipRequestQuery = OwnershipRequest.objects.filter(requester=request.user).filter(taxonomyItem=taxonomy)
+        existingOwnershipRequestQuery = OwnershipRequest.objects.filter(requester=request.user).filter(
+            taxonomyItem=taxonomy)
         if len(existingOwnershipRequestQuery) > 0:
             ownershipRequested = True
     ownerLoggedIn = False
@@ -69,7 +70,8 @@ def taxonomy_detail(request, taxonomy_id):
 
     return render_to_response("templates/taxonomy_detail.html",
                               {'taxonomy': taxonomy, 'owners': len(taxonomy.owners.all()),
-                               'ownerLoggedIn': ownerLoggedIn, 'ownershipRequested': ownershipRequested, 'references': refer},
+                               'ownerLoggedIn': ownerLoggedIn, 'ownershipRequested': ownershipRequested,
+                               'references': refer},
                               context_instance=RequestContext(request))
 
 
@@ -144,9 +146,9 @@ def request_ownership_response(request, approval_id):
 
     email_subject = email_prefix + "Request for ownership of " + taxonomyItem.name + " " + response
 
-    email_body_prefix = "We are pleased to welcome you on board Community Vis!\n\n"
+    email_body_prefix = "We are pleased to welcome you on board Community Vis!\n\n Please login and start managing the references for " + taxonomyItem.name + "!";
     if response != "Approved":
-        email_body_prefix = "We are sorry to inform you that we were unable to approve your request.!\n\n"
+        email_body_prefix = "We are sorry to inform you that we were unable to approve your request. The reason for not doing so is given below.\n\n"
 
     email_body_reason = responseDetail
 
@@ -284,6 +286,7 @@ def public_profile(request, username):
                                'approvals': [], 'taxonomyItems': taxonomyItems, 'notifications': []},
                               context_instance=RequestContext(request))
 
+
 @login_required
 def profile(request):
     requestedUser = None
@@ -332,7 +335,8 @@ def profile(request):
 
     return render_to_response("profile.html",
                               {"loggedInUser": loggedInUser, "profile": profile, "gravatar": gravatarMD5,
-                               'approvals': approvals, 'taxonomyItems': taxonomyItems, 'requested': requestedTaxonomyItemsForUser, 'notifications': notifications},
+                               'approvals': approvals, 'taxonomyItems': taxonomyItems,
+                               'requested': requestedTaxonomyItemsForUser, 'notifications': notifications},
                               context_instance=RequestContext(request))
 
 
@@ -472,7 +476,6 @@ def trimURL(urlRequestedFrom, find):
 
 @login_required()
 def taxonomy_edit_action(request):
-
     taxonomyId = request.POST.get('taxonomy_id', None)
     name = request.POST.get('taxonomy_name', None)
     category = request.POST.get('category_name', None)
@@ -576,7 +579,6 @@ def reference_remove(request, taxonomy_id, reference_id):
 
 
 def reference_detail(request, reference_id):
-
     currentPage = request.GET.get('currentPage', '')
 
     try:
@@ -585,8 +587,29 @@ def reference_detail(request, reference_id):
     except:
         referenceItem = {}
     return render_to_response("templates/reference.html",
-                              {'reference': referenceItem, 'taxonomy_items': assignedTaxonomyItems, 'previousPage': currentPage},
+                              {'reference': referenceItem, 'taxonomy_items': assignedTaxonomyItems,
+                               'previousPage': currentPage},
                               context_instance=RequestContext(request))
+
+
+@login_required
+def volunteer(request):
+    """
+    Shows a page with a form listing the taxonomy items available to manage.
+    """
+    taxonomyItemsWithNoOwnerQuery = TaxonomyItem.objects.filter(owners=None)
+
+    #the results go in to a dictionary so that we can build a nested tree of categories to taxonomy items
+    resultDict = {}
+
+    for taxonomyItem in taxonomyItemsWithNoOwnerQuery:
+        if not resultDict.has_key(taxonomyItem.category.name):
+            resultDict[taxonomyItem.category.name] = []
+
+        resultDict[taxonomyItem.category.name].append(taxonomyItem)
+
+    return render_to_response("templates/volunteer.html",
+                              {'available': resultDict}, context_instance=RequestContext(request))
 
 
 
