@@ -39,7 +39,7 @@
                 <p>
                     {% for item in category.taxonomyitem_set.all %}
 
-                        {% if item.references.all %}
+                        {% if item.references.all|length > 0 %}
                             <span class="badge badge-yellow taxonomy-item">
                         {% else %}
                             <span class="badge badge-dark-grey taxonomy-item">

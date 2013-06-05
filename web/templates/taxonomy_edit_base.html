@@ -59,7 +59,9 @@
                 <span id="description_help" class="help-inline hide" style="vertical-align: top">Please enter a description</span>
             </div>
 
-            <div><input name="commit" type="submit" class="btn btn-inverse"
+            <div>
+                <a href="{{ URL_PREPENDER }}/taxonomy/" class="btn btn-inverse">Cancel</a>
+                <input name="commit" type="submit" class="btn btn-yellow"
                         value="{% if taxonomy %}Update{% else %}Add{% endif %} Taxonomy Item"></div>
         </form>
     </div>

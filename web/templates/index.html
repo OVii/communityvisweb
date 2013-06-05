@@ -1,38 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
-    <link rel="stylesheet" href="{{ STATIC_URL }}bootstrap/css/bootstrap.css"/>
-    <link rel="stylesheet" href="{{ STATIC_URL }}css/style.css"/>
-    {% block head_additional %} {% endblock %}
-    <title>Community Resource: Visualization</title>
-    <script type="text/javascript" src="{{ STATIC_URL }}js/validation.js"></script>
+{% extends "base.html" %}
+{% block title %}Visualization Taxonomy{% endblock %}
 
-</head>
-<body>
 {% load webdesign %}
 
-<div class="topbar-home">
-    <div class="topbar-content" align="center">
-
-        <div class="user-account">
-            {% if user.is_authenticated %}
-                {{ user.username }}
-                <a href="{{ URL_PREPENDER }}/accounts/profile/" class="btn btn-mini account-button"><i
-                        class="icon-user"></i></a>
-                <a href="{{ URL_PREPENDER }}/accounts/logout/" class="btn btn-mini btn-yellow account-button"><i
-                        class="icon-off icon-white"></i></a>
-            {% else %}
-                <a href="{{ URL_PREPENDER }}/accounts/register" class="btn btn-yellow account-button"><i
-                        class="icon-check icon-white"></i> Register</a>
-                <a href="{{ URL_PREPENDER }}/accounts/login/" class="btn btn-yellow account-button"><i
-                        class="icon-user icon-white"></i> Sign In</a>
-            {% endif %}
-        </div>
-
-    </div>
-</div>
-
+{% block content %}
 <div class="home-page">
     <div class="row-fluid" align="center">
         <img src="{{ STATIC_URL }}img/static_img/home/logo_lrg.png"/>
@@ -124,6 +95,4 @@
     {% endif %}
 
 </div>
-
-</body>
-</html>
+{% endblock %}
