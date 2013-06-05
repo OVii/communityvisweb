@@ -54,6 +54,8 @@ urlpatterns = patterns('',
                        url(r'^account/$', 'web.views.account', name='account'),
                        url(r'^orcid$', 'web.views.orcid_profile', name='orcid'),
 
+                       url(r'^volunteer$', 'web.views.volunteer', name='volunteer'),
+
                        #url(r'^web/references/(?P<reference_id>\d+)/$', 'web.views.reference_detail')
 
                        # Uncomment the next line to enable the admin:
