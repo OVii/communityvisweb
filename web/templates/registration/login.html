@@ -5,7 +5,17 @@
 {% block content %}
 
     {% if form.errors %}
-        <p>Your username and password didn't match. Please try again.</p>
+
+        <div class="clearfix"></div>
+        <br/>
+        {% if form.username.errors %}
+            <div class="alert alert-danger">{{ form.username.errors.as_text }}</div>
+        {% endif %}
+
+        {% if form.password.errors %}
+            <div class="alert alert-danger">{{ form.password.errors.as_text }}</div>
+        {% endif %}
+
     {% endif %}
 
     <div id="login" class="login_form" id="user_edit" xmlns="http://www.w3.org/1999/html">
