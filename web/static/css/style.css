@@ -5,6 +5,10 @@ body {
     color: #042F4B;
 }
 
+.modal-footer {
+    background-color: #fff;
+}
+
 .topbar {
     position: fixed;
     height: 60px;
