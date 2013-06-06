@@ -29,8 +29,6 @@ urlpatterns = patterns('',
                        url(r'^taxonomy/add/action/$', 'web.views.taxonomy_add_action', name='add_taxonomy_action'),
                        url(r'^taxonomy/edit/action/$', 'web.views.taxonomy_edit_action', name='edit_taxonomy_action'),
 
-                       url(r'^reference/edit/(?P<reference_id>\d+)/$', 'web.views.reference_edit', name='edit_reference'),
-                       url(r'^reference/add/manual$', 'web.views.reference_add_manual', name='add_reference'),
                        url(r'^reference/add/file$', 'web.views.reference_add_upload_file', name='upload_bibtex'),
                        url(r'^reference/add/text$', 'web.views.reference_add_upload_text', name='upload_bibtex_text'),
 
