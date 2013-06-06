@@ -64,7 +64,7 @@
 
                         <p class="title">{{ reference.title }}</p>
 
-                        <p class="authors">{{ reference.authors }}</p>
+                        <p class="authors">{{ reference.authorsAsText }}</p>
 
                         <p><span class="journal">{{ reference.journal }}</span>{% if reference.year > 0 %}
                             <span class="year">{% if reference.journal %} {% endif %}{{ reference.year }}</span>{% endif %}

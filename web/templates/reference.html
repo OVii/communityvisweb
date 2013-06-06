@@ -4,7 +4,16 @@
     <style>
         .nav-pills>.active>a, .nav-pills>.active>a:hover, .nav-pills>.active>a:focus {
             color: #fff;
-           background-color: #EBB77B;
+            background-color: #EBB77B;
+        }
+
+        .profile-blocks {
+            margin-top: 0px;
+        }
+
+        .profile-content {
+            width: 900px;
+            margin: 0 auto;
         }
 
 
@@ -18,27 +27,32 @@
         <ul class="nav nav-pills">
             <br/>
             <li class="active">
-                <a href="{{ previousPage }}">← Previous</a>
+                <a href="{{ previousPage }}">← Back</a>
             </li>
         </ul>
     </div>
 
+
     <div class="profile-content">
 
 
-        <div class="profile-blocks span6">
-            <div class="reference-block span5">
+        <div class="profile-blocks">
+            <div style="font-weight: lighter; color: #414241; padding:10px 40px; font-size:1.4em; line-height: 26px; text-rendering: optimizelegibility;">{{ reference.title }}</div>
+            <br/>
+            {% if reference.abstract %}
+                <div style="font-weight: lighter; color: #666666; padding:10px 40px; font-size:1.1em; line-height: 20px; text-rendering: optimizelegibility;">{{ reference.abstract }}</div>
+            {% endif %}
+
+            <div class="clearfix"></div>
+            <div class="reference-block span5" id="about">
                 <div class="block-head">
                     Article information
                     <hr/>
                 </div>
                 <div class="profile-unit">
-                    <p><strong>{{ reference.title }}</strong></p>
 
                     <p style="font-size: 1em">
-                        {% for author in reference.authors.all %}
-                            {{ author.first_name }} {{ author.last_name }}
-                        {% endfor %}
+                        {{ reference.authorsAsText }}
                     </p>
 
                     <p style="font-size: 1em; color:#efa700">{{ reference.journal }}</p>
@@ -61,10 +75,9 @@
                     {% endfor %}
                 </div>
             </div>
-        </div>
 
-        <div class="profile-blocks span6">
-            <div class="reference-block span5">
+
+            <div class="reference-block span5" id="about">
                 <div class="block-head">
                     BibTeX
                     <hr/>

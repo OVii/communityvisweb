@@ -29,6 +29,8 @@ urlpatterns = patterns('',
                        url(r'^taxonomy/add/action/$', 'web.views.taxonomy_add_action', name='add_taxonomy_action'),
                        url(r'^taxonomy/edit/action/$', 'web.views.taxonomy_edit_action', name='edit_taxonomy_action'),
 
+                       url(r'^reference/edit/(?P<reference_id>\d+)/$', 'web.views.reference_edit', name='edit_reference'),
+                       url(r'^reference/add/manual$', 'web.views.reference_add_manual', name='add_reference'),
                        url(r'^reference/add/file$', 'web.views.reference_add_upload_file', name='upload_bibtex'),
                        url(r'^reference/add/text$', 'web.views.reference_add_upload_text', name='upload_bibtex_text'),
 
@@ -63,29 +65,6 @@ urlpatterns = patterns('',
                        url(r'^orcid$', 'web.views.orcid_profile', name='orcid'),
 
                        url(r'^volunteer$', 'web.views.volunteer', name='volunteer'),
-
-                       #url(r'^web/references/(?P<reference_id>\d+)/$', 'web.views.reference_detail')
-
-
-
-                       url(r'^accounts/password/change/$',
-                           auth_views.password_change,
-                           name='auth_password_change'),
-                       url(r'^accounts/password/change/done/$',
-                           auth_views.password_change_done,
-                           name='auth_password_change_done'),
-                       url(r'^accounts/password/reset/$',
-                           auth_views.password_reset,
-                           name='auth_password_reset'),
-                       url(r'^accounts/password/reset/confirm/(?P<uidb36>[0-9A-Za-z]+)-(?P<token>.+)/$',
-                           auth_views.password_reset_confirm,
-                           name='auth_password_reset_confirm'),
-                       url(r'^accounts/password/reset/complete/$',
-                           auth_views.password_reset_complete,
-                           name='auth_password_reset_complete'),
-                       url(r'^accounts/password/reset/done/$',
-                           auth_views.password_reset_done,
-                           name='auth_password_reset_done'),
 
                        url(r'^admin/', include(admin.site.urls), name='admin'),
 

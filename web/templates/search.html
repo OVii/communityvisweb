@@ -5,7 +5,8 @@
     <div class="home-content">
         <div class="row-fluid">
             <div class="search-wrapper">
-                <form id="search-search" action="{{ URL_PREPENDER }}/search" onsubmit="return validateSearchInput('search-search')">
+                <form id="search-search" action="{{ URL_PREPENDER }}/search"
+                      onsubmit="return validateSearchInput('search-search')">
                     <input id="search-text" type="text" name="q" placeholder="Search">
                 </form>
             </div
@@ -19,9 +20,11 @@
 
 
         {% for reference in searchResults %}
-            <div class="well taxonomy-well reference_box">
+            <div class="reference_box">
 
-                <p class="title">{{ reference.title }}</p>
+                <p class="title"><a
+                        href="{{ URL_PREPENDER }}/reference/{{ reference.id }}?currentPage={{ request.get_full_path }}">{{ reference.title }}</a>
+                </p>
 
                 <p class="authors">{{ reference.authors }}</p>
 
@@ -30,11 +33,21 @@
                         , {% endif %}{{ reference.year }}</span>{% endif %} </p>
 
 
-                {% if reference.url %}
-                    <a href="{{ reference.url }}" target="_blank" class="btn btn-small btn-yellow">Read Paper</a>
-                {% endif %}
-            <a href="{{ URL_PREPENDER }}/reference/{{ reference.id }}" class="btn btn-small">View Reference</a>
+            <span style="font-size: 0.8em; color:#666666">in
+                {% for taxonomyItem in reference.taxonomyitem_set.all %}
+                    <a href="{{ URL_PREPENDER }}taxonomy/{{ taxonomyItem.id }}"
+                       style="font-size: 0.8em; color:#666666">{{ taxonomyItem.name }}</a>
+                    {% if not forloop.last %}, {% endif %}
+                {% endfor %}
+                            </span>
 
+                {% if reference.url %}
+                    <a href="{{ reference.url }}" target="_blank" class="btn btn-mini">Read Paper</a>
+                {% endif %}
+
+                {% if not forloop.last %}
+                    <hr/>
+                {% endif %}
 
             </div>
         {% endfor %}

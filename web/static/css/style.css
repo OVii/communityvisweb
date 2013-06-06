@@ -50,7 +50,9 @@ body {
 .logo {
     background-image: url('../img/static_img/logo_swapped.png');
     background-repeat: no-repeat;
-    width: 460px;
+    background-size: 85%;
+    width: 430px;
+    margin-top: 7px;
     height: 58px;
     float: left;
     display: block;
@@ -71,7 +73,7 @@ body {
 }
 
 .user-account {
-    margin-top: 22px;
+    margin-top: 18px;
 }
 
 .menu {
@@ -604,7 +606,7 @@ input#search-text {
 }
 
 .reference_box .title {
-    font-size: 1.0em;
+    font-size: 1.1em;
     font-weight: bolder;
 }
 
@@ -976,4 +978,9 @@ body > .container.tabs-right.tabbable-bodered > .tab-content {
     margin-left: 40px;
     margin-bottom: 20px;
     float: left;
+}
+
+.upload-area {
+    width: 100px;
+    height: 100px;
 }

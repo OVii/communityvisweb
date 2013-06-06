@@ -11,7 +11,7 @@
         var extension = fileName.substring(fileName.lastIndexOf("."));
         console.log(extension)
         if (extension === ".bib" || extension === '.bibtex') {
-            $("#upload-area").html('<img align="center" src="{{ STATIC_URL }}img/static_img/profile/spinner.gif"/></br>');
+            $("#upload-area").toggleClass("hidden");
             return true;
         }
 
@@ -90,7 +90,9 @@
                         </div>
                     </div>
 
-                    <div id="upload-area"></div>
+                    <div id="upload-area" class="hidden">
+                        <img align="center" src="{{ STATIC_URL }}img/static_img/profile/spinner.gif"/> <span class="title"> Loading</span>
+                    </div>
                     <input name="commit" type="submit" class="btn btn-yellow" value="Load">
 
                 </form>

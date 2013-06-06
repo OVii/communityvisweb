@@ -26,7 +26,6 @@ def getFormattedAuthorList(authors):
     count = 0
     numberOfAuthors = len(authors.all())
     for author in authors.all():
-
         authorsAsString += format_name(author)
 
         if count != numberOfAuthors - 1:
@@ -47,6 +46,8 @@ class SortableReference():
         self.authors = getFormattedAuthorList(ref.authors)
         self.title = ref.title
         self.journal = ref.journal
+        self.authorsAsText = ref.authorsAsText
+        self.taxonomyitem_set=ref.taxonomyitem_set
         self.year = ref.year
         self.url = ref.url
 

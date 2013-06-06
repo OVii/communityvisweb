@@ -34,6 +34,8 @@ class ReferenceAttribute(models.Model):
 class Reference(models.Model):
     entry_key = models.CharField(max_length=256)
     title = models.TextField(default="")
+    authorsAsText = models.TextField(default="")
+    abstract = models.TextField(default="")
     journal = models.CharField(max_length=256, default="")
     year = models.IntegerField(max_length=4, null=True)
     url = models.CharField(max_length=256, default="")

@@ -76,8 +76,10 @@ def bibtex_import(filename, taxonomyItem):
                     ref_obj.journal = bibtex_purify(value)
                 elif 'year' in field.lower():
                     ref_obj.year = int(value)
-                elif 'url' in field.lower() or 'doi' in field.lower():
+                elif 'url' in field.lower():
                     ref_obj.url = value
+                elif 'abstract' in field.lower():
+                    ref_obj.abstract = value
                 elif 'doi' in field.lower():
                     doiPrepender = 'http://dx.doi.org/'
                     if not value.startswith(doiPrepender):
@@ -88,18 +90,38 @@ def bibtex_import(filename, taxonomyItem):
                 attr.save()
 
                 ref_obj.referenceAttributes.add(attr)
+
+            authorsAsText = ""
+            count = 0
             if bib_data.entries[key].persons:
+                numberOfAuthors = len(bib_data.entries[key].persons['author'])
                 for person in bib_data.entries[key].persons['author']:
+
                     first = person.get_part_as_text('first')
                     middle = person.get_part_as_text('middle')
                     prelast = person.get_part_as_text('prelast')
                     last = person.get_part_as_text('last')
                     lineage = person.get_part_as_text('lineage')
 
+                    simpleAuthor = bibtex_purify(first + ' ' + last)
+                    if 'emph' in simpleAuthor:
+                        simpleAuthor = simpleAuthor.replace('emph', '')
+
+                    authorsAsText += simpleAuthor
+
+                    if numberOfAuthors > 1:
+                        if count != (numberOfAuthors -1):
+                            authorsAsText += ', '
+                        if count == (numberOfAuthors - 2):
+                            authorsAsText += ' and '
+
+                    count += 1
+
                     try:
                         author, created = ReferenceAuthor.objects.get_or_create(first_name=first, last_name=last)
                     except Exception, e:
-                        logger.debug('Author ' + first + ' ' + last + ' exists in multiple places. Error is ' + e.message)
+                        logger.debug(
+                            'Author ' + first + ' ' + last + ' exists in multiple places. Error is ' + e.message)
                         author = ReferenceAuthor.objects.filter(first_name=first).filter(last_name=last).__getitem__(0)
                         created = False
 
@@ -112,6 +134,8 @@ def bibtex_import(filename, taxonomyItem):
                     if not author in ref_obj.authors.all():
                         ref_obj.authors.add(author)
 
+
+            ref_obj.authorsAsText = authorsAsText
             ref_obj.save()
 
             if not ref_obj in taxonomyItem.references.all():
