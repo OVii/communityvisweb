@@ -18,6 +18,12 @@
 
 
     </style>
+    <script>
+        function showDeleteWindow(referenceId) {
+            $('#deleteModal').modal('show');
+            $("#deleteModalForm").attr("action", '{{ URL_PREPENDER }}/reference/delete/' + referenceId + '/');
+        }
+    </script>
 {% endblock %}
 {% block content %}
 
@@ -37,6 +43,13 @@
 
 
         <div class="profile-blocks">
+            <div class="pull-right">
+                {% if user.is_superuser %}
+                <a onclick="showDeleteWindow({{ reference.id }})" class="btn btn-danger"><i
+                        class="icon-trash icon-white"></i> </a>
+                {% endif %}
+            </div>
+            <div class="clearfix"></div>
             <div style="font-weight: lighter; color: #414241; padding:10px 40px; font-size:1.4em; line-height: 26px; text-rendering: optimizelegibility;">{{ reference.title }}</div>
             <br/>
             {% if reference.abstract %}
@@ -90,5 +103,7 @@
             </div>
         </div>
     </div>
+
+    {% include 'fragments/deleteReferenceModal.html' %}
 
 {% endblock %}

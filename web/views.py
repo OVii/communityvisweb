@@ -580,6 +580,19 @@ def reference_remove(request, taxonomy_id, reference_id):
     return HttpResponseRedirect(urlRequestedFrom)
 
 
+@login_required
+def reference_delete(request, reference_id):
+
+    referenceItem = Reference.objects.filter(pk=reference_id).get(pk=reference_id)
+    referenceItem.delete()
+
+    return render_to_response("templates/infopage.html",
+                                  {
+                                      'messageTitle': 'Reference deleted successfully.',
+                                      'messageBody': 'We\'ve deleted that reference for you.'},
+                                  context_instance=RequestContext(request))
+
+
 def reference_detail(request, reference_id):
     currentPage = request.GET.get('currentPage', '')
 
