@@ -91,7 +91,7 @@
                             <br/>
                             <span style="font-size: 0.8em; color:#666666">in
                                 {% for taxonomyItem in reference.taxonomyitem_set.all %}
-                                    <a href="{{ URL_PREPENDER }}taxonomy/{{ taxonomyItem.id }}"
+                                    <a href="{{ URL_PREPENDER }}/taxonomy/{{ taxonomyItem.id }}"
                                        style="font-size: 0.8em; color:#666666">{{ taxonomyItem.name }}</a>
                                     {% if not forloop.last %}, {% endif %}
                                 {% endfor %}
