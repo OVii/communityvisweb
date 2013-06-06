@@ -16,13 +16,13 @@
 
             var errorHTML = "";
 
-            if(blankName) {
+            if (blankName) {
                 errorHTML += '<div class="alert alert-error">Please enter a name!</div>'
             }
-            if(blankEmail) {
+            if (blankEmail) {
                 errorHTML += '<div class="alert alert-error">Please enter your email address!</div>'
             }
-            if(blankDetails) {
+            if (blankDetails) {
                 errorHTML += '<div class="alert alert-error">Please enter a message!</div>'
             }
 
@@ -41,6 +41,12 @@
 
         }
     </script>
+
+    <style type="text/css">
+        .login_form {
+            margin: 5em auto;
+        }
+    </style>
 {% endblock %}
 
 {% block content %}
@@ -68,13 +74,12 @@
         </div>
 
 
-
         <div class="clearfix"></div>
         <form action="{{ URL_PREPENDER }}/contact/send" method="post" id="contact-form" class="formbody"
               onsubmit="return validate();">
 
-        <div id="errors">
-        </div>
+            <div id="errors">
+            </div>
             {% csrf_token %}
 
             <div id="name_group" class="control-group">
