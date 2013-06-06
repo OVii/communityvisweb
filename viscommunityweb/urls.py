@@ -3,9 +3,9 @@ from django.conf.urls import patterns, include, url
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
+from registration.forms import RegistrationFormUniqueEmail
 
 admin.autodiscover()
-
 urlpatterns = patterns('',
                        # Examples:
                        # url(r'^$', 'viscommunityweb.views.home', name='home'),
@@ -15,7 +15,12 @@ urlpatterns = patterns('',
                        # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 
 
+                       url(r'^accounts/register/$', 'registration.views.register',
+                           {'form_class': RegistrationFormUniqueEmail,
+                            'backend': 'registration.backends.default.DefaultBackend'},
+                           name='registration_register'),
                        url(r'^accounts/', include('registration.backends.default.urls')),
+
                        url(r'^profiles/', include('profiles.urls'), name='profiles'),
 
                        url(r'^$', 'web.views.index', name='community-home'),
@@ -71,3 +76,4 @@ urlpatterns = patterns('',
                        url(r'^admin/', include(admin.site.urls), name='admin'),
 
 )
+
