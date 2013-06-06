@@ -166,7 +166,10 @@ body {
     font-weight: bold;
 }
 
-#search input#search-text {
+#search-search {
+    margin-left: 40px;
+}
+input#search-text {
     padding: 5px 5px 5px 25px;
     font-family: Helvetica, Arial, sans-serif;
     font-size: 12px;

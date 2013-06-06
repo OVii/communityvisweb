@@ -5,8 +5,8 @@
  * Time: 14:00
  * To change this template use File | Settings | File Templates.
  */
-function validateSearchInput() {
-    var searchValue = document.forms["search"]["search-text"].value;
+function validateSearchInput(form) {
+    var searchValue = document.forms[form]["search-text"].value;
     console.log('Search value is ' + searchValue)
     return searchValue != "";
 }
