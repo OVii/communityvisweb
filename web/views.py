@@ -467,9 +467,7 @@ def taxonomy_add_action(request):
 
     taxonomy.save()
 
-    print urlRequestedFrom.find('edit')
-
-    return HttpResponseRedirect(urlRequestedFrom)
+    return HttpResponseRedirect(URL_PREPENDER + "/taxonomy/"+ taxonomy.id)
 
 
 def trimURL(urlRequestedFrom, find):
