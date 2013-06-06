@@ -42,6 +42,8 @@ class Reference(models.Model):
     bibtex = models.TextField()
     referenceAttributes = models.ManyToManyField(ReferenceAttribute, related_name="attributes+")
 
+    date_added = models.DateTimeField(auto_now=True)
+
     def __unicode__(self):
         return self.entry_key + " - " + self.title
 

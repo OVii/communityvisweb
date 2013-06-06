@@ -47,11 +47,12 @@
 
         <div class="menu">
             <a href="{{ URL_PREPENDER }}/taxonomy" class="menu-item">
-                Taxonomy
+                <img src="{{ STATIC_URL }}img/static_img/home/menu-taxonomy.png"/>
+
             </a>
 
             <a href="{{ URL_PREPENDER }}/contact" class="menu-item">
-                Contact us
+                <img src="{{ STATIC_URL }}img/static_img/home/contact.png"/>
             </a>
         </div>
 
@@ -84,7 +85,7 @@
             {% if user.is_authenticated %}
                 <ul class="footer_links">
                     <h4>Contribute</h4>
-                    <li><a href="{{ URL_PREPENDER }}/volunteer" target="_blank">Volunteer to maintain</a></li>
+                    <li><a href="{{ URL_PREPENDER }}/volunteer">Volunteer to maintain</a></li>
                 </ul>
             {% endif %}
 
@@ -107,8 +108,7 @@
                     <span class='st_linkedin_hcount' displayText='LinkedIn'></span>
                     <br/><br/>
                 {% endblock %}
-                © Community Resource: Visualization 2013-Present | Licensed under <a
-                    href="http://creativecommons.org/licenses/by/3.0/" alt="View License" target="_blank">Creative
+                © Community Resource: Visualization 2013-Present | Licensed under <a href="http://creativecommons.org/licenses/by/3.0/" alt="View License" target="_blank">Creative
                 Commons by 3.0 Unported</a> | Designed by <a href="http://www.antarctic-design.co.uk" target="_blank">Antarctic
                 Design</a>
 

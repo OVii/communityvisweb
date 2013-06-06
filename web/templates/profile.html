@@ -89,7 +89,15 @@
 
                                     for (var linkIndex in externalLinks) {
                                         if (externalLinks[linkIndex]["work-external-identifier-type"] === "DOI") {
-                                            publicationHTML += '<br/><a href="http://dx.doi.org/' + externalLinks[linkIndex]["work-external-identifier-id"]["value"] + '" class="" target="_blank">Read the paper</a>';
+
+                                            var doi = externalLinks[linkIndex]["work-external-identifier-id"]["value"];
+                                            publicationHTML += '<br/><a href="';
+                                            var doiPrependerURL = 'http://dx.doi.org/';
+                                            if(doi.indexOf(doiPrependerURL) == -1) {
+                                                publicationHTML += doiPrependerURL;
+                                            }
+                                            publicationHTML += doi + '" target="_blank">Read the paper</a>';
+
                                         }
                                     }
 

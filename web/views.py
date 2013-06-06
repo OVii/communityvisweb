@@ -33,7 +33,8 @@ email_to = "eamonn.maguire@oerc.ox.ac.uk"
 # index page
 def index(request):
     recent_items = TaxonomyItem.objects.order_by('-last_updated')[:3]
-    return render_to_response("templates/index.html", {'recent_taxonomy_items': recent_items},
+    recent_reference_items = Reference.objects.order_by('-date_added')[:3]
+    return render_to_response("templates/index.html", {'recent_taxonomy_items': recent_items, 'recent_reference_items': recent_reference_items},
                               context_instance=RequestContext(request))
 
 

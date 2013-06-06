@@ -62,7 +62,7 @@ body {
 }
 
 .menu, .search, .user-account {
-    margin-top: 17px;
+    margin-top: 15px;
     margin-left: 5px;
 
     display: block-inline;
@@ -76,7 +76,7 @@ body {
 
 .menu {
     margin-right: 40px;
-    margin-top: 22px;
+
 }
 
 .account-button {
@@ -93,7 +93,7 @@ body {
     border: none;
     color: #042F4B;
     text-decoration: none;
-    padding-bottom: 20px;
+    padding-bottom: 23px;
     font-weight: bold;
     border-bottom: thin solid #ccc;
     margin-left: 10px;
@@ -111,9 +111,7 @@ body {
     width: 31em;
 }
 
-.login_form {
-    margin: 5em auto;
-}
+
 
 .login_form .formbody {
 
@@ -196,8 +194,8 @@ body {
 }
 
 .home-page {
-    margin-top: 70px;
-    width: 800px;
+    margin-top: 20px;
+    width: 1000px;
     margin-left: auto;
     margin-right: auto;
 }
@@ -208,7 +206,7 @@ body {
 }
 
 #search-text {
-    width: 100%;
+    width: 90%;
 }
 
 .main-content {
@@ -528,7 +526,7 @@ body {
 
 
 .profile-blocks {
-    margin: 0 auto;
+margin: 0 auto;
     margin-top: 30px;
     float:left;
 }
