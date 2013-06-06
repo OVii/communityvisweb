@@ -84,11 +84,6 @@
 
                             <span style="font-size: 0.8em; color:#666666">{{ reference.journal }}</span>{% if reference.year > 0 %}<span class="year">{% if reference.journal %}, {% endif %}{{ reference.year }}</span>{% endif %}
 
-                            {% if reference.url %}
-                                <br/>
-                                <a href="{{ reference.url }}" target="_blank" class="btn btn-mini">Read Paper</a>
-                            {% endif %}
-
                         </div>
                         {% if not forloop.last %}
                             <hr/>
