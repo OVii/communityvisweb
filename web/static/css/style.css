@@ -12,7 +12,7 @@ body {
 .topbar {
     position: fixed;
     height: 60px;
-    min-width: 1024px;
+    min-width: 980px;
     width: 100%;
     overflow: visible;
     display: block;
@@ -55,7 +55,7 @@ body {
     background-image: url('../img/static_img/logo_swapped.png');
     background-repeat: no-repeat;
     background-size: 100%;
-    width: 310px;
+    width: 260px;
 
     margin-top: 7px;
     height: 58px;
