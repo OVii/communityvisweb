@@ -467,7 +467,7 @@ def taxonomy_add_action(request):
 
     taxonomy.save()
 
-    return HttpResponseRedirect(URL_PREPENDER + "/taxonomy/"+ str(taxonomy.id))
+    return HttpResponseRedirect(URL_PREPENDER + "/taxonomy/" + str(taxonomy.id))
 
 
 def trimURL(urlRequestedFrom, find):
@@ -548,9 +548,15 @@ def reference_add_upload_text(request):
 
 def contact_send(request):
     email_subject = email_prefix + "Contact"
-    email_from = request.POST['email']
-    email_name = request.POST['name']
-    email_body = request.POST['comments']
+    email_from = request.POST.get('email', '')
+    email_name = request.POST.get('name', '')
+    email_body = request.POST('comments', '')
+
+    if email_body == '':
+        return render_to_response("templates/contact.html",
+                                  {
+                                      'error_message': "No message was given. This is required, as I'm sure you'll understand. "},
+                                  context_instance=RequestContext(request))
 
     try:
         send_mail(email_subject, email_body, email_from,
@@ -580,15 +586,14 @@ def reference_remove(request, taxonomy_id, reference_id):
 
 @login_required
 def reference_delete(request, reference_id):
-
     referenceItem = Reference.objects.filter(pk=reference_id).get(pk=reference_id)
     referenceItem.delete()
 
     return render_to_response("templates/infopage.html",
-                                  {
-                                      'messageTitle': 'Reference deleted successfully.',
-                                      'messageBody': 'We\'ve deleted that reference for you.'},
-                                  context_instance=RequestContext(request))
+                              {
+                                  'messageTitle': 'Reference deleted successfully.',
+                                  'messageBody': 'We\'ve deleted that reference for you.'},
+                              context_instance=RequestContext(request))
 
 
 def reference_detail(request, reference_id):
