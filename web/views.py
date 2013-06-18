@@ -16,7 +16,7 @@ from viscommunityweb.settings import EMAIL_HOST_USER, SITE_ID, URL_PREPENDER
 from web.bibtex_utils.import_utils import saveFile, saveTextToFile
 from web.models import TaxonomyCategory, TaxonomyItem, Reference, UserProfile, OwnershipRequest, Enquiry
 from django.shortcuts import render_to_response, get_object_or_404
-from django.core.mail import send_mail
+from django.core.mail import send_mail, EmailMessage
 import os
 from django.conf import settings
 import taxonomy_backend, reference_backend
@@ -562,8 +562,9 @@ def contact_send(request):
         headers = {'Reply-To': email_from}
         email_body = 'Message sent from ' + email_name + ' (' + email_from + ')\n\n' + email_body
 
-        send_mail(email_subject, email_body, email_from,
-                  [item[1] for item in settings.ADMINS], fail_silently=False, headers=headers)
+        message = EmailMessage(email_subject, email_body, email_from, [item[1] for item in settings.ADMINS],
+                               headers=headers)
+        message.send(fail_silently=False)
     except:
         return render_to_response("templates/contact.html",
                                   {
