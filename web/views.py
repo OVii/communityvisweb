@@ -550,7 +550,7 @@ def contact_send(request):
     email_subject = email_prefix + "Contact"
     email_from = request.POST.get('email', '')
     email_name = request.POST.get('name', '')
-    email_body = request.POST('comments', '')
+    email_body = request.POST.get('comments', '')
 
     if email_body == '':
         return render_to_response("templates/contact.html",
@@ -629,5 +629,8 @@ def volunteer(request):
     return render_to_response("templates/volunteer.html",
                               {'available': resultDict}, context_instance=RequestContext(request))
 
+
+def server_error(request, template_name='500.html'):
+    return render_to_response(template_name, context_instance=RequestContext(request))
 
 
