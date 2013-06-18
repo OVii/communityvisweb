@@ -82,12 +82,12 @@
                 <label for="name" class="control-label">Name</label>
 
                 <div class="controls">
-                    <input id="name" type="text" name="name" class="input-xlarge">
+                    <input id="name" type="text" name="name" class="input-xlarge" value="{% if request.user.is_authenticated %}{{ request.user.username }}{% endif %}">
                 </div>
             </div>
             <div id="email_group" class="control-group">
                 <label for="email" class="control-label">Email Address</label>
-                <input id="email" type="email" name="email" class="input-xlarge">
+                <input id="email" type="email" name="email" class="input-xlarge" value="{% if request.user.is_authenticated %}{{ request.user.email }}{% endif %}">
             </div>
 
             <div id="comments_group" class="control-group">
