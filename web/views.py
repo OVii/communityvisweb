@@ -559,8 +559,11 @@ def contact_send(request):
                                   context_instance=RequestContext(request))
 
     try:
+        headers = {'Reply-To': email_from}
+        email_body = 'Message sent from ' + email_name + ' (' + email_from + ')\n\n' + email_body
+
         send_mail(email_subject, email_body, email_from,
-                  [item[1] for item in settings.ADMINS], fail_silently=False)
+                  [item[1] for item in settings.ADMINS], fail_silently=False, headers=headers)
     except:
         return render_to_response("templates/contact.html",
                                   {
