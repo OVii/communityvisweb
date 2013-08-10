@@ -23,7 +23,7 @@ $(function () {
                 // All the options are almost the same as jQuery's AJAX (read the docs)
                 "ajax": {
                     // the URL to fetch the data
-                    "url": "/api/taxonomyTree/",
+                    "url": "/community/api/taxonomyTree/",
                     // the `data` function is executed in the instance's scope
                     // the parameter is the node being loaded
                     // (may be -1, 0, or undefined when loading the root nodes)
@@ -44,7 +44,7 @@ $(function () {
 
             $.ajax({
                 type: 'GET',
-                url: "/api/taxonomy/" + data.rslt.obj.attr("itemId"),
+                url: "/community/api/taxonomy/" + data.rslt.obj.attr("itemId"),
                 dataType: 'json'
             }).done(function (data) {
                     myData = data;
