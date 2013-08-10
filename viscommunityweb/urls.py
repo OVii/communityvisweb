@@ -69,6 +69,11 @@ urlpatterns = patterns('',
                        url(r'^contact/$', 'web.views.contact', name='contact'),
                        url(r'^contact/send', 'web.views.contact_send', name='contact_send'),
 
+                       url(r'^api/taxonomyTree', 'web.views.getTaxonomyTree', name='api_taxonomy_tree'),
+                       url(r'^api/taxonomy/(?P<taxonomy_id>\d+)/$', 'web.views.getTaxonomyCategoryJSON', name='api_taxonomy_details'),
+
+
+
                        url(r'^search/$', 'web.views.search', name='search'),
                        url(r'^account/$', 'web.views.account', name='account'),
                        url(r'^orcid$', 'web.views.orcid_profile', name='orcid'),
@@ -76,6 +81,5 @@ urlpatterns = patterns('',
                        url(r'^volunteer$', 'web.views.volunteer', name='volunteer'),
 
                        url(r'^admin/', include(admin.site.urls), name='admin'),
-
 )
 

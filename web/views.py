@@ -12,6 +12,8 @@ from django.db.models import Q
 
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext
+import logging
+from django.utils import simplejson
 from viscommunityweb.settings import EMAIL_HOST_USER, SITE_ID, URL_PREPENDER
 from web.bibtex_utils.import_utils import saveFile, saveTextToFile
 from web.models import TaxonomyCategory, TaxonomyItem, Reference, UserProfile, OwnershipRequest, Enquiry
@@ -28,6 +30,8 @@ from web.reference_import import bibtex_import
 os.environ['DJANGO_SETTINGS_MODULE'] = "viscommunityweb.settings"
 email_prefix = "[OXVIS] "
 email_to = "eamonn.maguire@oerc.ox.ac.uk"
+
+logger = logging.getLogger(__name__)
 
 
 # index page
@@ -173,10 +177,7 @@ def request_ownership_response(request, approval_id):
 
 @login_required
 def revoke_ownership(request, taxonomy_id):
-    reason = request.POST['comments']
-
     taxonomyItem = TaxonomyItem.objects.filter(pk=taxonomy_id).get(pk=taxonomy_id)
-
     taxonomyItem.owners.remove(request.user)
 
     try:
@@ -252,9 +253,6 @@ def register(request):
 def public_profile(request, username):
     userQuery = User.objects.filter(username=username)
 
-    requestedUser = None
-    loggedInUser = False
-
     if len(userQuery) > 0:
         requestedUser = userQuery.get(username=username)
         loggedInUser = (requestedUser == request.user)
@@ -269,7 +267,8 @@ def public_profile(request, username):
     try:
         if not requestedUser.get_profile() is None:
             profile = requestedUser.get_profile()
-    except:
+    except Exception, e:
+        logger.error(str(e.message))
         profile = UserProfile(user=requestedUser)
         profile.save()
 
@@ -291,9 +290,6 @@ def public_profile(request, username):
 
 @login_required
 def profile(request):
-    requestedUser = None
-    loggedInUser = False
-
     if request.user.is_authenticated():
         requestedUser = request.user
         loggedInUser = True
@@ -381,6 +377,54 @@ def sendEmailForEnquiry(message, request, taxonomyItem):
                                   {'messageTitle': 'Your suggestion for ' + taxonomyItem.name + ' has been lodged.',
                                    'messageBody': "The maintainer will get back to you soon!"},
                                   context_instance=RequestContext(request))
+
+
+def getTaxonomyTree(request):
+    children = []
+    categories = TaxonomyCategory.objects.all()
+    for category in categories:
+        items = []
+        for item in category.taxonomyitem_set.all():
+            items.append({"data": item.name + " (" + str(len(item.references.all())) + " refs)",
+                          "attr": {"itemId": item.id, "type": "taxonomyItem"}})
+
+        children.append(
+            {"data": category.name, "attr": {"itemId": category.id,
+                                             "type": "taxonomyCategory"}, "children": items,
+             "state": "closed"})
+    response = [
+        {"data": "Taxonomy", "children": children, "state": "open"}
+    ]
+
+    return HttpResponse(simplejson.dumps(response), mimetype="application/json")
+
+
+def getTaxonomyCategoryJSON(request, taxonomy_id):
+    taxonomy = get_object_or_404(TaxonomyItem, pk=taxonomy_id)
+
+    referenceQuery = taxonomy.references.all()
+    sortedReferences = reference_backend.sorted_reference_list(request, referenceQuery)
+
+    hasOwner = False
+
+    if len(taxonomy.owners.all()) > 0:
+        hasOwner = True
+
+    ownerLoggedIn = False
+    if request.user in taxonomy.owners.all():
+        ownerLoggedIn = True
+
+    references = []
+    for reference in sortedReferences:
+        references.append({"id": reference.id, "title": reference.title, "authors": reference.authors,
+                           "journal": reference.journal, "year": reference.year,
+                           "url": URL_PREPENDER + "/reference/" + str(reference.id)})
+
+    response = {"id": taxonomy.id, "name": taxonomy.name, "description": taxonomy.detail, "url": URL_PREPENDER + "/taxonomy/" + str(taxonomy.id),
+                "hasOwner": hasOwner, "isOwner": ownerLoggedIn,
+                "count": len(taxonomy.references.all()), "references": references}
+
+    return HttpResponse(simplejson.dumps(response), mimetype="application/json")
 
 
 def handleTaxonomyEnquiry(request, taxonomy_id):
@@ -565,7 +609,7 @@ def contact_send(request):
         message = EmailMessage(email_subject, email_body, email_from, [item[1] for item in settings.ADMINS],
                                headers=headers)
         message.send(fail_silently=False)
-    except:
+    except Exception, e:
         return render_to_response("templates/contact.html",
                                   {
                                       'error_message': "There was a problem sending the email. Please ensure all fields are filled in correctly. Please contact " +
@@ -603,11 +647,14 @@ def reference_delete(request, reference_id):
 def reference_detail(request, reference_id):
     currentPage = request.GET.get('currentPage', '')
 
+    referenceItem = {}
+    assignedTaxonomyItems = {}
     try:
         referenceItem = Reference.objects.filter(pk=reference_id).get(pk=reference_id)
         assignedTaxonomyItems = referenceItem.taxonomyitem_set
-    except:
-        referenceItem = {}
+    except Exception, e:
+        logger.error('Bit of a mishap. Here is the error: ', str(e.message))
+
     return render_to_response("templates/reference.html",
                               {'reference': referenceItem, 'taxonomy_items': assignedTaxonomyItems,
                                'previousPage': currentPage},

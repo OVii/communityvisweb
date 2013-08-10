@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% block title %}Visualization Taxonomy{% endblock %}
 
+{% load templateutils %}
 {% load webdesign %}
 
 {% block content %}
@@ -10,7 +11,7 @@
     <div>
         <p style="font-size: 1.3em; font-weight: lighter">
             This taxonomy is based on the subject categories used by the submission and review processes for IEEE
-            VisWeek conferences (SciVis, InfoVis and VAST) and European Conference on Visualization (EuroVis). We
+            Vis conferences (SciVis, InfoVis and VAST) and European Conference on Visualization (EuroVis). We
             understand that almost all taxonomies will undergo an evolutionary development by the community concerned.
             We will review this taxonomy on a regular basis. Please let us know if you have any suggestions.
         </p>
@@ -28,35 +29,158 @@
     <div class="clearfix"></div>
     <br/>
 
-    <div class="row-fluid">
-        {% if taxonomies %}
-            {% for category in taxonomies %}
-                {% if forloop.counter|divisibleby:"1" %}
-                    <ul class="thumbnails">{% endif %}
-            <div class="well taxonomy-well">
-                <h1>{{ category.name }}</h1>
+    <div style="width:100%; min-width: 1100px">
 
-                <p>
-                    {% for item in category.taxonomyitem_set.all %}
+        <div class="span4 well">
 
-                        {% if item.references.all|length > 0 %}
-                            <span class="badge badge-yellow taxonomy-item">
-                        {% else %}
-                            <span class="badge badge-dark-grey taxonomy-item">
-                        {% endif %}
-                    <a href="{{ URL_PREPENDER }}/taxonomy/{{ item.id }}"
-                       style="color:white">{{ item.name }}</a></span>
-                    {% endfor %}
-                </p>
+            <input type="text" name="search_field" id="search_tree" onchange="searchTree()"
+                   placeholder="Search Taxonomy"/>
+            {#            <a id="search_tree" onclick="searchTree()" style="margin-top: -10px" class="btn">Search</a>#}
+
+            <div id="taxonomyTree">
+
             </div>
-            {% if forloop.counter|divisibleby:"1" %}</ul>{% endif %}
-            {% endfor %}
-            </div>
-        {% else %}
-            No taxonomy found.
-        {% endif %}
+        </div>
+
+
+        <div id="taxonomyInfo" class="span8">
+            <p>Select an item in the taxonomy tree to view it's details.</p>
+        </div>
+
     </div>
 
 
 
+{% endblock %}
+
+{% block end_additional %}
+    <script type="text/javascript" src="{{ STATIC_URL }}js/jsTree/jquery.hotkeys.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/jsTree/jquery.jstree.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/taxonomy_tree.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/handlebars.js"></script>
+
+    {% raw %}
+        <script id="taxonomy-template" type="text/x-handlebars-template">
+            <div class="page-header">
+                <h1>
+                    <small>{{ name }} <a href="{{ url }}"><span style="font-size:0.6em">View Taxonomy Page</span></a>
+                    </small>
+                </h1>
+                <p>
+                    {{#if description}}
+
+                    {{ description }}
+                    {{ else }}
+                    No description provided
+                    {{/if}}
+                </p>
+            </div>
+            <div class="well">
+
+                <h4>
+                    {{references.length}} References
+                    </h4>
+                {{#each references}}
+                <div class="taxonomy-well reference_box">
+
+                    <p class="title"><a href="{{ this.url }}">{{ this.title }}</a></p>
+
+                    <p class="authors">{{ this.authors }}</p>
+
+                    <p><span class="journal">{{ this.journal }}</span></p>
+                    <hr/>
+                </div>
+                {{/each}}
+            </div>
+        </script>
+
+        <script id="category-template" type="text/x-handlebars-template">
+            <div class="page-header">
+                <h1>
+                    <small>{{name}}</small>
+                </h1>
+
+            </div>
+            <div class="well">
+
+                <h4>
+                    {{items.length}} items in {{name}}
+                    </h4>
+                {{#each items}}
+                <div class="taxonomy-well reference_box">
+
+                    <p class="title"><a href="{{ this.url }}">{{ this.title }}</a></p>
+
+                    <p class="authors">{{ this.authors }}</p>
+
+                    <p><span class="journal">{{ this.journal }}</span></p>
+                    <hr/>
+                </div>
+                {{/each}}
+            </div>
+        </script>
+    {% endraw %}
+
+    <style type="text/css">
+        #taxonomyTree a {
+            white-space: normal !important;
+            height: auto;
+            padding: 1px 2px;
+        }
+
+        #taxonomyTree li > ins {
+            vertical-align: top;
+        }
+
+        #taxonomyTree {
+            font-size: 12px;
+            font-family: Helvetica, Arial, sans-serif;
+            font-weight: lighter;
+        }
+
+        #taxonomyTree .jstree-hovered, #taxonomyTree .jstree-clicked {
+            border: 0;
+        }
+
+        .jstree-default.jstree-focused {
+            background: #f5f5f5;
+        }
+
+        .jstree-default .jstree-clicked {
+            background: none;
+            border: none;
+            padding: 0 2px 0 1px;
+            font-weight: bolder;
+            color: #bc8400;
+        }
+
+        .jstree-default .jstree-hovered {
+            background: none;
+            border: none;
+            padding: 0 2px 0 1px;
+            color: #bc8400;
+        {#            font-weight: normal;#}
+        }
+
+        .jstree-default a.jstree-search {
+            color: #bc8400;
+            font-weight: bolder;
+            text-decoration: none;
+        }
+
+        input#search_tree {
+            padding: 5px 5px 5px 25px;
+
+            font-family: Helvetica, Arial, sans-serif;
+            font-size: 12px;
+            color: #414241;
+            background: white url({{ STATIC_URL }}img/static_img/search.png) no-repeat 7px 50%;
+            -webkit-border-radius: 4px;
+            -moz-border-radius: 4px;
+            border-radius: 4px;
+            border: thin solid #CACACA;
+            -webkit-box-shadow: rgba(255, 255, 255, 0.8) 0 1px 0;
+        }
+
+    </style>
 {% endblock %}
