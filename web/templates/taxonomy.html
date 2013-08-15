@@ -19,8 +19,8 @@
         <p>
 
             {% if user.is_authenticated %}
-                <a href="{{ URL_PREPENDER }}/contact" class="btn btn-large" type="button">I have a suggestion</a>
-                <a href="{{ URL_PREPENDER }}/taxonomy/add" class="btn btn-large btn-yellow" type="button">Add a new
+                <a href="{{ URL_PREPENDER }}/contact" class="btn" type="button">I have a suggestion</a>
+                <a href="{{ URL_PREPENDER }}/taxonomy/add" class="btn btn-yellow" type="button">Add a new
                     taxonomy</a>
             {% endif %}
         </p>
@@ -35,25 +35,27 @@
 
             <input type="text" name="search_field" id="search_tree" onchange="searchTree()"
                    placeholder="Search Taxonomy"/>
-            {#            <a id="search_tree" onclick="searchTree()" style="margin-top: -10px" class="btn">Search</a>#}
 
             <div id="taxonomyTree">
-
             </div>
+
         </div>
 
-
         <div id="taxonomyInfo" class="span8">
-            <p>Select an item in the taxonomy tree to view it's details.</p>
+            <p>Select an item in the taxonomy tree to view its details.</p>
         </div>
 
     </div>
 
+    {% include 'fragments/deleteModal.html' %}
+    {% include 'fragments/renameModal.html' %}
+    {% include 'fragments/splitModal.html' %}
 
 
 {% endblock %}
 
 {% block end_additional %}
+    <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
     <script type="text/javascript" src="{{ STATIC_URL }}js/jsTree/jquery.hotkeys.js"></script>
     <script type="text/javascript" src="{{ STATIC_URL }}js/jsTree/jquery.jstree.js"></script>
     <script type="text/javascript" src="{{ STATIC_URL }}js/taxonomy_tree.js"></script>
@@ -68,7 +70,6 @@
                 </h1>
                 <p>
                     {{#if description}}
-
                     {{ description }}
                     {{ else }}
                     No description provided
@@ -78,8 +79,8 @@
             <div class="well">
 
                 <h4>
-                    {{references.length}} References
-                    </h4>
+                    {{ references.length }} References
+                </h4>
                 {{#each references}}
                 <div class="taxonomy-well reference_box">
 
@@ -97,15 +98,15 @@
         <script id="category-template" type="text/x-handlebars-template">
             <div class="page-header">
                 <h1>
-                    <small>{{name}}</small>
+                    <small>{{ name }}</small>
                 </h1>
 
             </div>
             <div class="well">
 
                 <h4>
-                    {{items.length}} items in {{name}}
-                    </h4>
+                    {{ items.length }} items in {{ name }}
+                </h4>
                 {{#each items}}
                 <div class="taxonomy-well reference_box">
 
@@ -117,6 +118,14 @@
                     <hr/>
                 </div>
                 {{/each}}
+            </div>
+        </script>
+
+        <script id="reference-list-template" type="text/x-handlebars-template">
+
+            {{#each references}}
+            <li id="{{ this.id }}">{{ this.title }} <br/> <span style="font-size:0.7em">{{ this.authors }}</span></li>
+            {{/each}}
             </div>
         </script>
     {% endraw %}
@@ -181,6 +190,70 @@
             border: thin solid #CACACA;
             -webkit-box-shadow: rgba(255, 255, 255, 0.8) 0 1px 0;
         }
+
+        #originalListContainer, #newListContainer {
+            border: #f1f2f1 solid 1px;
+            border-radius: 3px;
+            list-style-type: none;
+            min-width: 220px;
+            max-width: 220px;
+
+            padding: 5px;
+            float: left;
+            margin: 10px 10px 0 0;
+            font-size: .8em;
+            font-weight: normal;
+        }
+
+        #originalListContainer ul, #newListContainer ul {
+            overflow: scroll;
+            min-height: 160px;
+            max-height: 160px;
+            margin: 0;
+        }
+
+        #originalTaxonomy li, #newTaxonomy li {
+            list-style: none;
+            background-color: #f1f2f1;
+            text-indent: 0;
+            padding: 5px;
+            margin: 0 3px 3px 3px;
+            font-size: 0.9em;
+            line-height: 1.2em;
+            min-width: 205px;
+            max-width: 205px;
+
+        }
+
+        #originalTaxonomy li:hover, #newTaxonomy li:hover {
+            color: #f89406;
+            cursor: pointer;
+        }
+
+        .reference-drop-placeholder {
+            border: #f89406 dashed 1px;
+            min-height: 25px;
+            background-color: #f1f2f1;
+            width: 200px;
+            opacity: 0.7;
+        }
+
+        #newTaxonomy li {
+            background-color: #f89406;
+            color: #fff;
+
+        }
+
+        #newTaxonomy li:hover {
+            background-color: #f89406;
+            opacity: 0.7;
+            color: #fff;
+        }
+
+        #splitModal .modal-body {
+            max-height: 700px;
+        }
+
 
     </style>
 {% endblock %}

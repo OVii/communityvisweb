@@ -420,11 +420,32 @@ def getTaxonomyCategoryJSON(request, taxonomy_id):
                            "journal": reference.journal, "year": reference.year,
                            "url": URL_PREPENDER + "/reference/" + str(reference.id)})
 
-    response = {"id": taxonomy.id, "name": taxonomy.name, "description": taxonomy.detail, "url": URL_PREPENDER + "/taxonomy/" + str(taxonomy.id),
+    response = {"id": taxonomy.id, "name": taxonomy.name, "description": taxonomy.detail,
+                "url": URL_PREPENDER + "/taxonomy/" + str(taxonomy.id),
                 "hasOwner": hasOwner, "isOwner": ownerLoggedIn,
                 "count": len(taxonomy.references.all()), "references": references}
 
     return HttpResponse(simplejson.dumps(response), mimetype="application/json")
+
+
+def createTaxonomyCategoryAPI(request):
+    response = {"success": True}
+    return HttpResponse(simplejson.dumps(response), mimetype="application/json")
+
+
+def moveTaxonomyCategoryAPI(request):
+    response = {"success": True}
+    return HttpResponse(simplejson.dumps(response), mimetype="application/json")
+
+
+def renameTaxonomyCategoryAPI(request, category_id):
+    category = TaxonomyCategory.objects.filter(pk=category_id).get(pk=category_id)
+    newName = request.POST.get('newName', category.name)
+
+    category.name = newName
+    category.save()
+
+    return HttpResponseRedirect(URL_PREPENDER + "/taxonomy/")
 
 
 def handleTaxonomyEnquiry(request, taxonomy_id):
@@ -498,12 +519,53 @@ def taxonomy_edit(request, taxonomy_id):
                               context_instance=RequestContext(request))
 
 
+def taxonomy_delete(request, taxonomy_id):
+    taxonomyItem = TaxonomyItem.objects.filter(pk=taxonomy_id).get(pk=taxonomy_id)
+    taxonomyItem.delete()
+    return HttpResponseRedirect(URL_PREPENDER + "/taxonomy/")
+
+
+def addReferencesToTaxonomyItem(referenceList, taxonomyItem):
+    for reference in referenceList:
+        if reference:
+            referenceToAddQuery = Reference.objects.filter(pk=reference)
+            if len(referenceToAddQuery) > 0:
+                taxonomyItem.references.add(referenceToAddQuery.get(pk=reference))
+
+
+def taxonomy_split(request, taxonomy_id):
+    taxonomyItemToSplit = TaxonomyItem.objects.filter(pk=taxonomy_id).get(pk=taxonomy_id)
+
+    newTaxonomyItem = request.POST.get('newTaxonomyName', '')
+
+    if newTaxonomyItem:
+        originalReferences = request.POST.get('originalTaxonomyReferences', '')
+        newReferences = request.POST.get('newTaxonomyReferences', '')
+
+        #only remove existing list if the new list has content.
+        if newReferences != "":
+            for reference in taxonomyItemToSplit.references.all():
+                taxonomyItemToSplit.references.remove(reference)
+
+        originalReferenceList = originalReferences.split(",")
+        newReferenceList = newReferences.split(",")
+
+        # add references to original
+        addReferencesToTaxonomyItem(originalReferenceList, taxonomyItemToSplit)
+        # create new taxonomy item
+        newTaxonomyItem = TaxonomyItem(name=newTaxonomyItem, category=taxonomyItemToSplit.category)
+        newTaxonomyItem.save()
+
+        addReferencesToTaxonomyItem(newReferenceList, newTaxonomyItem)
+
+    return HttpResponseRedirect(URL_PREPENDER + "/taxonomy/")
+
+
 @login_required()
 def taxonomy_add_action(request):
     name = request.POST.get('taxonomy_name', None)
     category = request.POST.get('category_name', None)
     detail = request.POST.get('description', None)
-    urlRequestedFrom = request.POST.get('postedFrom', '/')
 
     categoryObject, existed = TaxonomyCategory.objects.get_or_create(name=category)
     taxonomy = TaxonomyItem(name=name, category=categoryObject, detail=detail, last_updated=datetime.now())

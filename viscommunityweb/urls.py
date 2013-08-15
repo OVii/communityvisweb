@@ -52,6 +52,8 @@ urlpatterns = patterns('',
                        url(r'^taxonomy_alpha/$', 'web.views.taxonomy_alpha', name='taxonomy_alpha'),
                        url(r'^taxonomy/(?P<taxonomy_id>\d+)/$', 'web.views.taxonomy_detail', name='taxonomy_detail'),
                        url(r'^taxonomy/download/(\d+)/$', 'web.views.taxonomy_download', name='taxonomy_download'),
+                       url(r'^taxonomy/delete/(\d+)/$', 'web.views.taxonomy_delete', name='taxonomy_download'),
+                       url(r'^taxonomy/split/(\d+)/$', 'web.views.taxonomy_split', name='taxonomy_download'),
 
                        url(r'^request_ownership/(?P<taxonomy_id>\d+)$', 'web.views.request_ownership_send',
                            name='request_ownership'),
@@ -70,8 +72,11 @@ urlpatterns = patterns('',
                        url(r'^contact/send', 'web.views.contact_send', name='contact_send'),
 
                        url(r'^api/taxonomyTree', 'web.views.getTaxonomyTree', name='api_taxonomy_tree'),
-                       url(r'^api/taxonomy/(?P<taxonomy_id>\d+)/$', 'web.views.getTaxonomyCategoryJSON', name='api_taxonomy_details'),
+                       url(r'^api/taxonomy/info/(?P<taxonomy_id>\d+)/$', 'web.views.getTaxonomyCategoryJSON', name='api_taxonomy_details'),
+                       url(r'^api/taxonomy/create', 'web.views.createTaxonomyCategoryAPI', name='api_taxonomy_create'),
+                       url(r'^api/taxonomy/move', 'web.views.moveTaxonomyCategoryAPI', name='api_taxonomy_move'),
 
+                       url(r'^category/rename/(?P<category_id>\d+)/', 'web.views.renameTaxonomyCategoryAPI', name='category_rename'),
 
 
                        url(r'^search/$', 'web.views.search', name='search'),

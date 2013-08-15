@@ -27,7 +27,7 @@
 {% block content %}
     <br/>
     <div class="hero-unit">
-        <h4>New taxonomy item</h4>
+        <h4>{% if taxonomy %}Edit{% else %}New{% endif %} taxonomy item</h4>
 
         <form action="{% if taxonomy %}{{ URL_PREPENDER }}/taxonomy/edit/action/
             {% else %}{{ URL_PREPENDER }}/taxonomy/add/action/{% endif %}"

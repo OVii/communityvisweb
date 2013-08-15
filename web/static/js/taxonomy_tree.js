@@ -6,7 +6,7 @@ $(function () {
         .jstree({
             // List of active plugins
             "plugins": [
-                "themes", "json_data", "ui", "crrm", "dnd", "search", "types", "hotkeys", "contextmenu"
+                "themes", "json_data", "ui", "crrm", "search", "types", "hotkeys", "contextmenu"
             ],
 
             "themes": {
@@ -14,6 +14,8 @@ $(function () {
                 "dots": true,
                 "icons": false
             },
+
+            "contextmenu": {items: customMenu},
 
 
             // I usually configure the plugin that handles the data first
@@ -23,7 +25,7 @@ $(function () {
                 // All the options are almost the same as jQuery's AJAX (read the docs)
                 "ajax": {
                     // the URL to fetch the data
-                    "url": "/community/api/taxonomyTree/",
+                    "url": "/api/taxonomyTree/",
                     // the `data` function is executed in the instance's scope
                     // the parameter is the node being loaded
                     // (may be -1, 0, or undefined when loading the root nodes)
@@ -44,7 +46,7 @@ $(function () {
 
             $.ajax({
                 type: 'GET',
-                url: "/community/api/taxonomy/" + data.rslt.obj.attr("itemId"),
+                url: "/api/taxonomy/info/" + data.rslt.obj.attr("itemId"),
                 dataType: 'json'
             }).done(function (data) {
                     myData = data;
@@ -59,90 +61,95 @@ $(function () {
 
         })
 
-        .bind("create.jstree", function (e, data) {
-            $.post(
-                "/static/v.1.0pre/_demo/server.php",
-                {
-                    "operation": "create_node",
-                    "id": data.rslt.parent.attr("id").replace("node_", ""),
-                    "position": data.rslt.position,
-                    "title": data.rslt.name,
-                    "type": data.rslt.obj.attr("rel")
-                },
-                function (r) {
-                    if (r.status) {
-                        $(data.rslt.obj).attr("id", "node_" + r.id);
-                    }
-                    else {
-                        $.jstree.rollback(data.rlbk);
-                    }
-                }
-            );
-        })
-        .bind("remove.jstree", function (e, data) {
-            data.rslt.obj.each(function () {
-                $.ajax({
-                    async: false,
-                    type: 'POST',
-                    url: "/static/v.1.0pre/_demo/server.php",
-                    data: {
-                        "operation": "remove_node",
-                        "id": this.id.replace("node_", "")
-                    },
-                    success: function (r) {
-                        if (!r.status) {
-                            data.inst.refresh();
-                        }
-                    }
-                });
-            });
-        })
-        .bind("rename.jstree", function (e, data) {
-            $.post(
-                "/static/v.1.0pre/_demo/server.php",
-                {
-                    "operation": "rename_node",
-                    "id": data.rslt.obj.attr("id").replace("node_", ""),
-                    "title": data.rslt.new_name
-                },
-                function (r) {
-                    if (!r.status) {
-                        $.jstree.rollback(data.rlbk);
-                    }
-                }
-            );
-        })
-        .bind("move_node.jstree", function (e, data) {
-            data.rslt.o.each(function (i) {
-                $.ajax({
-                    async: false,
-                    type: 'POST',
-                    url: "/static/v.1.0pre/_demo/server.php",
-                    data: {
-                        "operation": "move_node",
-                        "id": $(this).attr("id").replace("node_", ""),
-                        "ref": data.rslt.cr === -1 ? 1 : data.rslt.np.attr("id").replace("node_", ""),
-                        "position": data.rslt.cp + i,
-                        "title": data.rslt.name,
-                        "copy": data.rslt.cy ? 1 : 0
-                    },
-                    success: function (r) {
-                        if (!r.status) {
-                            $.jstree.rollback(data.rlbk);
-                        }
-                        else {
-                            $(data.rslt.oc).attr("id", "node_" + r.id);
-                            if (data.rslt.cy && $(data.rslt.oc).children("UL").length) {
-                                data.inst.refresh(data.inst._get_parent(data.rslt.oc));
-                            }
-                        }
-                        $("#analyze").click();
-                    }
-                });
-            });
-        });
 
 });
+
+function customMenu(node) {
+    // The default set of all items
+    var items = {
+        editItem: { // The "rename" menu item
+            label: "Edit",
+            action: function (data) {
+
+                var itemId = data.attr("itemid");
+                var itemType = data.attr("type");
+
+                if (itemType == "taxonomyCategory") {
+                    $("#oldName").html(data.context.innerText);
+                    $("#renameForm").attr("action", '/category/rename/' + data.attr("itemid") + '/');
+                    $('#renameModal').modal('show');
+                } else {
+                    window.open("/taxonomy/edit/" + itemId);
+                }
+            }
+        },
+        deleteItem: { // The "rename" menu item
+            label: "Delete",
+            action: function (data) {
+                $("#itemToDeleteName").html(data.context.innerText.split("(")[0].trim());
+                $("#confirmRemove").attr("action", '/taxonomy/delete/' + data.attr("itemid") + '/');
+                $('#confirmRemoveModal').modal('show');
+
+            }
+        },
+
+        splitItem: { // The "delete" menu item
+            label: "Split",
+            action: function (data) {
+                $("#originalTaxonomy, #newTaxonomy").sortable({
+                    placeholder: "reference-drop-placeholder",
+                    connectWith: ".connectedSortable"
+                }).disableSelection();
+
+                // reset form fields in the event that they were populated before :)
+                $("#split_detail_group").toggleClass("control-group error", false);
+                $("#split_errors").html('');
+                $("#originalTaxonomyItemCount").text('');
+                $("#newTaxonomyItemCount").text('');
+                $("#newTaxonomy").html('');
+
+                $('#originalTaxonomyItem').text(data.context.innerText.split("(")[0].trim());
+                $("#splitForm").attr("action", '/taxonomy/split/' + data.attr("itemid") + '/');
+                $('#splitModal').modal('show');
+
+                $.ajax({
+                    type: 'GET',
+                    url: "/api/taxonomy/info/" + data.attr("itemId"),
+                    dataType: 'json'
+                }).done(function (data) {
+                        myData = data;
+                        console.log(myData);
+                        var source = $("#reference-list-template").html();
+                        var template = Handlebars.compile(source);
+                        var html = template(data);
+
+                        $("#originalTaxonomy").html(html);
+
+                    });
+            }
+        },
+        moveItem: { // The "delete" menu item
+            label: "Move",
+            action: function (data) {
+                console.log("I've got to move it, move it.")
+            }
+        }
+    };
+
+    if (node.attr("type") == "taxonomyCategory") {
+        delete items.splitItem;
+        delete items.deleteItem;
+        delete items.moveItem;
+    }
+
+    if (node.attr("type") != "taxonomyCategory" && node.attr("type") != "taxonomyItem") {
+        delete items.editItem;
+        delete items.splitItem;
+        delete items.deleteItem;
+    }
+
+    return items;
+}
 
 function searchTree() {
 
