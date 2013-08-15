@@ -383,23 +383,46 @@ def sendEmailForEnquiry(message, request, taxonomyItem):
                                   context_instance=RequestContext(request))
 
 
-def getTaxonomyTree(request):
+def getTaxonomyTree(request, formatting):
     children = []
+
     categories = TaxonomyCategory.objects.all()
+
+    if formatting == "jsTree":
+        for category in categories:
+            items = []
+            for item in category.taxonomyitem_set.all():
+                items.append({"data": item.name + " (" + str(len(item.references.all())) + " refs)",
+                              "attr": {"itemId": item.id, "type": "taxonomyItem"}})
+
+            children.append(
+                {"data": category.name, "attr": {"itemId": category.id,
+                                                 "type": "taxonomyCategory"}, "children": items, "state": "closed"})
+
+        response = [{"data": "Taxonomy", "children": children, "state": "open"}]
+
+    else:
+        for category in categories:
+            items = []
+            for item in category.taxonomyitem_set.all():
+                items.append({"data": item.name + " (" + str(len(item.references.all())) + " refs)", "id": item.id})
+
+            children.append(
+                {"data": category.name, "children": items})
+
+        response = {"taxonomy": children}
+
+    return HttpResponse(simplejson.dumps(response), mimetype="application/json")
+
+
+def getTaxonomyCategories(request):
+    categories = TaxonomyCategory.objects.all()
+    categoryArray = []
+
     for category in categories:
-        items = []
-        for item in category.taxonomyitem_set.all():
-            items.append({"data": item.name + " (" + str(len(item.references.all())) + " refs)",
-                          "attr": {"itemId": item.id, "type": "taxonomyItem"}})
+        categoryArray.append({"id": category.id, "name": category.name})
 
-        children.append(
-            {"data": category.name, "attr": {"itemId": category.id,
-                                             "type": "taxonomyCategory"}, "children": items,
-             "state": "closed"})
-    response = [
-        {"data": "Taxonomy", "children": children, "state": "open"}
-    ]
-
+    response = {"categories": categoryArray}
     return HttpResponse(simplejson.dumps(response), mimetype="application/json")
 
 
@@ -432,10 +455,12 @@ def getTaxonomyCategoryJSON(request, taxonomy_id):
     return HttpResponse(simplejson.dumps(response), mimetype="application/json")
 
 
-def moveTaxonomyItemAPI(request, taxonomy_id):
+def moveTaxonomyItem(request, taxonomy_id):
     taxonomyItem = TaxonomyItem.objects.filter(pk=taxonomy_id).get(pk=taxonomy_id)
 
     newCategory = request.POST.get('newCategory', '')
+
+    print 'New category is ' + newCategory
 
     success = True
     message = 'The parent for ' + taxonomyItem.name + ' has been changed from ' + taxonomyItem.category.name + ' to ' + newCategory

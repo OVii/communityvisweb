@@ -1,0 +1,131 @@
+<div id="moveReferencesModal" class="modal hide fade" tabindex="-1" role="dialog"
+     aria-labelledby="confirmRemoveRequest"
+     aria-hidden="true" xmlns="http://www.w3.org/1999/html">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3>Move References</h3>
+    </div>
+    <form accept-charset="UTF-8" action="" class="formbody" id="moveReferenceForm"
+          method="post" onsubmit="return validateMoveReferenceForm()">
+        <div class="modal-body">
+            <div class="modal-body" id="booking">
+                {% csrf_token %}
+                <div id="split_errors"></div>
+
+                <div id="split_detail_group" class="control-group">
+
+                    <div class="controls well well-small">
+                        <label for="moveRefFromTaxonomy" class="control-label">Taxonomy 1</label>
+
+                        <select name="moveRefFromTaxonomy" id="moveRefFromTaxonomy" class="span5"
+                                onchange="JavaScript: updateReferenceList('#moveRefFromTaxonomy', '#moveFromTaxonomyReferenceList', '#moveFromName'); updateReferenceList('#moveRefToTaxonomy', '#moveToTaxonomyReferenceList', '#moveToName')">
+                            {# will be automatically populated with all taxonomy items #}
+                        </select>
+
+                        <label for="moveRefToTaxonomy" class="control-label">Taxonomy 2</label>
+                        <select name="moveRefToTaxonomy" id="moveRefToTaxonomy" class="span5"
+                                onchange="JavaScript: updateReferenceList('#moveRefFromTaxonomy', '#moveFromTaxonomyReferenceList', '#moveFromName'); updateReferenceList('#moveRefToTaxonomy', '#moveToTaxonomyReferenceList','#moveToName')">
+                            {# will be automatically populated with all taxonomy items #}
+                        </select>
+
+                        <input name="moveFromTaxonomyReferences" type="hidden"/>
+                        <input name="moveToTaxonomyReferences" type="hidden"/>
+                    </div>
+
+                    <p>Drag and drop the references you want to migrate (if any) to the taxonomy.</p>
+
+                    <div id="originalListContainer">
+                        <span id="moveFromTaxonomyItemCount" style="font-weight: normal"></span> References in <span
+                            id="moveFromName" style="font-weight: bolder">Taxonomy 1</span>
+                        <ul id="moveFromTaxonomyReferenceList" class="connectedSortable"
+                            onmouseup="JavaScript: countItems()"
+                            onmouseout="JavaScript: countItems()">
+                        </ul>
+                    </div>
+
+                    <div id="newListContainer">
+                        <span id="moveToTaxonomyItemCount" style="font-weight: normal"></span> References in <span
+                            id="moveToName" style="font-weight: bolder">Taxonomy 1</span>
+                        <ul id="moveToTaxonomyReferenceList" class="connectedSortable"
+                            onmouseup="JavaScript: countItems()"
+                            onmouseout="JavaScript: countItems()">
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <input name="commit" type="submit" class="btn btn-yellow pull-right" value="Split">
+        </div>
+    </form>
+</div>
+
+<script type="text/javascript">
+
+
+    function validateMoveReferenceForm() {
+        var message = document.forms["moveReferenceForm"]["newTaxonomyName"].value;
+        blankMessage = (message === "");
+        var errorHTML = "";
+        if (blankMessage) {
+            errorHTML += '<div class="alert alert-error">Please enter a new name!</div>'
+        }
+        $("#split_errors").html(errorHTML);
+        $("#split_detail_group").toggleClass("control-group error", blankMessage);
+
+        if (!blankMessage) {
+            determineMovedReferenceLists();
+        }
+
+        return !(blankMessage);
+    }
+
+    function determineMovedReferenceLists() {
+        console.log("Determining references");
+        var newReferences = "";
+        var originalReferences = "";
+        $("#moveFromTaxonomyReferenceList").children().each(function (index) {
+            originalReferences += $(this).attr("id") + ",";
+        });
+
+        $("#moveToTaxonomyReferenceList").children().each(function (index) {
+            newReferences += $(this).attr("id") + ",";
+        });
+
+        $('input[name=moveFromTaxonomyReferences]').val(originalReferences);
+        $('input[name=moveToTaxonomyReferences]').val(newReferences);
+    }
+
+
+    function countItems() {
+        $("#moveFromTaxonomyItemCount").text($("#moveFromTaxonomyReferenceList").children().size())
+        $("#moveToTaxonomyItemCount").text($("#moveToTaxonomyReferenceList").children().size())
+    }
+
+    function updateReferenceList(fieldId, listId, taxonomyNameId) {
+        var taxonomyId = $(fieldId).val();
+
+        $.ajax({
+            type: 'GET',
+            url: "/api/taxonomy/info/" + taxonomyId,
+            dataType: 'json'
+        }).done(function (data) {
+
+                    var source;
+                    if (fieldId.indexOf("From") != -1) {
+                        source = $("#reference-list-template").html();
+                    } else {
+                        source = $("#reference-list-template-2").html();
+                    }
+
+
+                    var template = Handlebars.compile(source);
+                    var html = template(data);
+
+                    $(listId).html(html);
+                    countItems();
+
+                    $(taxonomyNameId).text(data.name);
+
+
+                });
+    }
+</script>

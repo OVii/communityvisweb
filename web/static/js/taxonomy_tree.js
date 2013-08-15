@@ -25,7 +25,7 @@ $(function () {
                 // All the options are almost the same as jQuery's AJAX (read the docs)
                 "ajax": {
                     // the URL to fetch the data
-                    "url": "/api/taxonomyTree/",
+                    "url": "/api/taxonomyTree/jsTree",
                     // the `data` function is executed in the instance's scope
                     // the parameter is the node being loaded
                     // (may be -1, 0, or undefined when loading the root nodes)
@@ -117,8 +117,7 @@ function customMenu(node) {
                     url: "/api/taxonomy/info/" + data.attr("itemId"),
                     dataType: 'json'
                 }).done(function (data) {
-                        myData = data;
-                        console.log(myData);
+
                         var source = $("#reference-list-template").html();
                         var template = Handlebars.compile(source);
                         var html = template(data);
@@ -129,9 +128,51 @@ function customMenu(node) {
             }
         },
         moveItem: { // The "delete" menu item
-            label: "Move",
+            label: "Move Taxonomy",
             action: function (data) {
                 console.log("I've got to move it, move it.")
+                $.ajax({
+                    type: 'GET',
+                    url: "/api/taxonomyCategories",
+                    dataType: 'json'
+                }).done(function (categories) {
+                        $('#taxonomyItemToMove').text(data.context.innerText.split("(")[0].trim());
+                        $("#moveCategoryForm").attr("action", '/taxonomy/move/' + data.attr("itemid") + '/');
+                        $('#moveCategoryModal').modal('show');
+
+                        var source = $("#category-list-template").html();
+                        var template = Handlebars.compile(source);
+                        var html = template(categories);
+                        $("#categories").html(html);
+
+
+                    });
+            }
+        },
+        moveReferences: { // The "delete" menu item
+            label: "Move References",
+            action: function (data) {
+                $.ajax({
+                    type: 'GET',
+                    url: "/api/taxonomyTree/default",
+                    dataType: 'json'
+                }).done(function (categories) {
+
+                        $("#moveFromTaxonomyReferenceList, #moveToTaxonomyReferenceList").sortable({
+                            placeholder: "reference-drop-placeholder",
+                            connectWith: ".connectedSortable"
+                        }).disableSelection();
+
+                        $("#moveReferencesForm").attr("action", '/taxonomy/movereferences/');
+                        $('#moveReferencesModal').modal('show');
+
+                        var source = $("#taxonomy-list-template").html();
+                        var template = Handlebars.compile(source);
+                        var html = template(categories);
+
+                        $("#moveRefFromTaxonomy").html(html);
+                        $("#moveRefToTaxonomy").html(html);
+                    });
             }
         }
     };

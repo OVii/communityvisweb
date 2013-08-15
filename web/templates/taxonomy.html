@@ -53,7 +53,6 @@
 
             <div id="taxonomyTree">
             </div>
-
         </div>
 
         <div id="taxonomyInfo" class="span8">
@@ -65,7 +64,8 @@
     {% include 'fragments/deleteModal.html' %}
     {% include 'fragments/renameModal.html' %}
     {% include 'fragments/splitModal.html' %}
-
+    {% include 'fragments/moveTaxonomyItemModal.html' %}
+    {% include 'fragments/moveReferencesModal.html' %}
 
 {% endblock %}
 
@@ -143,6 +143,32 @@
             {{/each}}
             </div>
         </script>
+
+        <script id="reference-list-template-2" type="text/x-handlebars-template">
+
+            {{#each references}}
+            <li id="{{ this.id }}" class="otherList">{{ this.title }} <br/> <span style="font-size:0.7em">{{ this.authors }}</span></li>
+            {{/each}}
+            </div>
+        </script>
+
+        <script id="category-list-template" type="text/x-handlebars-template">
+            {{#each categories}}
+            <option id="{{ this.id }}">{{ this.name }}</option>
+            {{/each}}
+        </script>
+
+        <script id="taxonomy-list-template" type="text/x-handlebars-template">
+            <option>Please select a taxonomy item</option>
+            {{#each taxonomy}}
+            <optgroup label="{{ this.data }}">
+                {{#each children}}
+                <option value="{{ this.id }}" id="{{ this.id }}">{{ this.data }}</option>
+                {{/each}}
+            </optgroup>
+            {{/each}}
+        </script>
+
     {% endraw %}
 
     <style type="text/css">
@@ -227,7 +253,7 @@
             margin: 0;
         }
 
-        #originalTaxonomy li, #newTaxonomy li {
+        #originalListContainer li, #newListContainer li {
             list-style: none;
             background-color: #f1f2f1;
             text-indent: 0;
@@ -240,7 +266,7 @@
 
         }
 
-        #originalTaxonomy li:hover, #newTaxonomy li:hover {
+        #originalListContainer li:hover, #newListContainer li:hover {
             color: #f89406;
             cursor: pointer;
         }
@@ -251,6 +277,10 @@
             background-color: #f1f2f1;
             width: 200px;
             opacity: 0.7;
+        }
+
+        .otherList {
+            color: #f89406;
         }
 
         #newTaxonomy li {
@@ -265,8 +295,9 @@
             color: #fff;
         }
 
-        #splitModal .modal-body {
-            max-height: 700px;
+        #splitModal .modal-body, #moveReferencesModal .modal-body {
+            min-height: 300px;
+            max-height: 600px;
         }
 
 
