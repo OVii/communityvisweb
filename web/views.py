@@ -45,8 +45,12 @@ def index(request):
 
 # taxonomy list
 def taxonomy(request):
+    message = request.GET.get('message', '')
+    success = request.GET.get('success', True)
+
     taxonomies = TaxonomyCategory.objects.all()
-    return render_to_response("templates/taxonomy.html", {'taxonomies': taxonomies},
+    return render_to_response("templates/taxonomy.html",
+                              {'taxonomies': taxonomies, 'message': message, 'success': success},
                               context_instance=RequestContext(request))
 
 
@@ -428,24 +432,37 @@ def getTaxonomyCategoryJSON(request, taxonomy_id):
     return HttpResponse(simplejson.dumps(response), mimetype="application/json")
 
 
-def createTaxonomyCategoryAPI(request):
-    response = {"success": True}
-    return HttpResponse(simplejson.dumps(response), mimetype="application/json")
+def moveTaxonomyItemAPI(request, taxonomy_id):
+    taxonomyItem = TaxonomyItem.objects.filter(pk=taxonomy_id).get(pk=taxonomy_id)
 
+    newCategory = request.POST.get('newCategory', '')
 
-def moveTaxonomyCategoryAPI(request):
-    response = {"success": True}
-    return HttpResponse(simplejson.dumps(response), mimetype="application/json")
+    success = True
+    message = 'The parent for ' + taxonomyItem.name + ' has been changed from ' + taxonomyItem.category.name + ' to ' + newCategory
+
+    if newCategory:
+        categoryQuery = TaxonomyCategory.objects.filter(name=newCategory)
+        if len(categoryQuery) > 0:
+            taxonomyItem.category = categoryQuery.get(name=newCategory)
+            taxonomyItem.save()
+    else:
+        success = False
+        message = 'An error occurred changing the taxonomy parent. Please select a taxonomy category.'
+
+    return HttpResponseRedirect(URL_PREPENDER + "/taxonomy/?success=" + str(success) + "&message=" + str(message))
 
 
 def renameTaxonomyCategoryAPI(request, category_id):
     category = TaxonomyCategory.objects.filter(pk=category_id).get(pk=category_id)
     newName = request.POST.get('newName', category.name)
 
+    success = True
+    message = 'Successfully renamed ' + category.name + ' to ' + newName
+
     category.name = newName
     category.save()
 
-    return HttpResponseRedirect(URL_PREPENDER + "/taxonomy/")
+    return HttpResponseRedirect(URL_PREPENDER + "/taxonomy/?success=" + str(success) + "&message=" + str(message))
 
 
 def handleTaxonomyEnquiry(request, taxonomy_id):
@@ -538,6 +555,10 @@ def taxonomy_split(request, taxonomy_id):
 
     newTaxonomyItem = request.POST.get('newTaxonomyName', '')
 
+    success = True
+    message = 'The splitting of ' + taxonomyItemToSplit.name + ' was successful. ' + newTaxonomyItem + \
+              ' is now available for your perusal.'
+
     if newTaxonomyItem:
         originalReferences = request.POST.get('originalTaxonomyReferences', '')
         newReferences = request.POST.get('newTaxonomyReferences', '')
@@ -557,8 +578,11 @@ def taxonomy_split(request, taxonomy_id):
         newTaxonomyItem.save()
 
         addReferencesToTaxonomyItem(newReferenceList, newTaxonomyItem)
+    else:
+        success = False
+        message = 'The splitting of ' + taxonomyItemToSplit.name + ' was unsuccessful. Please try again.'
 
-    return HttpResponseRedirect(URL_PREPENDER + "/taxonomy/")
+    return HttpResponseRedirect(URL_PREPENDER + "/taxonomy/?success=" + str(success) + "&message=" + str(message))
 
 
 @login_required()
