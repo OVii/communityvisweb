@@ -108,7 +108,7 @@ body {
 }
 
 .menu-item:hover {
-    border-color: #bc8400;
+    border-color: #F39C12;
     color: #042F4B;
 }
 
@@ -191,8 +191,6 @@ input#search-text {
     border: thin solid #CACACA;
     -webkit-box-shadow: rgba(255, 255, 255, 0.8) 0 1px 0;
 }
-
-
 
 .content {
     margin-top: 60px;
@@ -278,7 +276,7 @@ input#search-text {
 }
 
 .front-item:hover {
-    border-bottom: 2px solid #bc8400;
+    border-bottom: 2px solid #F39C12;
 }
 
 .search-wrapper {
@@ -290,7 +288,7 @@ input#search-text {
     -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#fafafa', endColorstr='#eaeaea')";
     border: 1px solid #CACACA;
     box-shadow: 0 1px 0 rgba(255, 255, 255, 0.4), 0 0px 10px rgba(0, 0, 0, 0.1);
-    padding-top: 25px;
+    padding-top: 20px;
 }
 
 .offset4-5 {
@@ -365,14 +363,14 @@ input#search-text {
     background: -webkit-linear-gradient(#FAFAFA, #EAEAEA);
     -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#fafafa', endColorstr='#eaeaea')";
     border: 1px solid #CACACA;
-    border-left: thick solid #bc8400;
+    border-left: thick solid #F39C12;
     font-weight: bolder;
     font-size: 0.9em;
     box-shadow: 0 1px 0 rgba(255, 255, 255, 0.4), 0 0px 10px rgba(0, 0, 0, 0.1);
 }
 
 .recent-items li:hover {
-    border-left: thick solid #bc8400;
+    border-left: thick solid #F39C12;
 }
 
 .badge-info, .badge-info[href] {
@@ -497,7 +495,7 @@ input#search-text {
 }
 
 #footer .upper_footer ul.footer_links a {
-    color: #bc8400;
+    color: #EBB77B;
     font-size: 13px;
     font-weight: normal;
 }
@@ -567,7 +565,7 @@ input#search-text {
 }
 
 #about {
-    border-top: 4px #bc8400 solid;
+    border-top: 4px #EBB77B solid;
 }
 
 #publications {
@@ -990,4 +988,13 @@ body > .container.tabs-right.tabbable-bodered > .tab-content {
 .upload-area {
     width: 100px;
     height: 100px;
+}
+
+.clearText {
+    font-weight: lighter;
+    color: #666666;
+    padding: 10px 0px;
+    font-size: 1.1em;
+    line-height: 20px;
+    text-rendering: optimizelegibility;
 }

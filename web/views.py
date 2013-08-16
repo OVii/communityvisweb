@@ -5,7 +5,7 @@ from datetime import datetime
 import hashlib
 import urllib2
 from django.contrib.auth import logout
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.models import User
 from django.contrib.sites.models import Site
 from django.db.models import Q
@@ -606,6 +606,44 @@ def taxonomy_split(request, taxonomy_id):
     else:
         success = False
         message = 'The splitting of ' + taxonomyItemToSplit.name + ' was unsuccessful. Please try again.'
+
+    return HttpResponseRedirect(URL_PREPENDER + "/taxonomy/?success=" + str(success) + "&message=" + str(message))
+
+
+@login_required
+@user_passes_test(lambda u: u.is_superuser)
+def moveReferences(request):
+
+    taxonomy1Id = request.POST.get('moveRefFromTaxonomy', '')
+    taxonomy2Id = request.POST.get('moveRefToTaxonomy', '')
+
+    if taxonomy1Id and taxonomy2Id:
+
+        taxonomy1 = TaxonomyItem.objects.filter(pk=taxonomy1Id).get(pk=taxonomy1Id)
+        taxonomy2 = TaxonomyItem.objects.filter(pk=taxonomy2Id).get(pk=taxonomy2Id)
+
+        taxonomy1References = request.POST.get('moveFromTaxonomyReferences', '')
+        taxonomy2References = request.POST.get('moveToTaxonomyReferences', '')
+
+        if taxonomy2References != "":
+            for reference in taxonomy1.references.all():
+                taxonomy2.references.remove(reference)
+
+            for reference in taxonomy2.references.all():
+                taxonomy2.references.remove(reference)
+
+        taxonomy1ReferencesList = taxonomy1References.split(",")
+        taxonomy2ReferencesList = taxonomy2References.split(",")
+
+        addReferencesToTaxonomyItem(taxonomy1ReferencesList, taxonomy1)
+        addReferencesToTaxonomyItem(taxonomy2ReferencesList, taxonomy2)
+
+        success = True
+        message = 'The moving of references between ' + taxonomy1.name + ' and ' + taxonomy2.name + ' was successful!' \
+                                                                                                    ' You may peruse...'
+    else:
+        success = False
+        message = 'The moving of references between the taxonomies was unsuccessful. Please try again.'
 
     return HttpResponseRedirect(URL_PREPENDER + "/taxonomy/?success=" + str(success) + "&message=" + str(message))
 

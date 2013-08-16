@@ -10,9 +10,9 @@
         <div class="modal-body">
             <div class="modal-body" id="booking">
                 {% csrf_token %}
-                <div id="split_errors"></div>
+                <div id="move_reference_errors"></div>
 
-                <div id="split_detail_group" class="control-group">
+                <div id="move_reference_errors_group" class="control-group">
 
                     <div class="controls well well-small">
                         <label for="moveRefFromTaxonomy" class="control-label">Taxonomy 1</label>
@@ -53,7 +53,7 @@
                     </div>
                 </div>
             </div>
-            <input name="commit" type="submit" class="btn btn-yellow pull-right" value="Split">
+            <input name="commit" type="submit" class="btn btn-yellow pull-right" value="Move References">
         </div>
     </form>
 </div>
@@ -62,20 +62,25 @@
 
 
     function validateMoveReferenceForm() {
-        var message = document.forms["moveReferenceForm"]["newTaxonomyName"].value;
-        blankMessage = (message === "");
-        var errorHTML = "";
-        if (blankMessage) {
-            errorHTML += '<div class="alert alert-error">Please enter a new name!</div>'
-        }
-        $("#split_errors").html(errorHTML);
-        $("#split_detail_group").toggleClass("control-group error", blankMessage);
 
-        if (!blankMessage) {
+        var taxonomy1 = $("#moveRefFromTaxonomy").val();
+        var taxonomy2 = $("#moveRefToTaxonomy").val();
+
+        taxonomy1Filled = (taxonomy1.indexOf("Please select") == -1);
+        taxonomy2Filled = (taxonomy2.indexOf("Please select") == -1);
+
+        var errorHTML = "";
+        if (!taxonomy1Filled ||! taxonomy2Filled) {
+            errorHTML += '<div class="alert alert-error">Please select two taxonomies!</div>'
+        }
+        $("#move_reference_errors").html(errorHTML);
+        $("#move_reference_errors_group").toggleClass("control-group error", (taxonomy1Filled || taxonomy2Filled));
+
+        if (taxonomy1Filled && taxonomy2Filled) {
             determineMovedReferenceLists();
         }
 
-        return !(blankMessage);
+        return (taxonomy1Filled && taxonomy2Filled);
     }
 
     function determineMovedReferenceLists() {

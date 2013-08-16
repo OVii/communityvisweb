@@ -9,7 +9,20 @@
     {% include "taxonomy-header.html" %}
 
 
-    <div>
+    {% if message %}
+
+        {% if success %}
+            <div class="alert alert-success">
+                {{ message }}
+            </div>
+        {% else %}
+            <div class="alert alert-error">
+                {{ message }}
+            </div>
+        {% endif %}
+    {% endif %}
+
+    <div class="">
         <p style="font-size: 1.3em; font-weight: lighter">
             This taxonomy is based on the subject categories used by the submission and review processes for IEEE
             Vis conferences (SciVis, InfoVis and VAST) and European Conference on Visualization (EuroVis). We
@@ -17,20 +30,7 @@
             We will review this taxonomy on a regular basis. Please let us know if you have any suggestions.
         </p>
 
-        {% if message %}
-            {% if success %}
-                <div class="alert alert-success">
-                    {{ message }}
-                </div>
-            {% else %}
-                <div class="alert alert-error">
-                    {{ message }}
-                </div>
-            {% endif %}
-            </br>
-        {% endif %}
-
-
+        <div class="clearfix"></div>
         <div class="row pull-right">
 
             {% if user.is_authenticated %}
@@ -39,12 +39,15 @@
                     taxonomy</a>
             {% endif %}
         </div>
+
+        <br/><br/>
+
     </div>
 
     <div class="clearfix"></div>
     <br/>
 
-    <div style="width:100%; min-width: 1100px">
+    <div class="row-fluid">
 
         <div class="span4 well">
 
@@ -56,7 +59,8 @@
         </div>
 
         <div id="taxonomyInfo" class="span8">
-            <p>Select an item in the taxonomy tree to view its details.</p>
+            <p style="font-size: 1.3em; font-weight: lighter">Select an item in the taxonomy tree to view its
+                details.</p>
         </div>
 
     </div>
@@ -73,17 +77,26 @@
     <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
     <script type="text/javascript" src="{{ STATIC_URL }}js/jsTree/jquery.hotkeys.js"></script>
     <script type="text/javascript" src="{{ STATIC_URL }}js/jsTree/jquery.jstree.js"></script>
+
+
+    <script type="text/javascript">
+        var showTreeMenu = false;
+        {% if user.is_superuser %}
+            showTreeMenu = true;
+        {% endif %}
+    </script>
+
     <script type="text/javascript" src="{{ STATIC_URL }}js/taxonomy_tree.js"></script>
     <script type="text/javascript" src="{{ STATIC_URL }}js/handlebars.js"></script>
 
     {% raw %}
         <script id="taxonomy-template" type="text/x-handlebars-template">
-            <div class="page-header">
+            <div>
                 <h1>
                     <small>{{ name }} <a href="{{ url }}"><span style="font-size:0.6em">View Taxonomy Page</span></a>
                     </small>
                 </h1>
-                <p>
+                <p class="clearText">
                     {{#if description}}
                     {{ description }}
                     {{ else }}
@@ -91,13 +104,14 @@
                     {{/if}}
                 </p>
             </div>
-            <div class="well">
+
+            <div>
 
                 <h4>
                     {{ references.length }} References
                 </h4>
                 {{#each references}}
-                <div class="taxonomy-well reference_box">
+                <div class="reference_box">
 
                     <p class="title"><a href="{{ this.url }}">{{ this.title }}</a></p>
 
@@ -147,7 +161,8 @@
         <script id="reference-list-template-2" type="text/x-handlebars-template">
 
             {{#each references}}
-            <li id="{{ this.id }}" class="otherList">{{ this.title }} <br/> <span style="font-size:0.7em">{{ this.authors }}</span></li>
+            <li id="{{ this.id }}" class="otherList">{{ this.title }} <br/> <span
+                    style="font-size:0.7em">{{ this.authors }}</span></li>
             {{/each}}
             </div>
         </script>
@@ -200,20 +215,21 @@
             background: none;
             border: none;
             padding: 0 2px 0 1px;
-            font-weight: bolder;
-            color: #bc8400;
+            font-weight: bold;
+            color: #2C3E50;
         }
 
         .jstree-default .jstree-hovered {
             background: none;
             border: none;
             padding: 0 2px 0 1px;
-            color: #bc8400;
+            color: #2C3E50;
+            font-weight: bolder;
         {#            font-weight: normal;#}
         }
 
         .jstree-default a.jstree-search {
-            color: #bc8400;
+            color: #2C3E50;
             font-weight: bolder;
             text-decoration: none;
         }
@@ -267,12 +283,12 @@
         }
 
         #originalListContainer li:hover, #newListContainer li:hover {
-            color: #f89406;
+            color: #EBB77B;
             cursor: pointer;
         }
 
         .reference-drop-placeholder {
-            border: #f89406 dashed 1px;
+            border: #EBB77B dashed 1px;
             min-height: 25px;
             background-color: #f1f2f1;
             width: 200px;
@@ -284,13 +300,13 @@
         }
 
         #newTaxonomy li {
-            background-color: #f89406;
+            background-color: #EBB77B;
             color: #fff;
 
         }
 
         #newTaxonomy li:hover {
-            background-color: #f89406;
+            background-color: #EBB77B;
             opacity: 0.7;
             color: #fff;
         }

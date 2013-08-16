@@ -60,7 +60,7 @@
                 {% for reference in references %}
                     <div class="well taxonomy-well reference_box">
 
-                        <p class="title">{{ reference.title }}</p>
+                        <a href="{{ URL_PREPENDER }}/reference/{{ reference.id }}?currentPage={{ request.path }}"><p class="title">{{ reference.title }}</p></a>
 
                         <p class="authors">{{ reference.authorsAsText }}</p>
 
@@ -74,16 +74,15 @@
                         {% endif %}
 
 
-                        <a href="{{ URL_PREPENDER }}/reference/{{ reference.id }}?currentPage={{ request.path }}" class="btn btn-small">View Reference</a>
+
 
 
                         {% if owners != 0 %}
                             <a onclick="showSuggestBox('reference', '{{ URL_PREPENDER }}/enquiry/{{ taxonomy.id }}/{{ reference.id }}/')"
-                               class="btn btn-yellow btn-small"><i class="icon-exclamation-sign icon-white"></i> Report
-                                error</a>{% endif %}
+                               class="btn btn-small"><i class="icon-exclamation-sign"></i> </a>{% endif %}
                         {% if user.is_superuser or ownerLoggedIn %}
                             <a onclick="showDeleteWindow({{ reference.id }})" class="btn btn-small btn-danger"><i
-                                    class="icon-remove-sign icon-white"></i> Remove reference from taxonomy</a>
+                                    class="icon-remove-sign icon-white"></i></a>
                         {% endif %}
                     </div>
                 {% endfor %}

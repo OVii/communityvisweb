@@ -163,7 +163,7 @@ function customMenu(node) {
                             connectWith: ".connectedSortable"
                         }).disableSelection();
 
-                        $("#moveReferencesForm").attr("action", '/taxonomy/movereferences/');
+                        $("#moveReferenceForm").attr("action", '/taxonomy/move-references/');
                         $('#moveReferencesModal').modal('show');
 
                         var source = $("#taxonomy-list-template").html();
@@ -187,6 +187,15 @@ function customMenu(node) {
         delete items.editItem;
         delete items.splitItem;
         delete items.deleteItem;
+    }
+
+
+    if(!showTreeMenu){
+        delete items.editItem;
+        delete items.splitItem;
+        delete items.deleteItem;
+        delete items.moveItem;
+        delete items.moveReferences;
     }
 
     return items;
