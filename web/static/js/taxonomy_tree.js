@@ -147,8 +147,6 @@ function customMenu(node) {
                         var template = Handlebars.compile(source);
                         var html = template(categories);
                         $("#categories").html(html);
-
-
                     });
             }
         },
