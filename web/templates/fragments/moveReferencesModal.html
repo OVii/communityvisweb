@@ -70,11 +70,13 @@
         taxonomy2Filled = (taxonomy2.indexOf("Please select") == -1);
 
         var errorHTML = "";
-        if (!taxonomy1Filled ||! taxonomy2Filled) {
+        if (!(taxonomy1Filled && taxonomy2Filled)) {
             errorHTML += '<div class="alert alert-error">Please select two taxonomies!</div>'
         }
+
+        alert(taxonomy1Filled + ' and ' + taxonomy2Filled);
         $("#move_reference_errors").html(errorHTML);
-        $("#move_reference_errors_group").toggleClass("control-group error", (taxonomy1Filled || taxonomy2Filled));
+        $("#move_reference_errors_group").toggleClass("control-group error", !(taxonomy1Filled && taxonomy2Filled));
 
         if (taxonomy1Filled && taxonomy2Filled) {
             determineMovedReferenceLists();
