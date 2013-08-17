@@ -147,6 +147,8 @@ function customMenu(node) {
                         var template = Handlebars.compile(source);
                         var html = template(categories);
                         $("#categories").html(html);
+
+
                     });
             }
         },
@@ -198,7 +200,6 @@ function customMenu(node) {
         delete items.splitItem;
         delete items.deleteItem;
     }
-
 
     if (!showTreeMenu) {
         delete items.editItem;
