@@ -16,7 +16,7 @@ import logging
 from django.utils import simplejson
 from viscommunityweb.settings import EMAIL_HOST_USER, SITE_ID, URL_PREPENDER
 from web.bibtex_utils.import_utils import saveFile, saveTextToFile
-from web.models import TaxonomyCategory, TaxonomyItem, Reference, UserProfile, OwnershipRequest, Enquiry
+from web.models import TaxonomyCategory, TaxonomyItem, Reference, UserProfile, OwnershipRequest, Enquiry, TaxonomyArea
 from django.shortcuts import render_to_response, get_object_or_404
 from django.core.mail import send_mail, EmailMessage
 import os
@@ -384,22 +384,32 @@ def sendEmailForEnquiry(message, request, taxonomyItem):
 
 
 def getTaxonomyTree(request, formatting):
-    children = []
 
-    categories = TaxonomyCategory.objects.all()
+    taxonomy = []
+
+    taxonomyArea = TaxonomyArea.objects.filter(name="Visualisation").get(name="Visualisation")
+    categories = taxonomyArea.taxonomycategory_set.all()
 
     if formatting == "jsTree":
+
         for category in categories:
             items = []
             for item in category.taxonomyitem_set.all():
                 items.append({"data": item.name + " (" + str(len(item.references.all())) + " refs)",
                               "attr": {"itemId": item.id, "type": "taxonomyItem"}})
 
-            children.append(
-                {"data": category.name, "attr": {"itemId": category.id,
-                                                 "type": "taxonomyCategory"}, "children": items, "state": "closed"})
+            if category.taxonomycategory_set:
+                sub_items = []
+                for subCategory in category.taxonomycategory_set.all():
+                    for item in subCategory.taxonomyitem_set.all():
+                        sub_items.append({"data": item.name + " (" + str(len(item.references.all())) + " refs)",
+                                      "attr": {"itemId": item.id, "type": "taxonomyItem"}})
 
-        response = [{"data": "Taxonomy", "children": children, "state": "open"}]
+                    items.append({"data": subCategory.name, "attr": {"itemId": subCategory.id, "type": "taxonomyCategory"}, "children": sub_items, "state": "closed"})
+
+            taxonomy.append({"data": category.name, "attr": {"itemId": category.id, "type": "taxonomyCategory"}, "children": items, "state": "closed"})
+
+        response = [{"data": "Taxonomy", "children": taxonomy, "state": "open"}]
 
     else:
         for category in categories:
@@ -407,10 +417,18 @@ def getTaxonomyTree(request, formatting):
             for item in category.taxonomyitem_set.all():
                 items.append({"data": item.name + " (" + str(len(item.references.all())) + " refs)", "id": item.id})
 
-            children.append(
-                {"data": category.name, "children": items})
+            if category.taxonomycategory_set:
+                sub_items = []
+                for subCategory in category.taxonomycategory_set.all():
+                    for item in subCategory.taxonomyitem_set.all():
+                        sub_items.append({"data": item.name + " (" + str(len(item.references.all())) + " refs)", "id": item.id})
 
-        response = {"taxonomy": children}
+                    items.append({"data": subCategory.name, "children": sub_items})
+
+
+            taxonomy.append({"data": category.name, "children": items})
+
+        response = {"taxonomy": taxonomy}
 
     return HttpResponse(simplejson.dumps(response), mimetype="application/json")
 
@@ -641,7 +659,7 @@ def moveReferences(request):
 
         if taxonomy2References != "":
             for reference in taxonomy1.references.all():
-                taxonomy2.references.remove(reference)
+                taxonomy1.references.remove(reference)
 
             for reference in taxonomy2.references.all():
                 taxonomy2.references.remove(reference)

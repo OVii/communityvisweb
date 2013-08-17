@@ -127,7 +127,7 @@
         <script id="category-info-template" type="text/x-handlebars-template">
             <div>
                 <h1>
-                    <small>{{name}}</a>
+                    <small>{{ name }}</a>
                     </small>
                 </h1>
             </div>
@@ -138,7 +138,10 @@
                 </h4>
                 {{#each taxonomyItems}}
                 <div class="reference_box">
-                    <p class="title"><i class="icon-arrow-up"></i> <a href="{{ this.url }}">{{ this.title }}</a> <span style="font-size:0.8em; color:#414241; font-weight:bold">{{ this.referenceCount }} References</span> </p>
+                    <p class="title"><i class="icon-arrow-up"></i> <a href="{{ this.url }}">{{ this.title }}</a> <span
+                            style="font-size:0.8em; color:#414241; font-weight:bold">{{ this.referenceCount }} References</span>
+                    </p>
+
                     <p class="authors">{{ this.description }}</p>
                     <hr/>
                 </div>
@@ -200,7 +203,15 @@
             {{#each taxonomy}}
             <optgroup label="{{ this.data }}">
                 {{#each children}}
+                {{#if this.children }}
+                <optgroup label="{{ this.data }}">
+                    {{#each children}}
+                    <option value="{{ this.id }}" id="{{ this.id }}">{{ this.data }}</option>
+                    {{/each}}
+                </optgroup>
+                {{else}}
                 <option value="{{ this.id }}" id="{{ this.id }}">{{ this.data }}</option>
+                {{/if}}
                 {{/each}}
             </optgroup>
             {{/each}}
@@ -223,6 +234,11 @@
             font-size: 12px;
             font-family: Helvetica, Arial, sans-serif;
             font-weight: lighter;
+        }
+
+        .jstree-search {
+            color: #EBB77B;
+            font-weight: bolder;
         }
 
         #taxonomyTree .jstree-hovered, #taxonomyTree .jstree-clicked {

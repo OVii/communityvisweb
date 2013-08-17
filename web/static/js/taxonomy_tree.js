@@ -175,6 +175,14 @@ function customMenu(node) {
 
                         $("#moveRefFromTaxonomy").html(html);
                         $("#moveRefToTaxonomy").html(html);
+
+                        console.log('Setting selected value to ' + data.attr("itemId"));
+
+
+                        $("#moveRefFromTaxonomy").val(data.attr("itemId"));
+                        countItems();
+                        updateReferenceList('#moveRefFromTaxonomy', '#moveFromTaxonomyReferenceList', '#moveFromName');
+
                     });
             }
         }
@@ -184,6 +192,7 @@ function customMenu(node) {
         delete items.splitItem;
         delete items.deleteItem;
         delete items.moveItem;
+        delete items.moveReferences;
     }
 
     if (node.attr("type") != "taxonomyCategory" && node.attr("type") != "taxonomyItem") {

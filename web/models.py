@@ -59,9 +59,9 @@ class TaxonomyArea(models.Model):
 
 class TaxonomyCategory(models.Model):
     name = models.CharField(max_length=128)
-    area = models.ForeignKey(TaxonomyArea)
+    area = models.ForeignKey(TaxonomyArea, null=True, blank=True)
 
-    children = models.ForeignKey("self", blank=True, null=True, related_name="sub_children")
+    parent = models.ForeignKey('self', blank=True, null=True)
 
     def __unicode__(self):
         return self.name + " (" + self.area.name + ")"
@@ -82,7 +82,6 @@ class TaxonomyItem(models.Model):
 
     def __unicode__(self):
         return self.name + " (" + self.category.name + ")"
-
 
 class UserProfile(models.Model):
     user = models.ForeignKey(User, unique=True)
