@@ -124,6 +124,28 @@
             </div>
         </script>
 
+        <script id="category-info-template" type="text/x-handlebars-template">
+            <div>
+                <h1>
+                    <small>{{name}}</a>
+                    </small>
+                </h1>
+            </div>
+
+            <div>
+                <h4>
+                    {{ taxonomyItems.length }} Items
+                </h4>
+                {{#each taxonomyItems}}
+                <div class="reference_box">
+                    <p class="title"><i class="icon-arrow-up"></i> <a href="{{ this.url }}">{{ this.title }}</a> <span style="font-size:0.8em; color:#414241; font-weight:bold">{{ this.referenceCount }} References</span> </p>
+                    <p class="authors">{{ this.description }}</p>
+                    <hr/>
+                </div>
+                {{/each}}
+            </div>
+        </script>
+
         <script id="category-template" type="text/x-handlebars-template">
             <div class="page-header">
                 <h1>

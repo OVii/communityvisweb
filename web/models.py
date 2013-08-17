@@ -61,6 +61,8 @@ class TaxonomyCategory(models.Model):
     name = models.CharField(max_length=128)
     area = models.ForeignKey(TaxonomyArea)
 
+    children = models.ForeignKey("self", blank=True, null=True, related_name="sub_children")
+
     def __unicode__(self):
         return self.name + " (" + self.area.name + ")"
 

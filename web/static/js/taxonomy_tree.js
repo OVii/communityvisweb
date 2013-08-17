@@ -40,18 +40,21 @@ $(function () {
             }
         })
         .bind("select_node.jstree", function (event, data) {
-            // `data.rslt.obj` is the jquery extended node that was clicked
-            // TODO: Load and display taxonomy category and taxonomy items.
-
-
+            itemType = data.rslt.obj.attr("type") == "taxonomyCategory" ? "category" : "taxonomy";
             $.ajax({
                 type: 'GET',
-                url: "/api/taxonomy/info/" + data.rslt.obj.attr("itemId"),
+                url: "/api/" + (data.rslt.obj.attr("type") == "taxonomyCategory" ? "category" : "taxonomy") + "/info/" + data.rslt.obj.attr("itemId"),
                 dataType: 'json'
             }).done(function (data) {
                     myData = data;
-                    console.log(myData);
-                    var source = $("#taxonomy-template").html();
+                    var source;
+
+                    if (itemType === "category") {
+                        source = $("#category-info-template").html();
+                    } else {
+                        source = $("#taxonomy-template").html();
+                    }
+
                     var template = Handlebars.compile(source);
                     var html = template(data);
 
@@ -190,7 +193,7 @@ function customMenu(node) {
     }
 
 
-    if(!showTreeMenu){
+    if (!showTreeMenu) {
         delete items.editItem;
         delete items.splitItem;
         delete items.deleteItem;

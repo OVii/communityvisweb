@@ -455,6 +455,21 @@ def getTaxonomyCategoryJSON(request, taxonomy_id):
     return HttpResponse(simplejson.dumps(response), mimetype="application/json")
 
 
+def getTaxonomyCategoryInformationJSON(request, category_id):
+    category = get_object_or_404(TaxonomyCategory, pk=category_id)
+    taxonomyItems = category.taxonomyitem_set.all()
+
+    taxonomyItemList = []
+
+    for taxonomyItem in taxonomyItems:
+        taxonomyItemList.append({"id": taxonomyItem.id, "title": taxonomyItem.name, "description": taxonomyItem.detail,
+                                 "url": URL_PREPENDER + "/taxonomy/" + str(taxonomyItem.id), "referenceCount": len(taxonomyItem.references.all())})
+
+    response = {"id": category.id, "name": category.name, "taxonomyItems": taxonomyItemList}
+
+    return HttpResponse(simplejson.dumps(response), mimetype="application/json")
+
+
 def moveTaxonomyItem(request, taxonomy_id):
     taxonomyItem = TaxonomyItem.objects.filter(pk=taxonomy_id).get(pk=taxonomy_id)
 
@@ -613,7 +628,6 @@ def taxonomy_split(request, taxonomy_id):
 @login_required
 @user_passes_test(lambda u: u.is_superuser)
 def moveReferences(request):
-
     taxonomy1Id = request.POST.get('moveRefFromTaxonomy', '')
     taxonomy2Id = request.POST.get('moveRefToTaxonomy', '')
 

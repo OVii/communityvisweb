@@ -54,6 +54,10 @@ urlpatterns = patterns('',
                        url(r'^taxonomy/download/(\d+)/$', 'web.views.taxonomy_download', name='taxonomy_download'),
                        url(r'^taxonomy/delete/(\d+)/$', 'web.views.taxonomy_delete', name='taxonomy_download'),
                        url(r'^taxonomy/split/(\d+)/$', 'web.views.taxonomy_split', name='taxonomy_download'),
+                       url(r'^taxonomy/move/(\d+)/$', 'web.views.moveTaxonomyItem', name='taxonomy_move'),
+                       url(r'^taxonomy/move-references/$', 'web.views.moveReferences', name='taxonomy_move'),
+
+                       url(r'^category/rename/(?P<category_id>\d+)/', 'web.views.renameTaxonomyCategoryAPI', name='category_rename'),
 
                        url(r'^request_ownership/(?P<taxonomy_id>\d+)$', 'web.views.request_ownership_send',
                            name='request_ownership'),
@@ -71,13 +75,10 @@ urlpatterns = patterns('',
                        url(r'^contact/$', 'web.views.contact', name='contact'),
                        url(r'^contact/send', 'web.views.contact_send', name='contact_send'),
 
-                       url(r'^api/taxonomyTree', 'web.views.getTaxonomyTree', name='api_taxonomy_tree'),
+                       url(r'^api/taxonomyTree/(?P<formatting>\w+)', 'web.views.getTaxonomyTree', name='api_taxonomy_tree'),
+                       url(r'^api/taxonomyCategories', 'web.views.getTaxonomyCategories', name='api_taxonomy_categories'),
                        url(r'^api/taxonomy/info/(?P<taxonomy_id>\d+)/$', 'web.views.getTaxonomyCategoryJSON', name='api_taxonomy_details'),
-                       url(r'^api/taxonomy/create', 'web.views.createTaxonomyCategoryAPI', name='api_taxonomy_create'),
-                       url(r'^api/taxonomy/move', 'web.views.moveTaxonomyCategoryAPI', name='api_taxonomy_move'),
-
-                       url(r'^category/rename/(?P<category_id>\d+)/', 'web.views.renameTaxonomyCategoryAPI', name='category_rename'),
-
+                       url(r'^api/category/info/(?P<category_id>\d+)/$', 'web.views.getTaxonomyCategoryInformationJSON', name='api_taxonomy_category_details'),
 
                        url(r'^search/$', 'web.views.search', name='search'),
                        url(r'^account/$', 'web.views.account', name='account'),
