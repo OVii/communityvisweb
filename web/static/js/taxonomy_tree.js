@@ -25,7 +25,7 @@ $(function () {
                 // All the options are almost the same as jQuery's AJAX (read the docs)
                 "ajax": {
                     // the URL to fetch the data
-                    "url": "/api/taxonomyTree/jsTree",
+                    "url": "/community/api/taxonomyTree/jsTree",
                     // the `data` function is executed in the instance's scope
                     // the parameter is the node being loaded
                     // (may be -1, 0, or undefined when loading the root nodes)
@@ -43,7 +43,7 @@ $(function () {
             itemType = data.rslt.obj.attr("type") == "taxonomyCategory" ? "category" : "taxonomy";
             $.ajax({
                 type: 'GET',
-                url: "/api/" + (data.rslt.obj.attr("type") == "taxonomyCategory" ? "category" : "taxonomy") + "/info/" + data.rslt.obj.attr("itemId"),
+                url: "/community/api/" + (data.rslt.obj.attr("type") == "taxonomyCategory" ? "category" : "taxonomy") + "/info/" + data.rslt.obj.attr("itemId"),
                 dataType: 'json'
             }).done(function (data) {
                     myData = data;
@@ -117,7 +117,7 @@ function customMenu(node) {
 
                 $.ajax({
                     type: 'GET',
-                    url: "/api/taxonomy/info/" + data.attr("itemId"),
+                    url: "/community/api/taxonomy/info/" + data.attr("itemId"),
                     dataType: 'json'
                 }).done(function (data) {
 
@@ -136,7 +136,7 @@ function customMenu(node) {
                 console.log("I've got to move it, move it.")
                 $.ajax({
                     type: 'GET',
-                    url: "/api/taxonomyCategories",
+                    url: "/community/api/taxonomyCategories",
                     dataType: 'json'
                 }).done(function (categories) {
                         $('#taxonomyItemToMove').text(data.context.innerText.split("(")[0].trim());
@@ -157,7 +157,7 @@ function customMenu(node) {
             action: function (data) {
                 $.ajax({
                     type: 'GET',
-                    url: "/api/taxonomyTree/default",
+                    url: "/community/api/taxonomyTree/default",
                     dataType: 'json'
                 }).done(function (categories) {
 

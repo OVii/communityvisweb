@@ -112,7 +112,7 @@
 
         $.ajax({
             type: 'GET',
-            url: "/api/taxonomy/info/" + taxonomyId,
+            url: "{{ URL_PREPENDER }}/api/taxonomy/info/" + taxonomyId,
             dataType: 'json'
         }).done(function (data) {
 
