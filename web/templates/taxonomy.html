@@ -114,11 +114,10 @@
                 {{#each references}}
                 <div class="reference_box">
 
-                    <p class="title"><a href="{{ this.url }}">{{ this.title }}</a></p>
+                    <p class="title"><a href="{{ this.url }}">{{ this.guid }}</a></p>
 
-                    <p class="authors">{{ this.authors }}</p>
+                    <p class="authors">{{ this.bibtex }}</p>
 
-                    <p><span class="journal">{{ this.journal }}</span></p>
                     <hr/>
                 </div>
                 {{/each}}

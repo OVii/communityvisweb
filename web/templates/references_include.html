@@ -60,7 +60,7 @@
                 {% for reference in references %}
                     <div class="well taxonomy-well reference_box">
 
-                        <a href="{{ URL_PREPENDER }}/reference/{{ reference.id }}?currentPage={{ request.path }}"><p class="title">{{ reference.title }}</p></a>
+                        <a href="{{ URL_PREPENDER }}/reference/{{ reference.id }}?currentPage={{ request.path }}"><p class="title">{{ reference.uid }}</p></a>
 
                         <p class="authors">{{ reference.authorsAsText }}</p>
 
@@ -68,14 +68,9 @@
                             <span class="year">{% if reference.journal %} {% endif %}{{ reference.year }}</span>{% endif %}
                         </p>
 
-
                         {% if reference.url %}
                             <a href="{{ reference.url }}" target="_blank" class="btn btn-small">View Paper</a>
                         {% endif %}
-
-
-
-
 
                         {% if owners != 0 %}
                             <a onclick="showSuggestBox('reference', '{{ URL_PREPENDER }}/enquiry/{{ taxonomy.id }}/{{ reference.id }}/')"

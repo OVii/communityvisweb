@@ -5,111 +5,119 @@
 from django.contrib.auth.models import User
 from django.db import models
 import user
-import reference_backend
+from reference_cassandra import *
 
+""""class ReferenceAuthor(models.Model):
+	first_name = models.CharField(max_length=256)
+	last_name = models.CharField(max_length=256)
+	middle_name = models.CharField(max_length=256)
+	prelast_name = models.CharField(max_length=256)
+	lineage = models.CharField(max_length=256)
 
-class ReferenceAuthor(models.Model):
-    first_name = models.CharField(max_length=256)
-    last_name = models.CharField(max_length=256)
-    middle_name = models.CharField(max_length=256)
-    prelast_name = models.CharField(max_length=256)
-    lineage = models.CharField(max_length=256)
-
-    def __unicode__(self):
-        return self.first_name + ", " + self.last_name + ", " + self.lineage
+	def __unicode__(self):
+		return self.first_name + ", " + self.last_name + ", " + self.lineage
 
 
 class ReferenceColumn(models.Model):
-    name = models.CharField(max_length=128)
+	name = models.CharField(max_length=128)
 
 
 class ReferenceAttribute(models.Model):
-    column = models.ForeignKey(ReferenceColumn)
-    value = models.TextField(default="")
+	column = models.ForeignKey(ReferenceColumn)
+	value = models.TextField(default="")
 
-    def __unicode__(self):
-        return self.column.name + " (" + self.value + ")"
+	def __unicode__(self):
+		return self.column.name + " (" + self.value + ")"
 
 
 class Reference(models.Model):
-    entry_key = models.CharField(max_length=256)
-    title = models.TextField(default="")
-    authorsAsText = models.TextField(default="")
-    abstract = models.TextField(default="")
-    journal = models.CharField(max_length=256, default="")
-    year = models.IntegerField(max_length=4, null=True)
-    url = models.CharField(max_length=256, default="")
+	entry_key = models.CharField(max_length=256)
+	title = models.TextField(default="")
+	authorsAsText = models.TextField(default="")
+	abstract = models.TextField(default="")
+	journal = models.CharField(max_length=256, default="")
+	year = models.IntegerField(max_length=4, null=True)
+	url = models.CharField(max_length=256, default="")
 
-    authors = models.ManyToManyField(ReferenceAuthor, related_name="authors+")
-    bibtex = models.TextField()
-    referenceAttributes = models.ManyToManyField(ReferenceAttribute, related_name="attributes+")
+	authors = models.ManyToManyField(ReferenceAuthor, related_name="authors+")
+	bibtex = models.TextField()
+	referenceAttributes = models.ManyToManyField(ReferenceAttribute, related_name="attributes+")
 
-    date_added = models.DateTimeField(auto_now=True, auto_now_add=False, null=True)
+	date_added = models.DateTimeField(auto_now=True, auto_now_add=False, null=True)
 
-    def __unicode__(self):
-        return self.entry_key + " - " + self.title
-
+	def __unicode__(self):
+		return self.entry_key + " - " + self.title
+"""""
 
 class TaxonomyArea(models.Model):
-    name = models.CharField(max_length=128)
+	name = models.CharField(max_length=128)
 
-    def __unicode__(self):
-        return self.name
+	def __unicode__(self):
+		return self.name
 
 
 class TaxonomyCategory(models.Model):
-    name = models.CharField(max_length=128)
-    area = models.ForeignKey(TaxonomyArea, null=True, blank=True)
+	name = models.CharField(max_length=128)
+	area = models.ForeignKey(TaxonomyArea, null=True, blank=True)
 
-    parent = models.ForeignKey('self', blank=True, null=True)
+	parent = models.ForeignKey('self', blank=True, null=True)
 
-    def __unicode__(self):
-        return self.name + " (" + self.area.name + ")"
+	def __unicode__(self):
+		return self.name + " (" + self.area.name + ")"
 
 
 class TaxonomyItem(models.Model):
-    name = models.CharField(max_length=256)
-    category = models.ForeignKey(TaxonomyCategory)
-    detail = models.TextField(default="")
-    last_updated = models.DateTimeField(auto_now=True)
-    last_updated_by = models.ForeignKey(User, null=True)
-    owners = models.ManyToManyField(User, related_name="owners+")
+	name = models.CharField(max_length=256)
+	category = models.ForeignKey(TaxonomyCategory)
+	detail = models.TextField(default="")
+	last_updated = models.DateTimeField(auto_now=True)
+	last_updated_by = models.ForeignKey(User, null=True)
+	owners = models.ManyToManyField(User, related_name="owners+")
 
-    references = models.ManyToManyField(Reference)
+	def references(self):
+		rf = ReferenceFamily(self.item_hash())
+		lst = rf.all_refs()
+		return lst
 
-    def short_description(self):
-        return self.detail[:50] + '...'
+	def ref_db_guid(self):
+		return self.item_hash()
 
-    def __unicode__(self):
-        return self.name + " (" + self.category.name + ")"
+	def item_hash(self):
+		return str(self.category.name) + "_" + self.name
+
+	def short_description(self):
+		return self.detail[:50] + '...'
+
+	def __unicode__(self):
+		return self.name + " (" + self.category.name + ")"
 
 class UserProfile(models.Model):
-    user = models.ForeignKey(User, unique=True)
-    orcid = models.CharField(max_length=19, blank=True)
-    gravatarEmail = models.CharField(max_length=100, blank=True)
+	user = models.ForeignKey(User, unique=True)
+	orcid = models.CharField(max_length=19, blank=True)
+	gravatarEmail = models.CharField(max_length=100, blank=True)
 
-    def __unicode__(self):
-        return user
+	def __unicode__(self):
+		return user
 
-    def get_absolute_url(self):
-        return 'profiles_profile_detail', (), {'username': self.user.username}
+	def get_absolute_url(self):
+		return 'profiles_profile_detail', (), {'username': self.user.username}
 
-    get_absolute_url = models.permalink(get_absolute_url)
+	get_absolute_url = models.permalink(get_absolute_url)
 
 
 class OwnershipRequest(models.Model):
-    requester = models.ForeignKey(User)
-    taxonomyItem = models.ForeignKey(TaxonomyItem)
-    additionalNotes = models.TextField()
+	requester = models.ForeignKey(User)
+	taxonomyItem = models.ForeignKey(TaxonomyItem)
+	additionalNotes = models.TextField()
 
-    def __unicode__(self):
-        return self.requester.username + ' - ' + self.taxonomyItem.name
+	def __unicode__(self):
+		return self.requester.username + ' - ' + self.taxonomyItem.name
 
 class Enquiry(models.Model):
 
-    requester = models.ForeignKey(User)
-    taxonomyItem = models.ForeignKey(TaxonomyItem)
-    enquiry_type = models.CharField(max_length=256, default="")
-    # optional
-    reference = models.ForeignKey(Reference, null=True)
-    additionalNotes = models.TextField()
+	requester = models.ForeignKey(User)
+	taxonomyItem = models.ForeignKey(TaxonomyItem)
+	enquiry_type = models.CharField(max_length=256, default="")
+	# optional
+	#reference = models.ForeignKey(Reference, null=True)
+	additionalNotes = models.TextField()

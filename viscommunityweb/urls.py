@@ -80,6 +80,12 @@ urlpatterns = patterns('',
                        url(r'^api/taxonomy/info/(?P<taxonomy_id>\d+)/$', 'web.views.getTaxonomyCategoryJSON', name='api_taxonomy_details'),
                        url(r'^api/category/info/(?P<category_id>\d+)/$', 'web.views.getTaxonomyCategoryInformationJSON', name='api_taxonomy_category_details'),
 
+                        # slight hack to get around difficult of prepending URL in external javascript files
+                       url(r'^community/api/taxonomyTree/(?P<formatting>\w+)', 'web.views.getTaxonomyTree', name='api_taxonomy_tree'),
+                       url(r'^community/api/taxonomyCategories', 'web.views.getTaxonomyCategories', name='api_taxonomy_categories'),
+                       url(r'^community/api/taxonomy/info/(?P<taxonomy_id>\d+)/$', 'web.views.getTaxonomyCategoryJSON', name='api_taxonomy_details'),
+                       url(r'^community/api/category/info/(?P<category_id>\d+)/$', 'web.views.getTaxonomyCategoryInformationJSON', name='api_taxonomy_category_details'),
+
                        url(r'^search/$', 'web.views.search', name='search'),
                        url(r'^account/$', 'web.views.account', name='account'),
                        url(r'^orcid$', 'web.views.orcid_profile', name='orcid'),

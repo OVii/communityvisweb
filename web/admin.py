@@ -1,4 +1,4 @@
-from web.models import TaxonomyArea, TaxonomyCategory, TaxonomyItem, Reference, OwnershipRequest
+from web.models import TaxonomyArea, TaxonomyCategory, TaxonomyItem, OwnershipRequest
 from django.contrib import admin
 from django import forms
 
@@ -20,4 +20,3 @@ class TaxonomyItemAdmin(admin.ModelAdmin):
 
 
 admin.site.register(TaxonomyItem, TaxonomyItemAdmin)
-admin.site.register(Reference)
