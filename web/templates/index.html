@@ -81,21 +81,14 @@
 
                         <div class="reference_box">
 
-                            <span="title"><a href="{{ URL_PREPENDER }}/reference/{{ reference.id }}?currentPage={{ request.path }}" class="title">{{ reference.title }}</a></span><br/>
+                            <span="title"><a href="{{ URL_PREPENDER }}/reference/{{ reference.0 }}?currentPage={{ request.path }}" class="title">{{ reference.1.title }}</a></span><br/>
 
-                            <span style="font-size: 0.8em; color:#666666">{{ reference.authorsAsText }}</span><br/>
-                            <span style="font-size: 0.8em; color:#666666">{{ reference.journal }}</span>
-                            {% if reference.year > 0 %}
-                                <span class="year">{% if reference.journal %}, {% endif %}{{ reference.year }}
+                            <span style="font-size: 0.8em; color:#666666">{{ reference.1.authorsAsText }}</span><br/>
+                            <span style="font-size: 0.8em; color:#666666">{{ reference.1.journal }}</span>
+                            {% if reference.1.year > 0 %}
+                                <span class="year">{% if reference.1.journal %}, {% endif %}{{ reference.1.year }}
                             </span>{% endif %}
                             <br/>
-                            <span style="font-size: 0.8em; color:#666666">in
-                                {% for taxonomyItem in reference.taxonomyitem_set.all %}
-                                    <a href="{{ URL_PREPENDER }}/taxonomy/{{ taxonomyItem.id }}"
-                                       style="font-size: 0.8em; color:#666666">{{ taxonomyItem.name }}</a>
-                                    {% if not forloop.last %}, {% endif %}
-                                {% endfor %}
-                            </span>
                         </div>
                         {% if not forloop.last %}
                             <hr/>

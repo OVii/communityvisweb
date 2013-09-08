@@ -14,8 +14,8 @@ def getTitle(fields):
         if fields[alias]:
             return bibtex_purify(fields[alias])
 
-def bibtex_import(filename, taxonomyItem):
-	tax_guid = taxonomyItem.ref_db_guid()
+def bibtex_import(filename):
+	tax_guid = "FIUHIUHF"
 	family = ReferenceFamily(tax_guid)
 	parser = bib_in.Parser()
 	bib_data = parser.parse_file(filename)
@@ -26,7 +26,7 @@ def bibtex_import(filename, taxonomyItem):
 		writer.write_entry(key, bib_data.entries[key], stream)
 		title = getTitle(bib_data.entries[key].fields)
 		print "Creating ref " + key + ", " + title
-		ref_obj = Reference()#.get_create_on_key_title(family, key, title)
+		ref_obj = Reference.get_create_on_key_title(key, title)
 		print ref_obj
 		ref_obj.bibtex = stream.getvalue()
 
@@ -35,6 +35,7 @@ def bibtex_import(filename, taxonomyItem):
 
 			for field in bib_data.entries[key].fields:
 				value = bib_data.entries[key].fields[field]
+				col = get_column(field)
 
 				if 'title' in field.lower():
 					ref_obj.title = title
@@ -62,14 +63,16 @@ def bibtex_import(filename, taxonomyItem):
 				for person in bib_data.entries[key].persons['author']:
 
 					first = person.get_part_as_text('first')
+					middle = person.get_part_as_text('middle')
+					prelast = person.get_part_as_text('prelast')
 					last = person.get_part_as_text('last')
+					lineage = person.get_part_as_text('lineage')
 
 					simpleAuthor = bibtex_purify(first + ' ' + last)
 					if 'emph' in simpleAuthor:
 						simpleAuthor = simpleAuthor.replace('emph', '')
 
 					authorsAsText += simpleAuthor
-					print authorsAsText
 
 					if numberOfAuthors > 1:
 						if count != (numberOfAuthors -1):
@@ -79,13 +82,19 @@ def bibtex_import(filename, taxonomyItem):
 
 					count += 1
 
+
+			ref_obj.authorsAsText = authorsAsText
 			ref_obj.save()
 
 		except Exception, e:
-			print e
+			logger.log(e.message)
+			connection._rollback()
 
 	print "Imported %i BibTeX references." % len(bib_data.entries)
 	print "This taxon now has items:"
 	items = family.all_refs()
 	for item in items:
 		print item
+
+
+bibtex_import("/Users/sim/Desktop/testone.bib")

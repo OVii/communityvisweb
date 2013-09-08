@@ -4,6 +4,7 @@ from pycassa.system_manager import *
 import hashlib
 from pycassa.types import *
 from pycassa.columnfamilymap import ColumnFamilyMap
+from pycassa.columnfamily import ColumnFamily
 from datetime import datetime
 from pycassa.index import *
 
@@ -18,49 +19,11 @@ KEYSPACE = "community_refs"
 
 pool = pycassa.ConnectionPool(KEYSPACE)
 
-"""class ReferenceAuthor(object):
-	def __init__(self):
-		self.key = str(uuid.uuid1())
-
-	def save(self):
-		reference_map.insert(self)
-
-	key = UTF8Type()
-	first_name = UTF8Type()
-	last_name = UTF8Type()
-	middle_name = UTF8Type()
-	prelast_name = UTF8Type()
-	lineage = UTF8Type()
-
-class ReferenceAttribute(object):
-	def __init__(self, ref_obj, col, val):
-		self.key = str(uuid.uuid1())
-		self.ref_key = ref_obj.key
-		self.col = col
-		self.val = val
-
-	def save(self):
-		attribute_map.insert(self)
-
-	@staticmethod
-	def get_all_for_ref(ref_obj):
-		clause = create_index_clause(create_index_expression('ref_key',ref_obj.key))
-		return reference_attributes.get_indexed_slices(clause)
-
-	ref_key = UTF8Type()
-	col = UTF8Type()
-	val = UTF8Type()
-
-# Reference / Author many-to-many
-class ReferenceMMAuthor(object):
-	key = UTF8Type()
-	ref_key = UTF8Type()
-	author_key = UTF8Type()
-"""
 class Reference(object):
 	@staticmethod
 	def ref_hash(bib_key, ref_title):
-		return unicode(str(hashlib.sha224(bib_key + '_' + ref_title).hexdigest()[:16]),'utf-8')
+		# key for reference: hash of the bib key and the title
+		return unicode(str(hashlib.sha224(bib_key + '_' + ref_title).hexdigest()[:32]),'utf-8')
 
 	def __init__(self):
 		pass
@@ -108,14 +71,6 @@ class Reference(object):
 	bibtex = AsciiType()
 	date_added = DateType()
 
-
-#author_map = ColumnFamilyMap(ReferenceAuthor, pool, 'ReferenceAuthor')
-#attribute_map = ColumnFamilyMap(ReferenceAttribute, pool, 'ReferenceAttribute')
-#reference_mm_author_map = ColumnFamilyMap(ReferenceMMAuthor, pool, 'ReferenceMMAuthor')
-# cassandra-cli
-# [default@community_refs] create column family reference and comparitor = 'AsciiType'#
-
-
 # Reference Family - one per Taxonomy Item (as identified by its guid)
 class ReferenceFamily:
 	def __init__(self, string):
@@ -123,6 +78,10 @@ class ReferenceFamily:
 		self.pool = pool
 		self.ensure_exists()
 		self.colmap = ColumnFamilyMap(Reference, self.pool, self.guid)
+		self.tax_to_ref_family = ColumnFamily(self.pool, "tax_to_ref_family")
+
+	# swap this reference family
+
 
 	def reference_map(self):
 		return self.colmap

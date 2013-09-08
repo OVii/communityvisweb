@@ -1,22 +1,21 @@
 import logging
+from reference_couch import *
+import StringIO
 from pybtex.bibtex.utils import bibtex_purify
 from pybtex.database.input import bibtex as bib_in
 from pybtex.database.output import bibtex as bib_out
-from reference_cassandra import *
-import StringIO
 
 logger = logging.getLogger(__name__)
 
 def getTitle(fields):
-    titleAliases = ['title', 'Title']
-
-    for alias in titleAliases:
-        if fields[alias]:
-            return bibtex_purify(fields[alias])
+	titleAliases = ['title', 'Title', 'TITLE']
+	print fields
+	for alias in titleAliases:
+		if fields[alias]:
+			return bibtex_purify(fields[alias])
 
 def bibtex_import(filename, taxonomyItem):
-	tax_guid = taxonomyItem.ref_db_guid()
-	family = ReferenceFamily(tax_guid)
+	family = ReferenceFamily(taxonomyItem.int_pk())
 	parser = bib_in.Parser()
 	bib_data = parser.parse_file(filename)
 	writer = bib_out.Writer(encoding='ascii')
@@ -25,14 +24,10 @@ def bibtex_import(filename, taxonomyItem):
 		stream = StringIO.StringIO()
 		writer.write_entry(key, bib_data.entries[key], stream)
 		title = getTitle(bib_data.entries[key].fields)
-		print "Creating ref " + key + ", " + title
-		ref_obj = Reference()#.get_create_on_key_title(family, key, title)
-		print ref_obj
+		ref_obj = Reference()
 		ref_obj.bibtex = stream.getvalue()
 
 		try:
-			ref_obj.save()
-
 			for field in bib_data.entries[key].fields:
 				value = bib_data.entries[key].fields[field]
 
@@ -52,9 +47,6 @@ def bibtex_import(filename, taxonomyItem):
 						value = doiPrepender + value
 					ref_obj.url = value
 
-				#attr = ReferenceAttribute(ref_obj, col, value)
-				#attr.save()
-
 			authorsAsText = ""
 			count = 0
 			if bib_data.entries[key].persons:
@@ -69,7 +61,6 @@ def bibtex_import(filename, taxonomyItem):
 						simpleAuthor = simpleAuthor.replace('emph', '')
 
 					authorsAsText += simpleAuthor
-					print authorsAsText
 
 					if numberOfAuthors > 1:
 						if count != (numberOfAuthors -1):
@@ -79,7 +70,9 @@ def bibtex_import(filename, taxonomyItem):
 
 					count += 1
 
-			ref_obj.save()
+			ref_obj.authorsAsText = authorsAsText
+			family.add_reference(ref_obj)
+			recent_references.add_reference(ref_obj)
 
 		except Exception, e:
 			print e

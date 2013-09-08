@@ -5,7 +5,7 @@
 from django.contrib.auth.models import User
 from django.db import models
 import user
-from reference_cassandra import *
+from reference_couch import *
 
 """"class ReferenceAuthor(models.Model):
 	first_name = models.CharField(max_length=256)
@@ -74,16 +74,17 @@ class TaxonomyItem(models.Model):
 	last_updated_by = models.ForeignKey(User, null=True)
 	owners = models.ManyToManyField(User, related_name="owners+")
 
+	def int_pk(self):
+		try:
+			return self.pk[0]
+		except:
+			return self.pk
+
 	def references(self):
-		rf = ReferenceFamily(self.item_hash())
-		lst = rf.all_refs()
-		return lst
+		return ReferenceFamily(self.int_pk()).all_refs()
 
-	def ref_db_guid(self):
-		return self.item_hash()
-
-	def item_hash(self):
-		return str(self.category.name) + "_" + self.name
+	def remove_reference(self, ref_id):
+		ReferenceFamily(self.int_pk()).remove_reference(ref_id)
 
 	def short_description(self):
 		return self.detail[:50] + '...'

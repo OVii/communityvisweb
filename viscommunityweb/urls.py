@@ -39,13 +39,13 @@ urlpatterns = patterns('',
                        url(r'^reference/add/file$', 'web.views.reference_add_upload_file', name='upload_bibtex'),
                        url(r'^reference/add/text$', 'web.views.reference_add_upload_text', name='upload_bibtex_text'),
 
-                       url(r'^reference/remove/(?P<taxonomy_id>\d+)/(?P<reference_id>\d+)/$',
+                       url(r'^reference/remove/(?P<taxonomy_id>\d+)/(?P<reference_id>\w+)/$',
                            'web.views.reference_remove', name='remove_reference'),
-                       url(r'^reference/delete/(?P<reference_id>\d+)/$',
+                       url(r'^reference/delete/(?P<reference_id>\w+)/$',
                            'web.views.reference_delete', name='delete_reference'),
 
 
-                       url(r'^reference/(?P<reference_id>\d+)/$', 'web.views.reference_detail',
+                       url(r'^reference/(?P<reference_id>\w+)/$', 'web.views.reference_detail',
                            name='reference_detail'),
 
                        url(r'^taxonomy/$', 'web.views.taxonomy', name='taxonomy'),
@@ -67,7 +67,7 @@ urlpatterns = patterns('',
                            name='revoke_ownership'),
 
                        url(r'^enquiry/(?P<taxonomy_id>\d+)/$', 'web.views.handleTaxonomyEnquiry', name='enquiry'),
-                       url(r'^enquiry/(?P<taxonomy_id>\d+)/(?P<reference_id>\d+)/$', 'web.views.handleReferenceEnquiry',
+                       url(r'^enquiry/(?P<taxonomy_id>\d+)/(?P<reference_id>\w+)/$', 'web.views.handleReferenceEnquiry',
                            name='enquiry_reference'),
                        url(r'^enquiry/(?P<decision>\w+)/(?P<enquiry_id>\d+)/$', 'web.views.respondToTaxonomyEnquiry',
                            name='enquiry_decision'),

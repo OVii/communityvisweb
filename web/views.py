@@ -24,8 +24,10 @@ from django.conf import settings
 import taxonomy_backend
 import json
 
+from reference_couch import recent_references
+
 # couple of globals
-from web.reference_import_cassandra import bibtex_import
+from web.reference_import_couch import bibtex_import
 
 os.environ['DJANGO_SETTINGS_MODULE'] = "viscommunityweb.settings"
 email_prefix = "[OXVIS] "
@@ -37,7 +39,7 @@ logger = logging.getLogger(__name__)
 # index page
 def index(request):
 	recent_items = TaxonomyItem.objects.order_by('-last_updated')[:3]
-	recent_reference_items = []#Reference.objects.order_by('-date_added')[:3]
+	recent_reference_items = recent_references.all_refs()#Reference.objects.order_by('-date_added')[:3]
 	return render_to_response("templates/index.html",
 							  {'recent_taxonomy_items': recent_items, 'recent_reference_items': recent_reference_items},
 							  context_instance=RequestContext(request))
@@ -65,9 +67,8 @@ def taxonomy_detail(request, taxonomy_id):
 	taxonomy = get_object_or_404(TaxonomyItem, pk=taxonomy_id)
 
 	references = taxonomy.references()
-	print references
 
-	refer = references#reference_backend.sorted_reference_list(request, references)
+	refer = references
 
 	ownershipRequested = False
 	if request.user.is_authenticated():
@@ -462,11 +463,9 @@ def getTaxonomyCategoryJSON(request, taxonomy_id):
 	count = len(references)
 
 	for reference in sortedReferences:
-		""""references.append({"id": reference.guid, "title": reference.title, "authors": reference.authors,
+		references.append({"id": reference.guid, "title": reference.title, "authors": reference.authors,
 						   "journal": reference.journal, "year": reference.year,
 						   "url": URL_PREPENDER + "/reference/" + str(reference.id)})
-		"""
-		references.append({"id": reference.guid, "bibtex": reference.bibtex })
 
 	response = {"id": taxonomy.id, "name": taxonomy.name, "description": taxonomy.detail,
 				"url": URL_PREPENDER + "/taxonomy/" + str(taxonomy.id),
@@ -657,6 +656,9 @@ def moveReferences(request):
 		taxonomy1 = TaxonomyItem.objects.filter(pk=taxonomy1Id).get(pk=taxonomy1Id)
 		taxonomy2 = TaxonomyItem.objects.filter(pk=taxonomy2Id).get(pk=taxonomy2Id)
 
+		# swap the taxonomy's cassandra family GUIDs.
+		#taxonomy1.swap_references_with(taxonomy2)
+
 		taxonomy1References = request.POST.get('moveFromTaxonomyReferences', '')
 		taxonomy2References = request.POST.get('moveToTaxonomyReferences', '')
 
@@ -746,7 +748,7 @@ def reference_add_upload_file(request):
 		return render_to_response("templates/infopage.html",
 								  {
 									  'messageTitle': 'Error in bibtex import.',
-									  'messageBody': 'We\'ve not been able to import the file you selected. Please ensure it\'s valid.\n\n' + e.message},
+									  'messageBody': 'We\'ve not been able to import the file you selected. Please ensure it\'s valid BibTeX.\n\n' + e.message},
 								  context_instance=RequestContext(request))
 
 
@@ -809,9 +811,7 @@ def reference_remove(request, taxonomy_id, reference_id):
 	urlRequestedFrom = request.POST.get('postedFrom', '/')
 
 	taxonomyItem = TaxonomyItem.objects.filter(pk=taxonomy_id).get(pk=taxonomy_id)
-	referenceItem = Reference.objects.filter(pk=reference_id).get(pk=reference_id)
-
-	taxonomyItem.references.remove(referenceItem)
+	taxonomyItem.remove_reference(reference_id)
 
 	return HttpResponseRedirect(urlRequestedFrom)
 
