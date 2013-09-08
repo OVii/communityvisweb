@@ -16,15 +16,13 @@ import logging
 from django.utils import simplejson
 from viscommunityweb.settings import EMAIL_HOST_USER, SITE_ID, URL_PREPENDER
 from web.bibtex_utils.import_utils import saveFile, saveTextToFile
-from web.models import TaxonomyCategory, TaxonomyItem, UserProfile, OwnershipRequest, Enquiry, TaxonomyArea
+from web.models import *#TaxonomyCategory, TaxonomyItem, UserProfile, OwnershipRequest, Enquiry, TaxonomyArea, ReferenceFamily, Reference, recent_references
 from django.shortcuts import render_to_response, get_object_or_404
 from django.core.mail import send_mail, EmailMessage
 import os
 from django.conf import settings
 import taxonomy_backend
 import json
-
-from reference_couch import recent_references
 
 # couple of globals
 from web.reference_import_couch import bibtex_import
@@ -828,14 +826,15 @@ def reference_delete(request, reference_id):
 							  context_instance=RequestContext(request))
 
 
-def reference_detail(request, reference_id):
+def reference_detail(request, taxonomy_id, reference_id):
 	currentPage = request.GET.get('currentPage', '')
 
 	referenceItem = {}
 	assignedTaxonomyItems = {}
+
 	try:
-		referenceItem = Reference.objects.filter(pk=reference_id).get(pk=reference_id)
-		assignedTaxonomyItems = referenceItem.taxonomyitem_set
+		referenceItem = ReferenceGlobal().get_reference(taxonomy_id,reference_id)#Reference.objects.filter(pk=reference_id).get(pk=reference_id)
+		assignedTaxonomyItems = []#referenceItem.taxonomyitem_set
 	except Exception, e:
 		logger.error('Bit of a mishap. Here is the error: ', str(e.message))
 

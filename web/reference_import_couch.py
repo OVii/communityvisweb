@@ -1,5 +1,5 @@
 import logging
-from reference_couch import *
+from web.models import *
 import StringIO
 from pybtex.bibtex.utils import bibtex_purify
 from pybtex.database.input import bibtex as bib_in
@@ -71,8 +71,8 @@ def bibtex_import(filename, taxonomyItem):
 					count += 1
 
 			ref_obj.authorsAsText = authorsAsText
-			family.add_reference(ref_obj)
-			recent_references.add_reference(ref_obj)
+			new_ref_id = family.add_reference(ref_obj)
+			recent_references.add_reference(ref_obj, new_ref_id, taxonomyItem.int_pk())
 
 		except Exception, e:
 			print e
