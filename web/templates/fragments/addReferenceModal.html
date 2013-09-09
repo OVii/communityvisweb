@@ -20,89 +20,89 @@
     }
 </script>
 
-<div id="addReferenceModal" class="modal hide fade" tabindex="-1" role="dialog"
+<div id="addReferenceModal" class="modal fade" tabindex="-1" role="dialog"
      aria-labelledby="suggestModal"
      aria-hidden="true">
-    <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-        <h3>Add References</h3>
-    </div>
+	 <div class="modal-dialog">
+		 <div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+				<h4>Add References</h4>
+			</div>
 
-    <br/>
-    <ul class="nav nav-tabs" id="myTab">
-        <li class="active"><a href="#upload" data-toggle="tab">Upload BibTeX</a></li>
-        <li><a href="#paste" data-toggle="tab">Paste BibTeX</a></li>
-    </ul>
+			<div class="modal-body">
+				<ul class="nav nav-tabs" id="myTab">
+					<li class="active"><a href="#upload" data-toggle="tab">Upload BibTeX</a></li>
+					<li><a href="#paste" data-toggle="tab">Paste BibTeX</a></li>
+				</ul>
 
-    <div class="tab-content">
-        <div class="tab-pane active" id="upload">
-            <div class="reference-block-addition-section">
-                <div align="center">
-                    <h4>Upload a BibTeX file...</h4>
+				<div class="tab-content">
+					<div class="tab-pane active" id="upload">
+						<div class="reference-block-addition-section">
+							<div align="center">
+								<h4>Upload a BibTeX file...</h4>
 
-                    <form action="{{ URL_PREPENDER }}/reference/add/file"
-                          id="bibtex_upload_form" enctype="multipart/form-data" method="post"
-                          onsubmit="return validateForm()">
+								<form action="{{ URL_PREPENDER }}/reference/add/file"
+									  id="bibtex_upload_form" enctype="multipart/form-data" method="post"
+									  onsubmit="return validateForm()">
 
-                        {% csrf_token %}
+									{% csrf_token %}
 
-                        <input type="hidden" name="taxonomy_id" value="{{ taxonomy.id }}"/>
+									<input type="hidden" name="taxonomy_id" value="{{ taxonomy.id }}"/>
 
-                        <input type="hidden" name="postedFrom" value="{{ request.path }}"/>
+									<input type="hidden" name="postedFrom" value="{{ request.path }}"/>
 
-                        <div class="fileupload fileupload-new" data-provides="fileupload">
-                            <div class="input-append">
-                                <div class="uneditable-input span3"><i
-                                        class="icon-file fileupload-exists"></i> <span
-                                        class="fileupload-preview"></span></div>
-                                <span class="btn btn-file"><span class="fileupload-new">Select file</span>
-                                    <span class="fileupload-exists">Change</span><input type="file" name="bibtex_file"/></span>
-                                <a href="#" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
-                            </div>
-                        </div>
+									<div class="fileupload fileupload-new" data-provides="fileupload">
+										<div class="input-append">
+											<div class="uneditable-input span3"><i
+													class="icon-file fileupload-exists"></i> <span
+													class="fileupload-preview"></span></div>
+											<span class="btn btn-file"><span class="fileupload-new">Select file</span>
+												<span class="fileupload-exists">Change</span><input type="file" name="bibtex_file"/></span>
+											<a href="#" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
+										</div>
+									</div>
 
-                        <div id="upload-area" class="hidden" align="center">
-                            <img align="center" src="{{ STATIC_URL }}img/static_img/profile/spinner.gif"/> <span class="title"> Loading</span>
-                        </div>
-                        <div>
-                            <input name="commit" type="submit" class="btn btn-yellow" value="Upload">
-                        </div>
-                    </form>
-                </div>
-                <br/><br/>
-
-
-            </div>
-
-        </div>
-        <div class="tab-pane" id="paste">
-            <div class="reference-block-addition-section" align="center">
-                <h4>Paste a BibTeX file...</h4>
-
-                <form accept-charset="UTF-8" action="{{ URL_PREPENDER }}/reference/add/text" class="formbody"
-                      id="addReferenceForm"
-                      method="post">
-                    {% csrf_token %}
-                    <div class="modal-body">
-                        <div class="modal-body" id="booking">
-                            <input type="hidden" name="postedFrom" value="{{ request.path }}"/>
-                            <input type="hidden" name="taxonomy_id" value="{{ taxonomy.id }}"/>
-                            <textarea id="bibtex" name="bibtex" class="span6"
-                                      rows="5"></textarea>
-                        </div>
-                    </div>
-
-                    <div id="upload-area" class="hidden">
-                        <img align="center" src="{{ STATIC_URL }}img/static_img/profile/spinner.gif"/> <span class="title"> Loading</span>
-                    </div>
-                    <input name="commit" type="submit" class="btn btn-yellow" value="Load">
-
-                </form>
-
-            </div>
-        </div>
+									<div id="upload-area" class="hidden" align="center">
+										<img align="center" src="{{ STATIC_URL }}img/static_img/profile/spinner.gif"/> <span class="title"> Loading</span>
+									</div>
+									<div>
+										<input name="commit" type="submit" class="btn btn-yellow" value="Upload">
+									</div>
+								</form>
+							</div>
+							<br/><br/>
 
 
-    </div>
+						</div>
 
+					</div>
+					<div class="tab-pane" id="paste">
+						<div class="reference-block-addition-section" align="center">
+							<h4>Paste a BibTeX file...</h4>
+
+							<form accept-charset="UTF-8" action="{{ URL_PREPENDER }}/reference/add/text" class="formbody"
+								  id="addReferenceForm"
+								  method="post">
+								{% csrf_token %}
+								<div>
+									<input type="hidden" name="postedFrom" value="{{ request.path }}"/>
+									<input type="hidden" name="taxonomy_id" value="{{ taxonomy.id }}"/>
+									<textarea id="bibtex" name="bibtex" class="form-control"
+										  rows="5"></textarea>
+								</div>
+								<div id="upload-area" class="hidden">
+									<img align="center" src="{{ STATIC_URL }}img/static_img/profile/spinner.gif"/> <span class="title"> Loading</span>
+								</div>
+								<div><br/>
+									<input name="commit" type="submit" class="btn btn-yellow" value="Load">
+								</div>
+
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>

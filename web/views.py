@@ -164,7 +164,7 @@ def request_ownership_response(request, approval_id):
 	email_body_reason = responseDetail
 
 	try:
-		send_mail(email_subject, email_body_prefix + email_body_reason,
+		send_mail(email_subject, email_body_prefix + " " + email_body_reason,
 				  EMAIL_HOST_USER,
 				  [ownershipRequest.requester.email], fail_silently=False)
 

@@ -158,7 +158,7 @@
 
     <div class="profile-content">
         <div class="profile-blocks span6">
-            <div class="block span5" id="about">
+            <div class="block col-md-5" id="about">
                 <div class="block-head">
                     ORCID Profile
                     <hr/>
@@ -187,7 +187,7 @@
                 </div>
             </div>
 
-            <div class="block span5" id="publications">
+            <div class="block col-md-5" id="publications">
                 <div class="block-head">
                     Latest Publications
                     <hr/>
@@ -221,7 +221,7 @@
             {% if user.is_superuser and approvals|length > 0 %}
                 <div class="clearfix"></div>
                 {#            start notifications section#}
-                <div class="block span7" id="approvals">
+                <div class="block col-md-7" id="approvals">
                     <div class="block-head">
                         Approvals Required
                         <hr/>
@@ -255,7 +255,7 @@
             {% endif %}
             <div class="clearfix"></div>
             {#            START taxonomy items section#}
-            <div class="block span7" id="taxonomy-items">
+            <div class="block col-md-7" id="taxonomy-items">
                 <div class="block-head">
                     Taxonomy Items
                     <hr/>

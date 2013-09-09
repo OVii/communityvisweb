@@ -582,6 +582,10 @@ input#search-text {
     border-radius: 6px;
 }
 
+.modal {
+	margin-top:70px;
+}
+
 .profile-unit h1 {
     margin-bottom: 0;
     font-size: 60px;

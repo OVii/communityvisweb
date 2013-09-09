@@ -45,13 +45,13 @@
             {% if user.is_authenticated %}
                 {{ user.username }}
                 <a href="{{ URL_PREPENDER }}/accounts/profile" class="btn btn-mini account-button"><i
-                        class="icon-user"></i></a>
+                        class="glyphicon-user glyphicon"></i></a>
                 <a href="{{ URL_PREPENDER }}/accounts/logout" class="btn btn-mini account-button btn-yellow"><i
-                        class="icon-off icon-white"></i></a>
+                        class="glyphicon-off glyphicon"></i></a>
             {% else %}
                 <a href="{{ URL_PREPENDER }}/accounts/register" class="btn btn account-button"><i
-                        class="icon-check"></i> Register</a>
-                <a href="{{ URL_PREPENDER }}/accounts/login" class="btn btn account-button"><i class="icon-user"></i>
+                        class="glyphicon glyphicon-check"></i> Register</a>
+                <a href="{{ URL_PREPENDER }}/accounts/login" class="btn btn account-button"><i class="glyphicon glyphicon-user"></i>
                     Sign In</a>
             {% endif %}
 

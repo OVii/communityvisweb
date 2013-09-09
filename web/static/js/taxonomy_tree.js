@@ -17,7 +17,6 @@ $(function () {
 
             "contextmenu": {items: customMenu},
 
-
             // I usually configure the plugin that handles the data first
             // This example uses JSON as it is most common
             "json_data": {
@@ -59,7 +58,6 @@ $(function () {
                     var html = template(data);
 
                     $("#taxonomyInfo").html(html);
-
                 });
 
         })
@@ -114,6 +112,7 @@ function customMenu(node) {
                 $('#originalTaxonomyItem').text(data.context.innerText.split("(")[0].trim());
                 $("#splitForm").attr("action", '/taxonomy/split/' + data.attr("itemid") + '/');
                 $('#splitModal').modal('show');
+
 
                 $.ajax({
                     type: 'GET',
@@ -213,11 +212,8 @@ function customMenu(node) {
 }
 
 function searchTree() {
-
     var value = document.getElementById("search_tree").value;
     $("#taxonomyTree").jstree("close_all", false);
     $("#taxonomyTree").jstree("open", 0);
     $("#taxonomyTree").jstree("search", value);
-
-
 }

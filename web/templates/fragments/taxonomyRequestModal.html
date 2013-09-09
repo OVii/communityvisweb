@@ -1,43 +1,48 @@
-<div id="taxonomyRequestModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="taxonomyRequest"
+<div id="taxonomyRequestModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="taxonomyRequest"
      aria-hidden="true">
-    <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-        <h3>Taxonomy Request</h3>
-    </div>
-    <form accept-charset="UTF-8" action="{{ URL_PREPENDER }}/request_ownership/{{ taxonomy.id }}" class="formbody"
-          id="requestForm" onsubmit="return validateRequestForm();" method="post">
-        <div class="modal-body">
-            <div class="modal-body" id="booking">
-                {% csrf_token %}
-                <div id="request_errors"></div>
-                <div id="request_message_group" class="control-group">
-                    <div class="controls">
-                        <label for="message" class="control-label">Tell us why you want to maintain this
-                            item?</label>
-                        <textarea name="message" maxlength="5000" rows=10 class="span6"></textarea>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="modal-footer" id="button">
-            <input name="commit" type="submit" class="btn btn-yellow" value="Submit Request">
-        </div>
-    </form>
+	 <div class="modal-dialog">
+		 <div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+				<h4>Taxonomy Request</h4>
+			</div>
+				<form accept-charset="UTF-8" action="{{ URL_PREPENDER }}/request_ownership/{{ taxonomy.id }}" class="formbody"
+				  id="requestForm" onsubmit="return validateRequestForm();" method="post">
+			<div class="modal-body">				
+					<div class="modal-body" id="booking">
+						{% csrf_token %}
+						<div id="request_errors"></div>
+						<div id="request_message_group" class="">
+							<div class="controls">
+								<label for="message" class="col-lg-4 control-label">Tell us why you want to maintain this
+									item?</label>
+								<textarea name="message" maxlength="5000" rows=10 class="col-lg-8"></textarea>
+							</div>
+						</div>
+					</div>
+
+				<div class="modal-footer" id="button">
+					<br/>					
+					<input name="commit" type="submit" class="btn btn-yellow" value="Submit Request">
+				</div>
+			</form>
+		</div>
+
+		<script type="text/javascript">
+			function validateRequestForm() {
+				var message = document.forms["requestForm"]["message"].value;
+				blankMessage = (message === "");
+				var errorHTML = "";
+
+				if (blankMessage) {
+					errorHTML += '<div class="alert alert-error">Please enter a message!</div>'
+				}
+
+				$("#request_errors").html(errorHTML);
+
+				$("#request_message_group").toggleClass("control-group error", blankMessage);
+				return !(blankMessage);
+			}
+		</script>
+	</div>
 </div>
-
-<script type="text/javascript">
-    function validateRequestForm() {
-        var message = document.forms["requestForm"]["message"].value;
-        blankMessage = (message === "");
-        var errorHTML = "";
-
-        if (blankMessage) {
-            errorHTML += '<div class="alert alert-error">Please enter a message!</div>'
-        }
-
-        $("#request_errors").html(errorHTML);
-
-        $("#request_message_group").toggleClass("control-group error", blankMessage);
-        return !(blankMessage);
-    }
-</script>
