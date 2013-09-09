@@ -132,9 +132,9 @@ class ReferenceGlobal(object):
 		return tax_ids
 
 # represents a fixed-size queue of recent reference entries
-class ReferenceFamilyQueue(ReferenceFamily):
+class ReferenceQueue(ReferenceFamily):
 	def __init__(self, size):
-		super(ReferenceFamilyQueue,self).__init__(0)
+		super(ReferenceQueue,self).__init__(0)
 		self.queue_size = size
 
 	def database_id(self):
@@ -143,14 +143,17 @@ class ReferenceFamilyQueue(ReferenceFamily):
 	def add_reference(self, ref, ref_id, tax_id):
 		ref.ref_doc_id = ref_id
 		ref.tax_id = tax_id
-		super(ReferenceFamilyQueue,self).add_reference(ref)
+		super(ReferenceQueue,self).add_reference(ref)
 		self.limit_queue()
 
 	def limit_queue(self):
-		self.db.purge(self.db.query("function(d) { emit(d); }")[self.queue_size:])
+		docs = self.db.query("function(d) { emit(d.id); }",descending=True,skip=self.queue_size)
+		for item in docs:
+			print item
+			self.db.delete(self.db[item.id])
 
 # front page recent references
-recent_references = ReferenceFamilyQueue(3)
+recent_references = ReferenceQueue(3)
 
 class UserProfile(models.Model):
 	user = models.ForeignKey(User, unique=True)

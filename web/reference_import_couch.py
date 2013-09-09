@@ -78,7 +78,3 @@ def bibtex_import(filename, taxonomyItem):
 			print e
 
 	print "Imported %i BibTeX references." % len(bib_data.entries)
-	print "This taxon now has items:"
-	items = family.all_refs()
-	for item in items:
-		print item
