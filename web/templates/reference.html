@@ -18,12 +18,26 @@
 
 
     </style>
+	<script src="{{ STATIC_URL }}js/ZeroClipboard.min.js"></script>
+	
     <script>
         function showDeleteWindow(referenceId) {
             $('#deleteModal').modal('show');
             $("#deleteModalForm").attr("action", '{{ URL_PREPENDER }}/reference/delete/' + referenceId + '/');
         }
+
+		$(document).ready(function() {
+			var clip = new ZeroClipboard(document.getElementById("btnCopyToClipboard"), {
+				moviePath: "{{ STATIC_URL }}ZeroClipboard.swf"
+			});
+
+			clip.on( 'dataRequested', function (client, args) {
+				client.setText($("#divBibtexText").text());
+		});
+		});
     </script>
+
+	
 {% endblock %}
 {% block content %}
 
@@ -94,10 +108,11 @@
             <div class="reference-block span5" id="about">
                 <div class="block-head">
                     BibTeX
+					<a class="pull-right btn btn-yellow" id="btnCopyToClipboard">Copy to Clipboard</a>
                     <hr/>
                 </div>
                 <div class="profile-unit">
-                    <p style="font-size: 1em; font-family:monospace">
+                    <p style="font-size: 1em; font-family:monospace" id="divBibtexText">
                         {{ reference.bibtex }}
                     </p>
                 </div>
