@@ -87,13 +87,12 @@ def taxonomy_detail(request, taxonomy_id):
 
 def taxonomy_download(request, taxonomy_id):
 	taxonomy = get_object_or_404(TaxonomyItem, pk=taxonomy_id)
-
-	references = taxonomy.references.all()
+	references = taxonomy.references()
 
 	bibtex = ""
 
 	for reference in references:
-		bibtex += reference.bibtex + "\n"
+		bibtex += reference[1]['bibtex']+ "\n"
 
 	response = HttpResponse(bibtex, mimetype='application/text')
 

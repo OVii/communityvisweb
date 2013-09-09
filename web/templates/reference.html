@@ -83,8 +83,10 @@
                     </p>
 
                     <p style="font-size: 1em; color:#efa700">{{ reference.journal }}</p>
-
-                    <p style="font-size: 1em; font-weight:bold">Year: {{ reference.year }}</p>
+					
+					{% if reference.year != 0 %}
+	                    <p style="font-size: 1em; font-weight:bold">Year: {{ reference.year }}</p>
+					{% endif %}
 
                     {% if reference.url %}
                         <p><a href="{{ reference.url }}" target="_blank" class="btn">Read the paper</a></p>
