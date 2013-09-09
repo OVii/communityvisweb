@@ -302,12 +302,6 @@ input#search-text {
     margin-right: auto;
 }
 
-.reference_box {
-    padding: 0.5em;
-    min-height: 20px;
-
-}
-
 .reference_box p {
     margin-bottom: 5px;
 }
@@ -537,9 +531,7 @@ input#search-text {
 }
 
 .profile-blocks {
-    margin: 0 auto;
-    margin-top: 30px;
-    float: left;
+    padding-top: 50px;
 }
 
 .block-head {

@@ -47,8 +47,8 @@ class TaxonomyItem(models.Model):
 		except:
 			return self.pk
 
-	def references(self):
-		return ReferenceFamily(self.int_pk()).all_refs()
+	def references(self,sort=None):
+		return ReferenceFamily(self.int_pk()).get_references(sort)
 
 	def remove_reference(self, ref_id):
 		ReferenceFamily(self.int_pk()).remove_reference(ref_id)
@@ -98,8 +98,12 @@ class ReferenceFamily(object):
 		return self.db[ref_id]
 
 	# get all references
-	def all_refs(self):
-		return [(x.key, x.value) for x in self.db.query("function(d) { emit(d._id,d); }")]
+	def get_references(self, sort=None):
+		emit = "emit(d._id,d)"
+		if sort is not None:
+			emit = "emit(d.%s,d)" % sort
+
+		return [(x.key, x.value) for x in self.db.query("function(d) { " + emit + "; }")]
 
 	# remove a reference by id
 	def remove_reference(self, ref_id):
@@ -151,9 +155,6 @@ class ReferenceQueue(ReferenceFamily):
 		for item in docs:
 			print item
 			self.db.delete(self.db[item.id])
-
-# front page recent references
-recent_references = ReferenceQueue(3)
 
 class UserProfile(models.Model):
 	user = models.ForeignKey(User, unique=True)

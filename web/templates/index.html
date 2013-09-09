@@ -14,7 +14,7 @@
 
         .home-white-block {
             background-color: #FFFFFF;
-            margin-bottom: 10px;
+			padding:10px;
             -webkit-box-shadow: 0px 0px 5px 0px #AAAAAA;
             box-shadow: 0px 0px 5px 0px #AAAAAA;
 
@@ -25,12 +25,11 @@
 {% block content %}
     <div class="home-page">
 
-
-        <div class="profile-blocks">
-            <div class="span7 home-white-block" style="background-color: #042F4B; min-height: 300px; ">
+        <div class="row profile-blocks">
+            <div class="col-md-7 home-white-block" style="background-color: #042F4B; min-height: 280px; ">
                 <img src="{{ STATIC_URL }}img/static_img/home/header-welcome.png"/>
 
-                <div style="font-weight: lighter; color: #fff; padding:20px; font-size:1.3em; line-height: 26px; text-rendering: optimizelegibility;">
+                <div style="font-weight: lighter; color: #fff; padding:20px; font-size:1.1em; line-height: 26px; text-rendering: optimizelegibility;">
                     Community Resource is an online collection of references compiled by researchers in the field of
                     visualization
                     (including
@@ -42,9 +41,21 @@
                 </div>
             </div>
 
-            <div class="span5 home-white-block">
-
-                <div class="profile-unit">
+            <div class="col-md-3" style="margin:0px; padding:0px; height:280px">
+				<a href="{{ URL_PREPENDER }}/taxonomy">
+					<div class="col-md-7 " style="height:100%; width:100%; padding-top:40px; background-color: #EBB77B">
+						<img src="{{ STATIC_URL }}img/static_img/home/taxonomy-block-item.png"/>
+					</div>
+				</a>
+			</div>
+            <div class="col-md-2" style="margin:0px; padding:0px; height:280px">
+				<a href="{{ URL_PREPENDER }}/volunteer">
+					<div class="col-md-5" style="height:100%; width:100%; padding-top:40px; background-color: #042F4B">
+						<img src="{{ STATIC_URL }}img/static_img/home/volunteer-block-item.png"/>
+					</div>
+				</a>
+			</div>
+               <!--<div class="profile-unit">
                     <br/>
 
                     <p>Search the reference collection</p>
@@ -53,25 +64,11 @@
                           onsubmit="return validateSearchInput('home-search')">
                         <input id="search-text" type="text" name="q" placeholder="Search">
                     </form>
-                </div>
+				</div>-->
+		</div>
+		<div class="row">
 
-            </div>
-
-            <a href="{{ URL_PREPENDER }}/taxonomy">
-                <div class="span3 home-white-block" style="min-height: 187px; background-color: #EBB77B">
-                    <img src="{{ STATIC_URL }}img/static_img/home/taxonomy-block-item.png"/>
-                </div>
-            </a>
-
-            <a href="{{ URL_PREPENDER }}/volunteer">
-                <div class="span2 home-white-block" style="min-height: 187px; background-color: #042F4B">
-                    <img src="{{ STATIC_URL }}img/static_img/home/volunteer-block-item.png"/>
-                </div>
-            </a>
-
-            <div class="clearfix"></div>
-
-            <div class="span7 home-white-block" style="min-height: 300px;">
+            <div class="col-md-7 home-white-block" style="min-height: 300px;">
                 <div class="profile-unit">
                     <br/>
 
@@ -97,7 +94,7 @@
                 </div>
             </div>
 
-            <div class="span5 home-white-block" style="min-height: 300px;">
+            <div class="col-md-5 home-white-block" style="min-height: 300px;">
                 <div class="profile-unit">
                     <br/>
 

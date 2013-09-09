@@ -16,7 +16,7 @@ import logging
 from django.utils import simplejson
 from viscommunityweb.settings import EMAIL_HOST_USER, SITE_ID, URL_PREPENDER
 from web.bibtex_utils.import_utils import saveFile, saveTextToFile
-from web.models import *#TaxonomyCategory, TaxonomyItem, UserProfile, OwnershipRequest, Enquiry, TaxonomyArea, ReferenceFamily, Reference, recent_references
+from web.models import *
 from django.shortcuts import render_to_response, get_object_or_404
 from django.core.mail import send_mail, EmailMessage
 import os
@@ -33,11 +33,13 @@ email_to = "eamonn.maguire@oerc.ox.ac.uk"
 
 logger = logging.getLogger(__name__)
 
+# front page recent references
+recent_references = ReferenceQueue(3)
 
 # index page
 def index(request):
 	recent_items = TaxonomyItem.objects.order_by('-last_updated')[:3]
-	recent_reference_items = recent_references.all_refs()#Reference.objects.order_by('-date_added')[:3]
+	recent_reference_items = recent_references.get_references()#Reference.objects.order_by('-date_added')[:3]
 	return render_to_response("templates/index.html",
 							  {'recent_taxonomy_items': recent_items, 'recent_reference_items': recent_reference_items},
 							  context_instance=RequestContext(request))
@@ -63,8 +65,8 @@ def taxonomy_alpha(request):
 # taxonomy detail page
 def taxonomy_detail(request, taxonomy_id):
 	taxonomy = get_object_or_404(TaxonomyItem, pk=taxonomy_id)
-
-	references = taxonomy.references()
+	sort_order = request.GET.get('sort')
+	references = taxonomy.references(sort_order)
 
 	refer = references
 
@@ -210,9 +212,9 @@ def revoke_ownership(request, taxonomy_id):
 
 
 # big list of all references in database (future: sorting/filtering etc)
-def references(request):
+""""def references(request):
 	pass
-"""	refs = reference_backend.sorted_reference_list(request)
+	refs = reference_backend.sorted_reference_list(request)
 
 	return render_to_response("templates/references.html",
 							  {'references': refs, 'bibtex_texts': json.dumps([x.bibtex for x in refs])},
