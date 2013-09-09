@@ -603,18 +603,14 @@ input#search-text {
 }
 
 .reference_box .title {
-    font-size: 1.1em;
+	color:#666;
+    font-size: 1.3em;
     font-weight: bolder;
 }
 
 .reference_box .journal {
-    font-size: 0.8em;
-    font-weight: bolder;
-}
-
-.reference_box .year {
     font-size: 0.9em;
-    font-weight: normal;
+	font-style:italic;
 }
 
 .reference_box .authors {

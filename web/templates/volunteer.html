@@ -23,9 +23,9 @@
 
                 $("#errors").html(errorHTML);
 
-                $("#name_group").toggleClass("control-group error", blankName);
+                $("#name_group").toggleClass("form-group error", blankName);
 
-                $("#comments_group").toggleClass("control-group error", blankDetails);
+                $("#comments_group").toggleClass("form-group error", blankDetails);
 
                 return !(blankName || blankDetails);
             }
@@ -59,7 +59,7 @@
     {% else %}
 
         <div class="home-page">
-            <div class="span5">
+            <div class="col-md-5">
 
                 <img src="{{ STATIC_URL }}/img/static_img/home/volunteer.png" align="center"/><br/>
                 <p style="font-weight: lighter; color: #414241; font-size:1.2em; line-height: 22px; text-rendering: optimizelegibility;">The development and maintenance of this resource requires the selfless contributions from many
@@ -68,56 +68,58 @@
                 request ownership of one of our taxonomy items.</p>
             </div>
 
-            <div id="login" class="login_form span7">
-                <div class="section-header"><span class="content-section login-section"><span
+            <div id="login" class="login_form col-md-7">
+                <div class="section-header">
+					<span class="content-section login-section"><span
                         class="header-text"><i
-                        class="icon-question-sign"></i> Tell us why you wish to volunteer</span></span>
+                        class="icon-question-sign"></i> Tell us why you wish to volunteer</span>
+					</span>
                 </div>
 
-                <div class="clearfix"></div>
-                <form action="" method="post" id="volunteer-form" class="formbody"
+                <form action="" method="post" id="volunteer-form" class="form-horizontal" style="margin-top:20px; margin-bottom:100px;"
                       onsubmit="return validate();">
-
 
                     <div id="errors">
                     </div>
                     {% csrf_token %}
 
-                    <div id="name_group" class="control-group">
-                        <label for="name" class="control-label">Name</label>
-
-                        <div class="controls">
-                            <input id="name" type="text" name="name" class="span5 input-xlarge">
+                    <div id="name_group" class="form-group">
+                        <label for="name" class="control-label col-lg-4">Name</label>
+                        <div class="controls col-lg-8">
+                            <input id="name" type="text" name="name" class="form-control">
                         </div>
                     </div>
 
 
-                    <label for="availableItems" class="control-label">Select an Available Taxonomy Item</label>
-                    <select name="availableItems" id="taxonomyItem" class="span5" onchange="updateAction()">
+					<div class="form-group">
+						<label for="availableItems" class="control-label col-lg-4">Select a Taxonomy Item</label>
+						<div class="col-lg-8">
+						<select name="availableItems" id="taxonomyItem" class="form-control" onchange="updateAction()">
 
-                        {% for category, taxonomyItems in available.items %}
-                            <optgroup label="{{ category }}">
-                                {% for taxonomyItem in taxonomyItems %}
-                                    <option value="{{ taxonomyItem.id }}">{{ taxonomyItem.name }}</option>
-                                {% endfor %}
-                            </optgroup>
-                        {% endfor %}
-                    </select>
+							{% for category, taxonomyItems in available.items %}
+								<optgroup label="{{ category }}">
+									{% for taxonomyItem in taxonomyItems %}
+										<option value="{{ taxonomyItem.id }}">{{ taxonomyItem.name }}</option>
+									{% endfor %}
+								</optgroup>
+							{% endfor %}
+						</select>
+						</div>
+					</div>
 
-
-                    <div id="comments_group" class="control-group">
-                        <label for="comments" class="control-label">Tell us why you should maintain this item. Please
-                            provide as
-                            much information as possible to enable our fast processing of your request!</label>
-
-                        <div class="controls">
-                            <textarea id="message" name="message" maxlength="5000" rows=10 class="span5"
+                    <div id="comments_group" class="form-group">
+                        <label for="comments" class="control-label col-lg-4">Tell us why you should maintain this item.</label>
+                        <div class="col-lg-8">
+                            <textarea id="message" name="message" maxlength="5000" rows=10 class="form-control"
                                       placeholder="I wish to take ownership of the above taxonomy item. I include relevant details of my expertise in the area."></textarea>
                         </div>
                     </div>
 
-                    <div class="controls">
-                        <input type="submit" class="btn btn-yellow pull-right" value="Submit Volunteer Request">
+					<div class="form-group">
+						<div class="col-lg-4"></div>
+	                    <div class="col-lg-8">
+	                        <input type="submit" class="btn btn-yellow pull-right" value="Submit Volunteer Request">
+						</div>
                     </div>
 
                 </form>
