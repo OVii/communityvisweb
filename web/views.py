@@ -33,9 +33,6 @@ email_to = "eamonn.maguire@oerc.ox.ac.uk"
 
 logger = logging.getLogger(__name__)
 
-# front page recent references
-recent_references = ReferenceQueue(3)
-
 # index page
 def index(request):
 	recent_items = TaxonomyItem.objects.order_by('-last_updated')[:3]
@@ -804,7 +801,6 @@ def contact_send(request):
 		return render_to_response("templates/contact.html", {'success_message': 'Your request was sent successfully!'},
 								  context_instance=RequestContext(request))
 
-
 @login_required
 def reference_remove(request, taxonomy_id, reference_id):
 	urlRequestedFrom = request.POST.get('postedFrom', '/')
@@ -814,11 +810,10 @@ def reference_remove(request, taxonomy_id, reference_id):
 
 	return HttpResponseRedirect(urlRequestedFrom)
 
-
 @login_required
-def reference_delete(request, reference_id):
-	referenceItem = Reference.objects.filter(pk=reference_id).get(pk=reference_id)
-	referenceItem.delete()
+def reference_delete(request, taxonomy_id, reference_id):
+	print "Deleting"
+	referenceItem = ReferenceGlobal().remove_reference(taxonomy_id, reference_id)
 
 	return render_to_response("templates/infopage.html",
 							  {
@@ -831,16 +826,17 @@ def reference_detail(request, taxonomy_id, reference_id):
 	currentPage = request.GET.get('currentPage', '')
 
 	referenceItem = {}
-	assignedTaxonomyItems = {}
+	assignedTaxonomyItem = {}
 
 	try:
-		referenceItem = ReferenceGlobal().get_reference(taxonomy_id,reference_id)#Reference.objects.filter(pk=reference_id).get(pk=reference_id)
-		assignedTaxonomyItems = []#referenceItem.taxonomyitem_set
+		referenceItem = ReferenceGlobal().get_reference(taxonomy_id,reference_id)
+		assignedTaxonomyItem = TaxonomyItem.objects.get(pk=taxonomy_id)
+		print assignedTaxonomyItem
 	except Exception, e:
 		logger.error('Bit of a mishap. Here is the error: ', str(e.message))
 
 	return render_to_response("templates/reference.html",
-							  {'reference': referenceItem, 'taxonomy_items': assignedTaxonomyItems,
+							  {'reference': referenceItem, 'taxonomy_item': assignedTaxonomyItem,
 							   'previousPage': currentPage},
 							  context_instance=RequestContext(request))
 

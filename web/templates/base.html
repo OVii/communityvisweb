@@ -57,15 +57,16 @@
 
         </div>
 
-        <div class="search" style="margin-right:20px">
+		{% comment %}
+		<div class="search" style="margin-right:20px"> #}
             <form id="search" action="{{ URL_PREPENDER }}/search" onsubmit="return validateSearchInput('search')">
-                <input id="search-text" style="width:80%" type="text" name="q" placeholder="Search References">
+			  <input id="search-text" style="width:80%" type="text" name="q" placeholder="Search References">
             </form>
-        </div>
+		</div>
+		{% endcomment %}
 
         <div class="menu">
             <a href="{{ URL_PREPENDER }}/taxonomy" class="menu-item">
-
                 <img src="{{ STATIC_URL }}img/static_img/home/menu-taxonomy.png"/>
 
             </a>

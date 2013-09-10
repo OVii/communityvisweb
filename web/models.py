@@ -63,6 +63,7 @@ class TaxonomyItem(models.Model):
 # represents a reference (duh)
 class Reference(object):
 	def __init__(self):
+		self.id = '' # duplicate of Couch's _id, but Django's template system doesn't like underscores
 		self.entry_key = ''
 		self.title = ''
 		self.bibtex = ''
@@ -91,7 +92,12 @@ class ReferenceFamily(object):
 
 	# add a reference to this reference family
 	def add_reference(self, ref):
-		return self.db.create(ref.__dict__)
+		result = self.db.create(ref.__dict__)
+		if result:
+			doc = self.db[result]
+			doc['id'] = result
+			self.db.save(doc)
+		return result
 
 	# get a reference by id
 	def get_reference(self, ref_id):
@@ -125,6 +131,9 @@ class ReferenceGlobal(object):
 
 	def get_reference(self, tax_id, ref_id):
 		return ReferenceFamily(tax_id).get_reference(ref_id)
+
+	def remove_reference(self, tax_id, ref_id):
+		return ReferenceFamily(tax_id).remove_reference(ref_id)
 
 	def tax_items_featuring_ref(self, ref_id):
 		tax_ids = []
@@ -186,3 +195,7 @@ class Enquiry(models.Model):
 	# optional
 	#reference = models.ForeignKey(Reference, null=True)
 	additionalNotes = models.TextField()
+
+# front page recent references
+recent_references = ReferenceQueue(3)
+

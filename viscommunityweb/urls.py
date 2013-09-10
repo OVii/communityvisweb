@@ -41,7 +41,7 @@ urlpatterns = patterns('',
 
                        url(r'^reference/remove/(?P<taxonomy_id>\d+)/(?P<reference_id>\w+)/$',
                            'web.views.reference_remove', name='remove_reference'),
-                       url(r'^reference/delete/(?P<reference_id>\w+)/$',
+                       url(r'^reference/delete/(?P<taxonomy_id>\d+)/(?P<reference_id>\w+)/$',
                            'web.views.reference_delete', name='delete_reference'),
 
 

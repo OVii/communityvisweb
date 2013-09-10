@@ -21,9 +21,9 @@
 	<script src="{{ STATIC_URL }}js/ZeroClipboard.min.js"></script>
 	
     <script>
-        function showDeleteWindow(referenceId) {
+        function showDeleteWindow(taxonomyId, referenceId) {
             $('#deleteModal').modal('show');
-            $("#deleteModalForm").attr("action", '{{ URL_PREPENDER }}/reference/delete/' + referenceId + '/');
+            $("#deleteModalForm").attr("action", '{{ URL_PREPENDER }}/reference/delete/' + taxonomyId + "/" + referenceId + '/');
         }
 
 		$(document).ready(function() {
@@ -54,12 +54,10 @@
 
 
     <div class="profile-content">
-
-
         <div class="profile-blocks">
             <div class="pull-right">
                 {% if user.is_superuser %}
-                <a onclick="showDeleteWindow({{ reference.0 }})" class="btn btn-danger"><i
+				<a onclick="showDeleteWindow({{ taxonomy_item.id }},'{{ reference.id }}')" class="btn btn-danger"><i
                         class="glyphicon-trash glyphicon"></i> </a>
                 {% endif %}
             </div>
@@ -73,7 +71,7 @@
 			<div class="">
 				<div class="reference-block" style="width:45%" id="about">
 					<div class="block-head">
-						Article information
+						Reference information
 						<hr/>
 					</div>
 					<div class="profile-unit">
@@ -84,7 +82,7 @@
 
 						<p style="font-size: 1em; color:#efa700">{{ reference.journal }}</p>
 						
-						{% if reference.year != 0 %}
+						{% if reference.year %}
 							<p style="font-size: 1em; font-weight:bold">Year: {{ reference.year }}</p>
 						{% endif %}
 
