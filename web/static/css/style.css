@@ -213,6 +213,10 @@ input#search-text {
     margin-right: auto;
 }
 
+.glyphicon-pad {
+	padding-right:10px;
+}
+
 .search-wrapper #search {
     width: 90%;
     margin-left: 15px
@@ -608,7 +612,7 @@ input#search-text {
 
 .reference_box .title {
 	color:#666;
-    font-size: 1.3em;
+    font-size: 1.2em;
     font-weight: bolder;
 }
 
@@ -620,6 +624,11 @@ input#search-text {
 .reference_box .authors {
     font-size: 0.9em;
     font-weight: lighter;
+}
+
+.reference_box .year {
+	font-size: 0.9em;
+	font-weight: normal;
 }
 
 .taxonomy-detail {

@@ -46,6 +46,9 @@
 {% endblock %}
 
 {% block content %}
+	<div class="page-header">
+		<h1><small><span class="glyphicon-envelope glyphicon glyphicon-pad"></span> Contact us</small></h1>
+	</div>
 
     <div>
         {% if error_message %}
@@ -61,13 +64,7 @@
 
     </div>
 
-    <div class="clearfix"></div>
-
-
     <div id="login" class="login_form">
-        <div class="section-header"><span class="content-section login-section"><span
-                class="header-text"><i class="icon-envelope"></i> Contact us</span></span>
-        </div>
 
         <form action="{{ URL_PREPENDER }}/contact/send" method="post" id="contact-form" class="form-horizontal" style="margin-top:20px"
               onsubmit="return validate();" role="form">
@@ -101,7 +98,7 @@
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-lg-8">
+                <div class="col-lg-offset-4 col-lg-8">
                     <input type="submit" class="btn btn-yellow" value="Submit">
                 </div>
             </div>

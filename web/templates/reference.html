@@ -57,12 +57,18 @@
         <div class="profile-blocks">
             <div class="pull-right">
                 {% if user.is_superuser %}
-				<a onclick="showDeleteWindow({{ taxonomy_item.id }},'{{ reference.id }}')" class="btn btn-danger"><i
-                        class="glyphicon-trash glyphicon"></i> </a>
+				<a onclick="showDeleteWindow({{ taxonomy_item.id }},'{{ reference.id }}')" class="btn btn-danger"><span
+                        class="glyphicon-trash glyphicon glyphicon-pad"></span>Delete Reference</a>
                 {% endif %}
             </div>
             <div class="clearfix"></div>
-            <div style="font-weight: lighter; color: #414241; padding:10px 40px; font-size:1.4em; line-height: 26px; text-rendering: optimizelegibility;">{{ reference.title }}</div>
+            <div style="font-weight: lighter; color: #414241; padding:10px 40px; font-size:1.4em; line-height: 26px; text-rendering: optimizelegibility;">
+				{% if reference %}
+					{{ reference.title }}
+				{% else %}
+				<span class="glyphicon glyphicon-exclamation-sign glyphicon-pad"></span>Opps! Looks like that reference has been removed. 
+				{% endif %}
+			</div>
             <br/>
             {% if reference.abstract %}
                 <div style="font-weight: lighter; color: #666666; padding:10px 40px; font-size:1.1em; line-height: 20px; text-rendering: optimizelegibility;">{{ reference.abstract }}</div>
@@ -107,7 +113,7 @@
 				<div class="reference-block" style="width:45%" id="about">
 					<div class="block-head">
 						BibTeX
-						<a class="pull-right btn btn-yellow" id="btnCopyToClipboard">Copy to Clipboard</a>
+						<a class="pull-right btn btn-yellow" id="btnCopyToClipboard"><span class="glyphicon glyphicon-paperclip glyphicon-pad"></span>Copy to Clipboard</a>
 						<hr/>
 					</div>
 					<div class="profile-unit">

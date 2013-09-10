@@ -81,15 +81,21 @@
                     {% for reference in recent_reference_items %}
 
                         <div class="reference_box">
-
-							<span="title"><a href="{{ URL_PREPENDER }}/reference/{{reference.1.tax_id}}/{{ reference.1.ref_doc_id }}?currentPage={{ request.path }}" class="title">{{ reference.1.title }}</a></span><br/>
-
-                            <span style="font-size: 0.8em; color:#666666">{{ reference.1.authorsAsText }}</span><br/>
-                            <span style="font-size: 0.8em; color:#666666">{{ reference.1.journal }}</span>
-                            {% if reference.1.year > 0 %}
-                                <span class="year">{% if reference.1.journal %}, {% endif %}{{ reference.1.year }}
-                            </span>{% endif %}
-                            <br/>
+							<div class="row">
+								<div class="col-md-1"><span class="glyphicon glyphicon-book" style="height:100%; padding-top:3px; font-size:2em"></span></div>
+								<div class="col-md-11">
+									<a href="{{ URL_PREPENDER }}/reference/{{reference.1.tax_id}}/{{ reference.1.ref_doc_id }}?currentPage={{ request.path }}" class="title">{{ reference.1.title }}</a> 
+								</div>
+							</div>
+							<div class="row" style="margin-top:3px">
+								<div class="col-md-11 col-md-offset-1">
+									<span class="authors" style="color:#666">{{ reference.1.authorsAsText }}</span><br/>
+									<span class="journal" style="color:#666">{{ reference.1.journal }}</span>
+									{% if reference.1.year > 0 %}
+									<span class="year">{{ reference.1.year }}</span>
+									{% endif %}
+								</div>
+							</div>
                         </div>
                         {% if not forloop.last %}
                             <hr/>
