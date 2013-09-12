@@ -80,7 +80,7 @@ function customMenu(node) {
                     $("#renameForm").attr("action", '/category/rename/' + data.attr("itemid") + '/');
                     $('#renameModal').modal('show');
                 } else {
-                    window.open("/taxonomy/edit/" + itemId);
+                    window.open("/community/taxonomy/edit/" + itemId);
                 }
             }
         },
@@ -88,7 +88,7 @@ function customMenu(node) {
             label: "Delete",
             action: function (data) {
                 $("#itemToDeleteName").html(data.context.innerText.split("(")[0].trim());
-                $("#confirmRemove").attr("action", '/taxonomy/delete/' + data.attr("itemid") + '/');
+                $("#confirmRemove").attr("action", '/community/taxonomy/delete/' + data.attr("itemid") + '/');
                 $('#confirmRemoveModal').modal('show');
 
             }
@@ -110,7 +110,7 @@ function customMenu(node) {
                 $("#newTaxonomy").html('');
 
                 $('#originalTaxonomyItem').text(data.context.innerText.split("(")[0].trim());
-                $("#splitForm").attr("action", '/taxonomy/split/' + data.attr("itemid") + '/');
+                $("#splitForm").attr("action", '/community/taxonomy/split/' + data.attr("itemid") + '/');
                 $('#splitModal').modal('show');
 
 
@@ -139,7 +139,7 @@ function customMenu(node) {
                     dataType: 'json'
                 }).done(function (categories) {
                         $('#taxonomyItemToMove').text(data.context.innerText.split("(")[0].trim());
-                        $("#moveCategoryForm").attr("action", '/taxonomy/move/' + data.attr("itemid") + '/');
+                        $("#moveCategoryForm").attr("action", '/community/taxonomy/move/' + data.attr("itemid") + '/');
                         $('#moveCategoryModal').modal('show');
 
                         var source = $("#category-list-template").html();
@@ -165,7 +165,7 @@ function customMenu(node) {
                             connectWith: ".connectedSortable"
                         }).disableSelection();
 
-                        $("#moveReferenceForm").attr("action", '/taxonomy/move-references/');
+                        $("#moveReferenceForm").attr("action", '/community/taxonomy/move-references/');
                         $('#moveReferencesModal').modal('show');
 
                         var source = $("#taxonomy-list-template").html();

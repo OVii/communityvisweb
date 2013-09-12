@@ -32,9 +32,9 @@ urlpatterns = patterns('',
 
                        url(r'^taxonomy/add/$', 'web.views.taxonomy_add', name='add_taxonomy'),
                        url(r'^taxonomy/edit/(?P<taxonomy_id>\d+)/$', 'web.views.taxonomy_edit', name='edit_taxonomy'),
-
+                       url(r'^community/taxonomy/edit/(?P<taxonomy_id>\d+)/$', 'web.views.taxonomy_edit', name='edit_taxonomy'),
                        url(r'^taxonomy/add/action/$', 'web.views.taxonomy_add_action', name='add_taxonomy_action'),
-                       url(r'^taxonomy/edit/action/$', 'web.views.taxonomy_edit_action', name='edit_taxonomy_action'),
+                       url(r'^community/taxonomy/edit/action/$', 'web.views.taxonomy_edit_action', name='edit_taxonomy_action'),
 
                        url(r'^reference/add/file$', 'web.views.reference_add_upload_file', name='upload_bibtex'),
                        url(r'^reference/add/text$', 'web.views.reference_add_upload_text', name='upload_bibtex_text'),
@@ -53,8 +53,11 @@ urlpatterns = patterns('',
                        url(r'^taxonomy/(?P<taxonomy_id>\d+)/$', 'web.views.taxonomy_detail', name='taxonomy_detail'),
                        url(r'^taxonomy/download/(\d+)/$', 'web.views.taxonomy_download', name='taxonomy_download'),
                        url(r'^taxonomy/delete/(\d+)/$', 'web.views.taxonomy_delete', name='taxonomy_download'),
+                       url(r'^community/taxonomy/delete/(\d+)/$', 'web.views.taxonomy_delete', name='taxonomy_download'),
                        url(r'^taxonomy/split/(\d+)/$', 'web.views.taxonomy_split', name='taxonomy_download'),
+                       url(r'^community/taxonomy/split/(\d+)/$', 'web.views.taxonomy_split', name='taxonomy_download'),
                        url(r'^taxonomy/move/(\d+)/$', 'web.views.moveTaxonomyItem', name='taxonomy_move'),
+                       url(r'^community/taxonomy/move/(\d+)/$', 'web.views.moveTaxonomyItem', name='taxonomy_move'),
                        url(r'^taxonomy/move-references/$', 'web.views.moveReferences', name='taxonomy_move'),
 
                        url(r'^category/rename/(?P<category_id>\d+)/', 'web.views.renameTaxonomyCategoryAPI', name='category_rename'),
