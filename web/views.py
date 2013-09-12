@@ -595,8 +595,8 @@ def taxonomy_edit(request, taxonomy_id):
 def taxonomy_delete(request, taxonomy_id):
 	taxonomyItem = TaxonomyItem.objects.filter(pk=taxonomy_id).get(pk=taxonomy_id)
 	taxonomyItem.delete()
+	# for now, any attached references are left dangling
 	return HttpResponseRedirect(URL_PREPENDER + "/taxonomy/")
-
 
 def taxonomy_split(request, taxonomy_id):
 	taxonomyItemToSplit = TaxonomyItem.objects.filter(pk=taxonomy_id).get(pk=taxonomy_id)
