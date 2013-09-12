@@ -607,26 +607,23 @@ def taxonomy_split(request, taxonomy_id):
 	message = 'The splitting of ' + taxonomyItemToSplit.name + ' was successful. ' + newTaxonomyItem + \
 			  ' is now available for your perusal.'
 
-	if newTaxonomyItem:
-		originalReferences = request.POST.get('originalTaxonomyReferences', '')
-		newReferences = request.POST.get('newTaxonomyReferences', '')
+	try:
+		if newTaxonomyItem is None or len(newTaxonomyItem) == 0 or taxonomyItemToSplit is None:
+			raise Exception
 
-		#only remove existing list if the new list has content.
-		if newReferences != "":
-			for reference in taxonomyItemToSplit.references.all():
-				taxonomyItemToSplit.references.remove(reference)
+		ref_lists = [ request.POST.get('originalTaxonomyReferences', '').split(','), request.POST.get('newTaxonomyReferences', '').split(',') ]
 
-		originalReferenceList = originalReferences.split(",")
-		newReferenceList = newReferences.split(",")
-
-		# add references to original
-		addReferencesToTaxonomyItem(originalReferenceList, taxonomyItemToSplit)
 		# create new taxonomy item
 		newTaxonomyItem = TaxonomyItem(name=newTaxonomyItem, category=taxonomyItemToSplit.category)
 		newTaxonomyItem.save()
 
-		addReferencesToTaxonomyItem(newReferenceList, newTaxonomyItem)
-	else:
+		curr_refs = taxonomyItemToSplit.reference_family().get_references_as_dict()
+
+		# go through each ref and move over to new family if necessary
+		for ref_id, ref_doc in curr_refs:
+			if ref_id in ref_lists[1]:
+				taxonomyItemToSplit.reference_family().move_reference(ref_id,newTaxonomyItem.reference_family())
+	except Exception, e:
 		success = False
 		message = 'The splitting of ' + taxonomyItemToSplit.name + ' was unsuccessful. Please try again.'
 
@@ -651,6 +648,7 @@ def moveReferences(request):
 			families.append(taxonomy[tax].reference_family())
 			old_refs.append(families[tax].get_references_as_dict())
 
+		refs_moved = 0
 		for tax in range(0,2):
 			source = tax
 			dest = (tax + 1) % 2
@@ -660,9 +658,10 @@ def moveReferences(request):
 					print "Moving source %i dest %i" % (source,dest)
 					print "Ref id " + ref_id
 					families[source].move_reference(ref_id,families[dest])
+					refs_moved += 1
 
 		success = True
-		message = 'The moving of references between ' + taxonomy[0].name + ' and ' + taxonomy[1].name + ' was successful!'
+		message = 'The moving of %i references between %s and %s was successful!' % (refs_moved,taxonomy[0].name,taxonomy[1].name)
 	except Exception, e:
 		success = False
 		message = 'The moving of references between the taxonomies was unsuccessful. Please try again.'

@@ -1,103 +1,106 @@
 <div id="splitModal" class="modal fade" tabindex="-1" role="dialog"
      aria-labelledby="confirmRemoveRequest"
      aria-hidden="true" xmlns="http://www.w3.org/1999/html">
-    <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-        <h3>Split Taxonomy</h3>
-    </div>
-    <form accept-charset="UTF-8" action="" class="formbody" id="splitForm"
-          method="post" onsubmit="return validateSplitForm()">
-        <div class="modal-body">
-            <div class="modal-body" id="booking">
-                {% csrf_token %}
-                <div id="split_errors"></div>
+	 <div class="modal-dialog">
+		 <div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h3>Split Taxonomy</h3>
+			</div>
+			<form accept-charset="UTF-8" action="" class="formbody" id="splitForm"
+				  method="post" onsubmit="return validateSplitForm()">
+				<div class="modal-body" id="booking" style="height:380px">
+					{% csrf_token %}
+					<div id="split_errors"></div>
 
-                <div id="split_detail_group" class="control-group">
+					<div id="split_detail_group" class="control-group">
 
-                    <div class="controls well well-small">
-                        <label for="comments" class="control-label">New taxonomy name</label>
-                        <input name="newTaxonomyName" id="newTaxonomyForSplit" type="text" class="span6"
-                               onkeyup="JavaScript: updateText()"/>
+						<div class="controls well well-small">
+							<label for="comments" class="control-label">New taxonomy name</label>
+							<input name="newTaxonomyName" id="newTaxonomyForSplit" type="text" class="span6"
+								   onkeyup="JavaScript: updateText()"/>
 
-                        <input name="originalTaxonomyReferences" type="hidden"/>
-                        <input name="newTaxonomyReferences" type="hidden"/>
-                    </div>
+							<input name="originalTaxonomyReferences" type="hidden"/>
+							<input name="newTaxonomyReferences" type="hidden"/>
+						</div>
 
-                    <p>Drag and drop the references you want to migrate (if any) to the new taxonomy.</p>
+						<p>Drag and drop the references you want to migrate (if any) to the new taxonomy.</p>
 
-                    <div id="originalListContainer">
-                        <span id="originalTaxonomyItemCount" style="font-weight: normal"></span> References in <span
-                            id="originalTaxonomyItem" style="font-weight: normal"></span>
-                        <ul id="originalTaxonomy" class="connectedSortable" onmouseup="JavaScript: countItems()"
-                            onmouseout="JavaScript: countItems()">
-                            <li>Loading</li>
-                        </ul>
-                    </div>
+						<div id="originalListContainer">
+							<span id="originalTaxonomyItemCount" style="font-weight: normal"></span> References in <span
+								id="originalTaxonomyItem" style="font-weight: normal"></span>
+							<ul id="originalTaxonomy" class="connectedSortable" style="padding-left:0px" onmouseup="JavaScript: countItems()"
+								onmouseout="JavaScript: countItems()">
+								<li>Loading</li>
+							</ul>
+						</div>
 
-                    <div id="newListContainer">
-                        <span id="newTaxonomyItemCount" style="font-weight: normal"></span> References in <span
-                            id="newSplitTaxonomyItem" style="font-weight: bolder; color:#bc8400"></span>
-                        <ul id="newTaxonomy" class="connectedSortable" onmouseup="JavaScript: countItems()"
-                            onmouseout="JavaScript: countItems()">
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <input name="commit" type="submit" class="btn btn-yellow pull-right" value="Split">
-        </div>
-    </form>
+						<div id="newListContainer">
+							<span id="newTaxonomyItemCount" style="font-weight: normal"></span> References in <span
+								id="newSplitTaxonomyItem" style="font-weight: bolder; color:#bc8400"></span>
+							<ul id="newTaxonomy" class="connectedSortable" style="padding-left:0px" onmouseup="JavaScript: countItems()"
+								onmouseout="JavaScript: countItems()">
+							</ul>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<input name="commit" type="submit" class="btn btn-yellow pull-right" value="Split Taxonomy">
+				</div>
+			</form>
+		</div>
+	</div>
 </div>
+		<script type="text/javascript">
 
-<script type="text/javascript">
 
+			function validateSplitForm() {
+				var message = document.forms["splitForm"]["newTaxonomyName"].value;
+				blankMessage = (message === "");
+				var errorHTML = "";
+				if (blankMessage) {
+					errorHTML += '<div class="alert alert-error">Please enter a new name!</div>'
+				}
+				$("#split_errors").html(errorHTML);
+				$("#split_detail_group").toggleClass("control-group error", blankMessage);
 
-    function validateSplitForm() {
-        var message = document.forms["splitForm"]["newTaxonomyName"].value;
-        blankMessage = (message === "");
-        var errorHTML = "";
-        if (blankMessage) {
-            errorHTML += '<div class="alert alert-error">Please enter a new name!</div>'
-        }
-        $("#split_errors").html(errorHTML);
-        $("#split_detail_group").toggleClass("control-group error", blankMessage);
+				if (!blankMessage) {
+					determineReferenceLists();
+				}
 
-        if (!blankMessage) {
-            determineReferenceLists();
-        }
+				return !(blankMessage);
+			}
 
-        return !(blankMessage);
-    }
+			function determineReferenceLists() {
+				console.log("Determining references");
+				var newReferences = "";
+				var originalReferences = "";
+				$("#originalTaxonomy").children().each(function (index) {
+					console.log(index);
+					originalReferences += $(this).attr("id") + ",";
+				});
 
-    function determineReferenceLists() {
-        console.log("Determining references");
-        var newReferences = "";
-        var originalReferences = "";
-        $("#originalTaxonomy").children().each(function (index) {
-            console.log(index);
-            originalReferences += $(this).attr("id") + ",";
-        });
+				$("#newTaxonomy").children().each(function (index) {
+					console.log(index);
+					newReferences += $(this).attr("id") + ",";
+				});
 
-        $("#newTaxonomy").children().each(function (index) {
-            console.log(index);
-            newReferences += $(this).attr("id") + ",";
-        });
+				$('input[name=originalTaxonomyReferences]').val(originalReferences);
+				$('input[name=newTaxonomyReferences]').val(newReferences);
+			}
 
-        $('input[name=originalTaxonomyReferences]').val(originalReferences);
-        $('input[name=newTaxonomyReferences]').val(newReferences);
-    }
+			function updateText() {
+				var message = document.forms["splitForm"]["newTaxonomyName"].value;
 
-    function updateText() {
-        var message = document.forms["splitForm"]["newTaxonomyName"].value;
+				if (message == "") {
+					message = "new taxonomy";
+				}
+				$("#newSplitTaxonomyItem").text(message);
 
-        if (message == "") {
-            message = "new taxonomy";
-        }
-        $("#newSplitTaxonomyItem").text(message);
+			}
 
-    }
-
-    function countItems() {
-        $("#originalTaxonomyItemCount").text($("#originalTaxonomy").children().size())
-        $("#newTaxonomyItemCount").text($("#newTaxonomy").children().size())
-    }
-</script>
+			function countItems() {
+				$("#originalTaxonomyItemCount").text($("#originalTaxonomy").children().size())
+				$("#newTaxonomyItemCount").text($("#newTaxonomy").children().size())
+			}
+		</script>

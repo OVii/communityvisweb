@@ -67,4 +67,6 @@ web/admin.pyc
 
 web/views.pyc
 
+nuke_all_references.py
+
 *.pyc
