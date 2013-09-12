@@ -5,7 +5,6 @@ from collections import defaultdict
 from django.contrib.auth.models import User
 from django.db import models
 import user
-from reference_couch import *
 import uuid
 import hashlib
 from datetime import datetime
