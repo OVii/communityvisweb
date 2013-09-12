@@ -444,7 +444,7 @@ def getTaxonomyCategoryJSON(request, taxonomy_id):
 	taxonomy = get_object_or_404(TaxonomyItem, pk=taxonomy_id)
 
 	referenceQuery = taxonomy.references()
-	sortedReferences = taxonomy.references()#reference_backend.sorted_reference_list(request, referenceQuery)
+	references = taxonomy.references()
 
 	hasOwner = False
 
@@ -455,18 +455,18 @@ def getTaxonomyCategoryJSON(request, taxonomy_id):
 	if request.user in taxonomy.owners.all():
 		ownerLoggedIn = True
 
-	references = sortedReferences
 	count = len(references)
+	refjsonlist = []
 
-	for reference in sortedReferences:
-		references.append({"id": reference.guid, "title": reference.title, "authors": reference.authors,
-						   "journal": reference.journal, "year": reference.year,
-						   "url": URL_PREPENDER + "/reference/" + str(reference.id)})
+	for (ref_id, reference) in references:
+		reference['url'] = URL_PREPENDER + "/reference/" + str(ref_id)
+		print reference
+		refjsonlist.append(reference);
 
 	response = {"id": taxonomy.id, "name": taxonomy.name, "description": taxonomy.detail,
 				"url": URL_PREPENDER + "/taxonomy/" + str(taxonomy.id),
 				"hasOwner": hasOwner, "isOwner": ownerLoggedIn,
-				"count": count, "references": references}
+				"count": count, "references": refjsonlist}
 
 	return HttpResponse(simplejson.dumps(response), mimetype="application/json")
 
@@ -598,14 +598,6 @@ def taxonomy_delete(request, taxonomy_id):
 	return HttpResponseRedirect(URL_PREPENDER + "/taxonomy/")
 
 
-def addReferencesToTaxonomyItem(referenceList, taxonomyItem):
-	for reference in referenceList:
-		if reference:
-			referenceToAddQuery = Reference.objects.filter(pk=reference)
-			if len(referenceToAddQuery) > 0:
-				taxonomyItem.references.add(referenceToAddQuery.get(pk=reference))
-
-
 def taxonomy_split(request, taxonomy_id):
 	taxonomyItemToSplit = TaxonomyItem.objects.filter(pk=taxonomy_id).get(pk=taxonomy_id)
 
@@ -644,37 +636,34 @@ def taxonomy_split(request, taxonomy_id):
 @login_required
 @user_passes_test(lambda u: u.is_superuser)
 def moveReferences(request):
-	taxonomy1Id = request.POST.get('moveRefFromTaxonomy', '')
-	taxonomy2Id = request.POST.get('moveRefToTaxonomy', '')
+	tax_ids = [request.POST.get('moveRefFromTaxonomy', ''), request.POST.get('moveRefToTaxonomy', '')]
+	new_ref_list = [request.POST.get('moveFromTaxonomyReferences', '').split(","), request.POST.get('moveToTaxonomyReferences', '').split(",")]
 
-	if taxonomy1Id and taxonomy2Id:
+	try:
+		if tax_ids[0] == tax_ids[1]:
+			raise Exception
 
-		taxonomy1 = TaxonomyItem.objects.filter(pk=taxonomy1Id).get(pk=taxonomy1Id)
-		taxonomy2 = TaxonomyItem.objects.filter(pk=taxonomy2Id).get(pk=taxonomy2Id)
+		taxonomy = []
+		families = []
+		old_refs = []
+		for tax in range(0,2):
+			taxonomy.append(TaxonomyItem.objects.filter(pk=tax_ids[tax]).get(pk=tax_ids[tax]))
+			families.append(taxonomy[tax].reference_family())
+			old_refs.append(families[tax].get_references_as_dict())
 
-		# swap the taxonomy's cassandra family GUIDs.
-		#taxonomy1.swap_references_with(taxonomy2)
-
-		taxonomy1References = request.POST.get('moveFromTaxonomyReferences', '')
-		taxonomy2References = request.POST.get('moveToTaxonomyReferences', '')
-
-		if taxonomy2References != "":
-			for reference in taxonomy1.references.all():
-				taxonomy1.references.remove(reference)
-
-			for reference in taxonomy2.references.all():
-				taxonomy2.references.remove(reference)
-
-		taxonomy1ReferencesList = taxonomy1References.split(",")
-		taxonomy2ReferencesList = taxonomy2References.split(",")
-
-		addReferencesToTaxonomyItem(taxonomy1ReferencesList, taxonomy1)
-		addReferencesToTaxonomyItem(taxonomy2ReferencesList, taxonomy2)
+		for tax in range(0,2):
+			source = tax
+			dest = (tax + 1) % 2
+			for ref_id, ref_doc in old_refs[source]:
+				# the old ref from this family is in t'other list, then move it move it move it
+				if ref_id in new_ref_list[dest]:
+					print "Moving source %i dest %i" % (source,dest)
+					print "Ref id " + ref_id
+					families[source].move_reference(ref_id,families[dest])
 
 		success = True
-		message = 'The moving of references between ' + taxonomy1.name + ' and ' + taxonomy2.name + ' was successful!' \
-																									' You may peruse...'
-	else:
+		message = 'The moving of references between ' + taxonomy[0].name + ' and ' + taxonomy[1].name + ' was successful!'
+	except Exception, e:
 		success = False
 		message = 'The moving of references between the taxonomies was unsuccessful. Please try again.'
 

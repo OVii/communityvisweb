@@ -1,7 +1,7 @@
 """
  Data models
 """
-
+from collections import defaultdict
 from django.contrib.auth.models import User
 from django.db import models
 import user
@@ -47,6 +47,9 @@ class TaxonomyItem(models.Model):
 		except:
 			return self.pk
 
+	def reference_family(self):
+		return ReferenceFamily(self.int_pk())
+
 	def references(self,sort=None):
 		return ReferenceFamily(self.int_pk()).get_references(sort)
 
@@ -90,18 +93,31 @@ class ReferenceFamily(object):
 	def database_id(self):
 		return "ref_fam_%s" % self.tax_id
 
+	def copy_reference(self, ref_id):
+		new_id = uuid.uuid4().hex
+		new_rev = self.db.copy(ref_id,new_id)
+		return new_id
+
+	def move_reference(self, ref_id, new_family):
+		new_family.add_reference(self.db[ref_id])
+		self.db.purge([self.db[ref_id]])
+
 	# add a reference to this reference family
 	def add_reference(self, ref):
-		result = self.db.create(ref.__dict__)
-		if result:
-			doc = self.db[result]
-			doc['id'] = result
-			self.db.save(doc)
-		return result
+		ref = ref.__dict__ if type(ref) is Reference else ref
+		doc_id, rev_id = self.db.save(ref)
+		# Django doesn't like Couch's _id so we'll create a redundant id attribute
+		doc = self.db[doc_id]
+		doc['id'] = doc_id
+		self.db.save(doc)
+		return doc_id
 
 	# get a reference by id
 	def get_reference(self, ref_id):
 		return self.db[ref_id]
+
+	def delete_reference(self, ref_id):
+		return self.db.delete(self.db[ref_id])
 
 	# get all references
 	def get_references(self, sort=None):
@@ -111,9 +127,21 @@ class ReferenceFamily(object):
 
 		return [(x.key, x.value) for x in self.db.query("function(d) { " + emit + "; }")]
 
+	def get_references_as_dict(self, sort=None):
+		refs = self.get_references()
+		d = defaultdict(list)
+		for k,v in refs:
+			d[k] = v
+		return d.items()
+
 	# remove a reference by id
 	def remove_reference(self, ref_id):
 		self.db.delete(self.get_reference(ref_id))
+
+	def remove_all_references(self):
+		all_refs = self.get_references()
+		for k,v in all_refs:
+			self.delete_reference(k)
 
 	# ensures db object exists; creates if not
 	def _ensure_exists(self):

@@ -1,40 +1,45 @@
-<div id="renameModal" class="modal hide fade" tabindex="-1" role="dialog"
+<div id="renameModal" class="modal fade" tabindex="-1" role="dialog"
      aria-labelledby="confirmRemoveRequest"
      aria-hidden="true" xmlns="http://www.w3.org/1999/html">
-    <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-        <h3>Rename </h3>
-    </div>
-    <form accept-charset="UTF-8" action="" class="formbody" id="renameForm"
-          method="post" onsubmit="return validateRenameForm()">
-        <div class="modal-body">
-            <div class="modal-body" id="booking">
-                {% csrf_token %}
-                <div id="rename_errors"></div>
-                <p>Old Name was <strong><span id="oldName"></span></strong></p>
-                <div id="rename_detail_group" class="control-group">
-                    <label for="comments" class="control-label">Enter the new name</label>
-                    <div class="controls">
-                        <input name="newName" type="text" class="span6"/>
-                    </div>
-                </div>
-            </div>
-            <input name="commit" type="submit" class="btn btn-yellow pull-right" value="Rename">
-        </div>
-    </form>
+	 <div class="modal-dialog">
+		 <div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4>Rename item</h4>
+			</div>
+			<form accept-charset="UTF-8" action="" class="form-horizontal" id="renameForm"
+				  method="post" onsubmit="return validateRenameForm()">
+			<div class="modal-body">
+				{% csrf_token %}
+				<div id="rename_errors"></div>
+				<p class="">Current name: <strong><span id="oldName"></span></strong></p>
+				<br/>
+				<div id="rename_detail_group" class="form-group">
+					<label for="comments" class="col-lg-4 control-label">Enter the new name</label>
+					<div class="col-lg-8">
+						<input name="newName" type="text" class="form-control"/>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<input name="commit" type="submit" class="btn btn-yellow pull-right" value="Rename">
+			</div>
+			</form>
+		</div>
+	</div>
 </div>
 
 <script type="text/javascript">
-    function validateRenameForm() {
-        var message = document.forms["renameForm"]["newName"].value;
-        blankMessage = (message === "");
-        var errorHTML = "";
-        if (blankMessage) {
-            errorHTML += '<div class="alert alert-error">Please enter a new name!</div>'
-        }
+	function validateRenameForm() {
+		var message = document.forms["renameForm"]["newName"].value;
+		blankMessage = (message === "");
+		var errorHTML = "";
+		if (blankMessage) {
+			errorHTML += '<div class="alert alert-error">Please enter a new name!</div>'
+		}
 
-        $("#rename_errors").html(errorHTML);
-        $("#rename_detail_group").toggleClass("control-group error", blankMessage);
-        return !(blankMessage);
-    }
+		$("#rename_errors").html(errorHTML);
+		$("#rename_detail_group").toggleClass("control-group error", blankMessage);
+		return !(blankMessage);
+	}
 </script>

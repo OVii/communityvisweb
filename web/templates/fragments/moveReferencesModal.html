@@ -1,105 +1,110 @@
-<div id="moveReferencesModal" class="modal hide fade" tabindex="-1" role="dialog"
+<div id="moveReferencesModal" class="modal fade" tabindex="-1" role="dialog"
      aria-labelledby="confirmRemoveRequest"
      aria-hidden="true" xmlns="http://www.w3.org/1999/html">
-    <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-        <h3>Move References</h3>
-    </div>
-    <form accept-charset="UTF-8" action="" class="formbody" id="moveReferenceForm"
-          method="post" onsubmit="return validateMoveReferenceForm()">
-        <div class="modal-body">
-            <div class="modal-body" id="booking">
-                {% csrf_token %}
-                <div id="move_reference_errors"></div>
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+				<h3>Move References</h3>
+			</div>
+			<form accept-charset="UTF-8" action="" class="formbody" id="moveReferenceForm"
+				  method="post" onsubmit="return validateMoveReferenceForm()">
+				<div class="modal-body" id="booking" style="height:380px">
+					{% csrf_token %}
+					<div id="move_reference_errors"></div>
 
-                <div id="move_reference_errors_group" class="control-group">
+					<div id="move_reference_errors_group" class="control-group">
 
-                    <div class="controls well well-small">
-                        <label for="moveRefFromTaxonomy" class="control-label">Taxonomy 1</label>
+						<div class="controls well well-small">
+							<label for="moveRefFromTaxonomy" class="control-label">Taxonomy 1</label>
 
-                        <select name="moveRefFromTaxonomy" id="moveRefFromTaxonomy" class="span5"
-                                onchange="JavaScript: updateReferenceList('#moveRefFromTaxonomy', '#moveFromTaxonomyReferenceList', '#moveFromName'); updateReferenceList('#moveRefToTaxonomy', '#moveToTaxonomyReferenceList', '#moveToName')">
-                            {# will be automatically populated with all taxonomy items #}
-                        </select>
+							<select name="moveRefFromTaxonomy" id="moveRefFromTaxonomy" class="span5"
+									onchange="JavaScript: updateReferenceList('#moveRefFromTaxonomy', '#moveFromTaxonomyReferenceList', '#moveFromName'); updateReferenceList('#moveRefToTaxonomy', '#moveToTaxonomyReferenceList', '#moveToName')">
+								{# will be automatically populated with all taxonomy items #}
+							</select>
 
-                        <label for="moveRefToTaxonomy" class="control-label">Taxonomy 2</label>
-                        <select name="moveRefToTaxonomy" id="moveRefToTaxonomy" class="span5"
-                                onchange="JavaScript: updateReferenceList('#moveRefFromTaxonomy', '#moveFromTaxonomyReferenceList', '#moveFromName'); updateReferenceList('#moveRefToTaxonomy', '#moveToTaxonomyReferenceList','#moveToName')">
-                            {# will be automatically populated with all taxonomy items #}
-                        </select>
+							<label for="moveRefToTaxonomy" class="control-label">Taxonomy 2</label>
+							<select name="moveRefToTaxonomy" id="moveRefToTaxonomy" class="span5"
+									onchange="JavaScript: updateReferenceList('#moveRefFromTaxonomy', '#moveFromTaxonomyReferenceList', '#moveFromName'); updateReferenceList('#moveRefToTaxonomy', '#moveToTaxonomyReferenceList','#moveToName')">
+								{# will be automatically populated with all taxonomy items #}
+							</select>
 
-                        <input name="moveFromTaxonomyReferences" type="hidden"/>
-                        <input name="moveToTaxonomyReferences" type="hidden"/>
-                    </div>
+							<input name="moveFromTaxonomyReferences" type="hidden"/>
+							<input name="moveToTaxonomyReferences" type="hidden"/>
+						</div>
 
-                    <p>Drag and drop the references you want to migrate (if any) to the taxonomy.</p>
+						<p>Drag and drop the references you want to migrate (if any) to the taxonomy.</p>
 
-                    <div id="originalListContainer">
-                        <span id="moveFromTaxonomyItemCount" style="font-weight: normal"></span> References in <span
-                            id="moveFromName" style="font-weight: bolder">Taxonomy 1</span>
-                        <ul id="moveFromTaxonomyReferenceList" class="connectedSortable"
-                            onmouseup="JavaScript: countItems()"
-                            onmouseout="JavaScript: countItems()">
-                        </ul>
-                    </div>
+						<div id="originalListContainer">
+							<span id="moveFromTaxonomyItemCount" style="font-weight: normal"></span> References in <span
+								id="moveFromName" style="font-weight: bolder">Taxonomy 1</span>
+							<ul id="moveFromTaxonomyReferenceList" class="connectedSortable" style="padding-left:0px"
+								onmouseup="JavaScript: countItems()"
+								onmouseout="JavaScript: countItems()">
+							</ul>
+						</div>
 
-                    <div id="newListContainer">
-                        <span id="moveToTaxonomyItemCount" style="font-weight: normal"></span> References in <span
-                            id="moveToName" style="font-weight: bolder">Taxonomy 1</span>
-                        <ul id="moveToTaxonomyReferenceList" class="connectedSortable"
-                            onmouseup="JavaScript: countItems()"
-                            onmouseout="JavaScript: countItems()">
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <input name="commit" type="submit" class="btn btn-yellow pull-right" value="Move References">
-        </div>
-    </form>
+						<div id="newListContainer">
+							<span id="moveToTaxonomyItemCount" style="font-weight: normal"></span> References in <span
+								id="moveToName" style="font-weight: bolder">Taxonomy 1</span>
+							<ul id="moveToTaxonomyReferenceList" class="connectedSortable" style="padding-left:0px"
+								onmouseup="JavaScript: countItems()"
+								onmouseout="JavaScript: countItems()">
+							</ul>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<input name="commit" type="submit" class="btn btn-yellow pull-right" value="Move References">
+				</div>
+			</form>
+		</div>
+	</div>
 </div>
 
-<script type="text/javascript">
+		<script type="text/javascript">
 
 
-    function validateMoveReferenceForm() {
+			function validateMoveReferenceForm() {
 
-        var taxonomy1 = $("#moveRefFromTaxonomy").val();
-        var taxonomy2 = $("#moveRefToTaxonomy").val();
+				var taxonomy1 = $("#moveRefFromTaxonomy").val();
+				var taxonomy2 = $("#moveRefToTaxonomy").val();
 
-        taxonomy1Filled = (taxonomy1.indexOf("Please select") == -1);
-        taxonomy2Filled = (taxonomy2.indexOf("Please select") == -1);
+				taxonomy1Filled = (taxonomy1.indexOf("Please select") == -1);
+				taxonomy2Filled = (taxonomy2.indexOf("Please select") == -1);
 
-        var errorHTML = "";
-        if (!(taxonomy1Filled && taxonomy2Filled)) {
-            errorHTML += '<div class="alert alert-error">Please select two taxonomies!</div>'
-        }
+				var errorHTML = "";
+				if (!(taxonomy1Filled && taxonomy2Filled)) {
+					errorHTML += '<div class="alert alert-error">Please select two taxonomies!</div>'
+				}
 
-        alert(taxonomy1Filled + ' and ' + taxonomy2Filled);
-        $("#move_reference_errors").html(errorHTML);
-        $("#move_reference_errors_group").toggleClass("control-group error", !(taxonomy1Filled && taxonomy2Filled));
+				//alert(taxonomy1Filled + ' and ' + taxonomy2Filled);
+				$("#move_reference_errors").html(errorHTML);
+				$("#move_reference_errors_group").toggleClass("control-group error", !(taxonomy1Filled && taxonomy2Filled));
 
-        if (taxonomy1Filled && taxonomy2Filled) {
-            determineMovedReferenceLists();
-        }
+				if (taxonomy1Filled && taxonomy2Filled) {
+					determineMovedReferenceLists();
+				}
 
-        return (taxonomy1Filled && taxonomy2Filled);
-    }
+				return (taxonomy1Filled && taxonomy2Filled);
+			}
 
-    function determineMovedReferenceLists() {
-        console.log("Determining references");
-        var newReferences = "";
-        var originalReferences = "";
-        $("#moveFromTaxonomyReferenceList").children().each(function (index) {
-            originalReferences += $(this).attr("id") + ",";
-        });
+			function determineMovedReferenceLists() {
+				console.log("Determining references");
+				var newReferences = "";
+				var originalReferences = "";
+				$("#moveFromTaxonomyReferenceList").children().each(function (index) {
+					originalReferences += $(this).attr("id") + ",";
+				});
 
-        $("#moveToTaxonomyReferenceList").children().each(function (index) {
-            newReferences += $(this).attr("id") + ",";
-        });
+				$("#moveToTaxonomyReferenceList").children().each(function (index) {
+					newReferences += $(this).attr("id") + ",";
+				});
+				console.log(newReferences);
 
-        $('input[name=moveFromTaxonomyReferences]').val(originalReferences);
-        $('input[name=moveToTaxonomyReferences]').val(newReferences);
-    }
+				$('input[name=moveFromTaxonomyReferences]').val(originalReferences);
+				$('input[name=moveToTaxonomyReferences]').val(newReferences);
+			}
 
 
     function countItems() {
