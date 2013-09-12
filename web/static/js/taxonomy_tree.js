@@ -77,7 +77,7 @@ function customMenu(node) {
 
                 if (itemType == "taxonomyCategory") {
                     $("#oldName").html(data.context.innerText);
-                    $("#renameForm").attr("action", '/category/rename/' + data.attr("itemid") + '/');
+                    $("#renameForm").attr("action", '/community/category/rename/' + data.attr("itemid") + '/');
                     $('#renameModal').modal('show');
                 } else {
                     window.open("/community/taxonomy/edit/" + itemId);
