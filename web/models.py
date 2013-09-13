@@ -97,6 +97,10 @@ class ReferenceFamily(object):
 		new_rev = self.db.copy(ref_id,new_id)
 		return new_id
 
+	def move_all_references(self, new_family):
+		for ref_id, rec_doc in self.get_references():
+			self.move_reference(ref_id, new_family)
+
 	def move_reference(self, ref_id, new_family):
 		new_family.add_reference(self.db[ref_id])
 		self.db.purge([self.db[ref_id]])
@@ -149,6 +153,7 @@ class ReferenceFamily(object):
 		except:
 			print "Creating database %s" % self.database_id()
 			self.db = server.create(self.database_id())
+			self.db.commit()
 		assert(self.db is not None)
 
 # functions for dealing with references without worrying about which taxonomy they're attached to (ehh...)

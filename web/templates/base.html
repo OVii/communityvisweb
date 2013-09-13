@@ -29,7 +29,12 @@
 
         ga('create', 'UA-41812283-1', 'ox.ac.uk');
         ga('send', 'pageview');
-
+		
+		// for use in javascript files
+		var globalURLPrefix = "{{ URL_PREPENDER }}";
+		if(globalURLPrefix.charAt(globalURLPrefix.length-1) != '/')
+			globalURLPrefix += '/';
+		console.log("Global URL prefix " + globalURLPrefix);
     </script>
     <script type="text/javascript" src="{{ STATIC_URL }}js/validation.js"></script>
 </head>

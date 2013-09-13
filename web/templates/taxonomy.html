@@ -62,11 +62,17 @@
 
     </div>
 
+	<script type="text/javascript">
+		// used in taxonomy_tree API for correct, machine-agnostic URLs
+		var apiURLPrefix = ".." + globalURLPrefix;
+	</script>
+
     {% include 'fragments/deleteModal.html' %}
     {% include 'fragments/renameModal.html' %}
     {% include 'fragments/splitModal.html' %}
     {% include 'fragments/moveTaxonomyItemModal.html' %}
     {% include 'fragments/moveReferencesModal.html' %}
+    {% include 'fragments/createChildModal.html' %}
 
 {% endblock %}
 

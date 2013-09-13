@@ -176,7 +176,6 @@ def request_ownership_response(request, approval_id):
 
 	return HttpResponseRedirect(urlRequestedFrom)
 
-
 @login_required
 def revoke_ownership(request, taxonomy_id):
 	taxonomyItem = TaxonomyItem.objects.filter(pk=taxonomy_id).get(pk=taxonomy_id)
@@ -626,6 +625,41 @@ def taxonomy_split(request, taxonomy_id):
 	except Exception, e:
 		success = False
 		message = 'The splitting of ' + taxonomyItemToSplit.name + ' was unsuccessful. Please try again.'
+
+	return HttpResponseRedirect(URL_PREPENDER + "/taxonomy/?success=" + str(success) + "&message=" + str(message))
+
+def taxonomy_add_child(request, taxonomy_id):
+	taxItem = TaxonomyItem.objects.filter(pk=taxonomy_id).get(pk=taxonomy_id)
+	newChildName = request.POST.get("newChildName","")
+	parentName = taxItem.name
+
+	try:
+		if len(newChildName) == 0 or taxItem is None:
+			raise Exception
+
+		# create category with same name as this item
+		cat = TaxonomyCategory(name=taxItem.name,parent=taxItem.category)
+		cat.save();
+		# create new child item (weird method but seems to be how you to copy model instances in Django)
+		new_child = TaxonomyItem.objects.filter(pk=taxonomy_id).get(pk=taxonomy_id)
+		new_child.pk = None
+		new_child.save()
+		new_child.name = newChildName
+		new_child.category = cat
+		new_child.save()
+
+		# shift references old -> new item
+		taxItem = TaxonomyItem.objects.filter(pk=taxonomy_id).get(pk=taxonomy_id)
+		taxItem.reference_family().move_all_references(new_child.reference_family())
+
+		# finally kill the existing child
+		taxItem.delete()
+
+		message =  "Created new taxonomy item named %s of parent %s" %(newChildName,parentName)
+		success = True
+	except Exception, e:
+		success = False
+		message = "There was a problem creating the child node. Please contact us. Details: " + str(e)
 
 	return HttpResponseRedirect(URL_PREPENDER + "/taxonomy/?success=" + str(success) + "&message=" + str(message))
 

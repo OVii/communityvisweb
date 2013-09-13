@@ -24,7 +24,7 @@ $(function () {
                 // All the options are almost the same as jQuery's AJAX (read the docs)
                 "ajax": {
                     // the URL to fetch the data
-                    "url": "/community/api/taxonomyTree/jsTree",
+                    "url": apiURLPrefix + "api/taxonomyTree/jsTree",
                     // the `data` function is executed in the instance's scope
                     // the parameter is the node being loaded
                     // (may be -1, 0, or undefined when loading the root nodes)
@@ -42,7 +42,7 @@ $(function () {
             itemType = data.rslt.obj.attr("type") == "taxonomyCategory" ? "category" : "taxonomy";
             $.ajax({
                 type: 'GET',
-                url: "/community/api/" + (data.rslt.obj.attr("type") == "taxonomyCategory" ? "category" : "taxonomy") + "/info/" + data.rslt.obj.attr("itemId"),
+                url: apiURLPrefix + "api/" + (data.rslt.obj.attr("type") == "taxonomyCategory" ? "category" : "taxonomy") + "/info/" + data.rslt.obj.attr("itemId"),
                 dataType: 'json'
             }).done(function (data) {
                     myData = data;
@@ -77,10 +77,10 @@ function customMenu(node) {
 
                 if (itemType == "taxonomyCategory") {
                     $("#oldName").html(data.context.innerText);
-                    $("#renameForm").attr("action", '/community/category/rename/' + data.attr("itemid") + '/');
+                    $("#renameForm").attr("action", apiURLPrefix + 'category/rename/' + data.attr("itemid") + '/');
                     $('#renameModal').modal('show');
                 } else {
-                    window.open("/community/taxonomy/edit/" + itemId);
+                    window.open(apiURLPrefix + "taxonomy/edit/" + itemId);
                 }
             }
         },
@@ -88,13 +88,13 @@ function customMenu(node) {
             label: "Delete",
             action: function (data) {
                 $("#itemToDeleteName").html(data.context.innerText.split("(")[0].trim());
-                $("#confirmRemove").attr("action", '/community/taxonomy/delete/' + data.attr("itemid") + '/');
+                $("#confirmRemove").attr("action", 'taxonomy/delete/' + data.attr("itemid") + '/');
                 $('#confirmRemoveModal').modal('show');
 
             }
         },
 
-        splitItem: { // The "delete" menu item
+        splitItem: { // The "split" menu item
             label: "Split",
             action: function (data) {
                 $("#originalTaxonomy, #newTaxonomy").sortable({
@@ -110,13 +110,13 @@ function customMenu(node) {
                 $("#newTaxonomy").html('');
 
                 $('#originalTaxonomyItem').text(data.context.innerText.split("(")[0].trim());
-                $("#splitForm").attr("action", '/community/taxonomy/split/' + data.attr("itemid") + '/');
+                $("#splitForm").attr("action", apiURLPrefix + 'taxonomy/split/' + data.attr("itemid") + '/');
                 $('#splitModal').modal('show');
 
 
                 $.ajax({
                     type: 'GET',
-                    url: "/community/api/taxonomy/info/" + data.attr("itemId"),
+                    url: apiURLPrefix + "api/taxonomy/info/" + data.attr("itemId"),
                     dataType: 'json'
                 }).done(function (data) {
 
@@ -129,25 +129,31 @@ function customMenu(node) {
                     });
             }
         },
+		addChild: {
+			label: "Add Child",
+			action: function(data) {
+                $("#parentName").html(data.context.innerText.split("(")[0].trim());
+                $("#addChildForm").attr("action", apiURLPrefix + 'taxonomy/add_child/' + data.attr("itemid") + '/');
+                $('#createChildModal').modal('show');
+			}
+		},
         moveItem: { // The "delete" menu item
             label: "Move Taxonomy",
             action: function (data) {
                 console.log("I've got to move it, move it.")
                 $.ajax({
                     type: 'GET',
-                    url: "/community/api/taxonomyCategories",
+                    url: apiURLPrefix + "api/taxonomyCategories",
                     dataType: 'json'
                 }).done(function (categories) {
                         $('#taxonomyItemToMove').text(data.context.innerText.split("(")[0].trim());
-                        $("#moveCategoryForm").attr("action", '/community/taxonomy/move/' + data.attr("itemid") + '/');
+                        $("#moveCategoryForm").attr("action", apiURLPrefix + 'taxonomy/move/' + data.attr("itemid") + '/');
                         $('#moveCategoryModal').modal('show');
 
                         var source = $("#category-list-template").html();
                         var template = Handlebars.compile(source);
                         var html = template(categories);
                         $("#categories").html(html);
-
-
                     });
             }
         },
@@ -156,7 +162,7 @@ function customMenu(node) {
             action: function (data) {
                 $.ajax({
                     type: 'GET',
-                    url: "/community/api/taxonomyTree/default",
+                    url: apiURLPrefix + "api/taxonomyTree/default",
                     dataType: 'json'
                 }).done(function (categories) {
 
@@ -165,7 +171,7 @@ function customMenu(node) {
                             connectWith: ".connectedSortable"
                         }).disableSelection();
 
-                        $("#moveReferenceForm").attr("action", '/community/taxonomy/move-references/');
+                        $("#moveReferenceForm").attr("action", apiURLPrefix + 'taxonomy/move-references/');
                         $('#moveReferencesModal').modal('show');
 
                         var source = $("#taxonomy-list-template").html();
@@ -192,12 +198,14 @@ function customMenu(node) {
         delete items.deleteItem;
         delete items.moveItem;
         delete items.moveReferences;
+		delete items.addChild;
     }
 
     if (node.attr("type") != "taxonomyCategory" && node.attr("type") != "taxonomyItem") {
         delete items.editItem;
         delete items.splitItem;
         delete items.deleteItem;
+		delete items.addChild;
     }
 
     if (!showTreeMenu) {
@@ -206,6 +214,7 @@ function customMenu(node) {
         delete items.deleteItem;
         delete items.moveItem;
         delete items.moveReferences;
+		delete items.addChild;
     }
 
     return items;
