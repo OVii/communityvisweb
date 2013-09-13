@@ -394,8 +394,8 @@ def getTaxonomyTree(request, formatting):
 							  "attr": {"itemId": item.id, "type": "taxonomyItem"}})
 
 			if category.taxonomycategory_set:
-				sub_items = []
 				for subCategory in category.taxonomycategory_set.all():
+					sub_items = []
 					for item in subCategory.taxonomyitem_set.all():
 						sub_items.append({"data": item.name + " (" + str(len(item.references())) + " refs)",
 									  "attr": {"itemId": item.id, "type": "taxonomyItem"}})
