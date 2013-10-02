@@ -707,7 +707,7 @@ def taxonomy_add_action(request):
 
     taxonomy.save()
 
-    return HttpResponseRedirect(URL_PREPENDER + "/taxonomy/" + str(taxonomy.id))
+    return HttpResponseRedirect(URL_PREPENDER + "/taxonomy/" + str(taxonomy.id) + "/")
 
 
 def trimURL(urlRequestedFrom, find):

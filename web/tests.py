@@ -5,7 +5,13 @@ from viscommunityweb.settings import URL_PREPENDER
 from web.models import TaxonomyItem
 
 
+
 class URLTests(TestCase):
+
+    """
+        To run these tests, run
+        python manage.py test web
+    """
     client = Client()
 
 
