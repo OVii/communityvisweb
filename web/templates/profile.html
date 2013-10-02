@@ -22,8 +22,9 @@
         }
 
         function showRevokeConfirmWindow(url) {
-            $("#confirmRemove").attr("action", url);
-            $('#confirmRemoveModal').modal('show');
+
+            $("#confirmRevoke").attr("action", url);
+            $('#confirmRevokeModal').modal('show');
         }
 
         function showEnquiryResponseWindow(url) {
@@ -222,7 +223,7 @@
             {% if user.is_superuser and approvals|length > 0 %}
                 <div class="clearfix"></div>
                 {#            start notifications section#}
-                <div class="block col-md-7" id="approvals">
+                <div class="block col-md-5" id="approvals">
                     <div class="block-head">
                         Approvals Required
                         <hr/>
@@ -241,7 +242,7 @@
                                 <p style="font-size:0.8em; font-weight: lighter">{{ approval.additionalNotes }}</p>
 
                                 <a href="{{ URL_PREPENDER }}/taxonomy/{{ approval.taxonomyItem.id }}" target="_blank"
-                                   class="btn">View
+                                   class="btn btn-default">View
                                     Taxonomy Item</a>
 
                                 <a onclick="showResponseWindow('{{ URL_PREPENDER }}/request_ownership/response/{{ approval.id }}')"
@@ -254,7 +255,7 @@
                 {#            end approvals section#}
 
             {% endif %}
-            <div class="clearfix"></div>
+
             {#            START taxonomy items section#}
             <div class="block col-md-5" id="taxonomy-items">
                 <div class="block-head">
@@ -287,8 +288,7 @@
                             {% if loggedInUser %}
 
                                 <a onclick="showRevokeConfirmWindow('{{ URL_PREPENDER }}/revoke_ownership/{{ taxonomyItem.id }}')"
-                                   class="btn btn-small btn-danger">Revoke
-                                    ownership</a>
+                                   class="btn btn-small btn-danger">Revoke ownership</a>
                             {% endif %}
 
                             {% for enquiry in notifications %}
