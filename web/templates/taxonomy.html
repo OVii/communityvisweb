@@ -62,9 +62,11 @@
 
     </div>
 
+	{{ AJAX_URL_PREFIX }}
+
 	<script type="text/javascript">
 		// used in taxonomy_tree API for correct, machine-agnostic URLs
-		var apiURLPrefix = "{{ URL_PREFIX }}";
+		var apiURLPrefix = "{{ ajax_url_prefix }}";
 	</script>
 
     {% include 'fragments/deleteModal.html' %}

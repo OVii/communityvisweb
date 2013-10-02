@@ -88,7 +88,7 @@ function customMenu(node) {
             label: "Delete",
             action: function (data) {
                 $("#itemToDeleteName").html(data.context.innerText.split("(")[0].trim());
-                $("#confirmRemove").attr("action", 'taxonomy/delete/' + data.attr("itemid") + '/');
+                $("#confirmRemove").attr("action", apiURLPrefix + 'taxonomy/delete/' + data.attr("itemid") + '/');
                 $('#confirmRemoveModal').modal('show');
 
             }
@@ -207,6 +207,11 @@ function customMenu(node) {
         delete items.deleteItem;
 		delete items.addChild;
     }
+
+	// limit stuff that can be done to items not at recursion level 0
+	if(node.attr("level") > 0) {
+		delete items.addChild;
+	}
 
     if (!showTreeMenu) {
         delete items.editItem;

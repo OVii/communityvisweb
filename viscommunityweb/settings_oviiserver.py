@@ -9,6 +9,8 @@ ADMINS = (
     ('Alfie','alfie.abdulrahman@gmail.com')
 )
 
+AJAX_URL_PREFIX = "http://ovii.oerc.ox.ac.uk/community/"
+
 AUTH_PROFILE_MODULE = 'web.UserProfile'
 
 EMAIL_USE_TLS = True

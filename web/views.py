@@ -47,10 +47,11 @@ def index(request):
 def taxonomy(request):
 	message = request.GET.get('message', '')
 	success = request.GET.get('success', True)
+	ajax_url_prefix = settings.AJAX_URL_PREFIX
 
 	taxonomies = TaxonomyCategory.objects.all()
 	return render_to_response("templates/taxonomy.html",
-							  {'taxonomies': taxonomies, 'message': message, 'success': success},
+			{'taxonomies': taxonomies, 'message': message, 'success': success,'ajax_url_prefix' :ajax_url_prefix},
 							  context_instance=RequestContext(request))
 
 
@@ -392,14 +393,14 @@ def getTaxonomyTree(request, formatting):
 			items = []
 			for item in category.taxonomyitem_set.all():
 				items.append({"data": item.name + " (" + str(len(item.references())) + " refs)",
-							  "attr": {"itemId": item.id, "type": "taxonomyItem"}})
+					"attr": {"itemId": item.id, "type": "taxonomyItem", "level":0}})
 
 			if category.taxonomycategory_set:
 				for subCategory in category.taxonomycategory_set.all():
 					sub_items = []
 					for item in subCategory.taxonomyitem_set.all():
 						sub_items.append({"data": item.name + " (" + str(len(item.references())) + " refs)",
-									  "attr": {"itemId": item.id, "type": "taxonomyItem"}})
+							"attr": {"itemId": item.id, "type": "taxonomyItem", "level":1}})
 
 					items.append({"data": subCategory.name, "attr": {"itemId": subCategory.id, "type": "taxonomyCategory"}, "children": sub_items, "state": "closed"})
 
@@ -640,6 +641,7 @@ def taxonomy_add_child(request, taxonomy_id):
 		# create category with same name as this item
 		cat = TaxonomyCategory(name=taxItem.name,parent=taxItem.category)
 		cat.save();
+
 		# create new child item (weird method but seems to be how you to copy model instances in Django)
 		new_child = TaxonomyItem.objects.filter(pk=taxonomy_id).get(pk=taxonomy_id)
 		new_child.pk = None
