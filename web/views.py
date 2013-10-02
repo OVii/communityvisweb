@@ -326,6 +326,7 @@ def profile(request):
 
 	notifications = []
 	taxonomyItemsForUser = TaxonomyItem.objects.filter(owners__username=requestedUser.username)
+
 	for userTaxonomyItem in taxonomyItemsForUser:
 		taxonomyItems.append(userTaxonomyItem)
 		enquiryQueryForTaxonomyItem = Enquiry.objects.filter(taxonomyItem=userTaxonomyItem)

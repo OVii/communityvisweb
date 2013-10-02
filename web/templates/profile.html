@@ -270,7 +270,7 @@
                                     href="{{ URL_PREPENDER }}/taxonomy/{{ taxonomyItem.taxonomyItem.id }}">{{ taxonomyItem.taxonomyItem.name }}</a></strong>
                             </p>
 
-                            <p><i class="icon-arrow-up"></i> {{ taxonomyItem.taxonomyItem.category }}</p>
+							<p><i class="icon-arrow-up"></i> {{ taxonomyItem.taxonomyItem.category }}</p>
                         </div>
                     {% endfor %}
 
@@ -312,7 +312,7 @@
                                         </strong>
                                         </p>
 
-                                        <p><i class="icon-arrow-up"></i> {{ enquiry.taxonomyItem.category }}</p>
+                                        <p><i class="icon-arrow-up"></i> {{ enquiry.taxonomyItem.category.name }}</p>
 
 
                                         <p style="font-style: italic; font-size: 1em">{{ enquiry.additionalNotes }}</p>

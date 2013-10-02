@@ -28,7 +28,7 @@ class TaxonomyCategory(models.Model):
     parent = models.ForeignKey('self', blank=True, null=True)
 
     def __unicode__(self):
-        return self.name + " (" + self.area.name + ")"
+        return self.name
 
 
 class TaxonomyItem(models.Model):
