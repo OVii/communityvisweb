@@ -1,26 +1,30 @@
-<div id="moveCategoryModal" class="modal hide fade" tabindex="-1" role="dialog"
+<div id="moveCategoryModal" class="modal fade" tabindex="-1" role="dialog"
      aria-labelledby="confirmRemoveRequest"
      aria-hidden="true" xmlns="http://www.w3.org/1999/html">
-    <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-        <h3>Move <span id="taxonomyItemToMove"></span></h3>
-    </div>
-    <form accept-charset="UTF-8" action="" class="formbody" id="moveCategoryForm" method="post">
-        <div class="modal-body">
-            <div class="modal-body" id="booking">
-                {% csrf_token %}
-                <div id="rename_errors"></div>
-                <div id="rename_detail_group" class="control-group">
-                    <label for="comments" class="control-label">Please select the new category</label>
-                    <div class="controls">
-                        <select id="categories" name="newCategory" class="span5">
-                            <option></option>
-                            {# this will be populated automatically#}
-                        </select>
-                    </div>
-                </div>
-            </div>
-            <input name="commit" type="submit" class="btn btn-yellow pull-right" value="Move category">
-        </div>
-    </form>
+	 <div class="modal-dialog">
+		 <div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4>Move <span id="taxonomyItemToMove"></span></h4>
+			</div>
+			<form accept-charset="UTF-8" action="" class="formbody" id="moveCategoryForm" method="post">
+				<div class="modal-body" id="booking">
+					{% csrf_token %}
+					<div id="rename_errors"></div>
+					<div id="rename_detail_group" class="control-group">
+						<label for="comments" class="control-label">Please select the new category</label>
+						<div class="controls">
+							<select id="categories" name="newCategory" class="span5">
+								<option></option>
+								{# this will be populated automatically#}
+							</select>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<input name="commit" type="submit" class="btn btn-yellow pull-right" value="Move category">
+				</div>
+			</form>
+		</div>
+	</div>
 </div>

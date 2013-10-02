@@ -3,15 +3,16 @@ DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
-    ('Eamonn Maguire', 'eamonn.maguire@st-annes.ox.ac.uk')
+     ('Simon Walton', 'simon.walton@gmail.com'),
+    ('Eamonn Maguire', 'eamonn.maguire@st-annes.ox.ac.uk'),
 )
 
 AUTH_PROFILE_MODULE = 'web.UserProfile'
 
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'eamonnmag@gmail.com'
-EMAIL_HOST_PASSWORD = 'c67WFmlu'
+EMAIL_HOST_USER = 'communityvis@gmail.com'
+EMAIL_HOST_PASSWORD = 'community_vis'
 EMAIL_PORT = 587
 EMAIL_SUBJECT_PREFIX = "[OXVIS]"
 

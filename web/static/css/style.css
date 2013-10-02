@@ -78,7 +78,7 @@ body {
 }
 
 .user-account {
-    margin-top: 18px;
+    margin-top: 12px;
 }
 
 .menu {
@@ -100,7 +100,7 @@ body {
     border: none;
     color: #042F4B;
     text-decoration: none;
-    padding-bottom: 23px;
+    padding-bottom: 22px;
     font-weight: bold;
     border-bottom: thin solid #ccc;
     margin-left: 5px;
@@ -157,13 +157,15 @@ body {
     filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#fafafa',endColorstr='#eaeaea')";
     width: 100%;
     height: 30px;
+    padding:5px;
     /*text-indent: -9999px;*/
 }
 
 .header-text {
     display: inline-block;
-    font-weight: bold;
-    padding-top: 8px;
+
+
+
 }
 
 .content-section {
@@ -211,6 +213,10 @@ input#search-text {
     width: 1000px;
     margin-left: auto;
     margin-right: auto;
+}
+
+.glyphicon-pad {
+    padding-right: 10px;
 }
 
 .search-wrapper #search {
@@ -300,12 +306,6 @@ input#search-text {
     width: 965px;
     margin-left: auto;
     margin-right: auto;
-}
-
-.reference_box {
-    padding: 0.5em;
-    min-height: 20px;
-
 }
 
 .reference_box p {
@@ -537,9 +537,7 @@ input#search-text {
 }
 
 .profile-blocks {
-    margin: 0 auto;
-    margin-top: 30px;
-    float: left;
+    padding-top: 50px;
 }
 
 .block-head {
@@ -590,6 +588,10 @@ input#search-text {
     border-radius: 6px;
 }
 
+.modal {
+    margin-top: 70px;
+}
+
 .profile-unit h1 {
     margin-bottom: 0;
     font-size: 60px;
@@ -611,23 +613,24 @@ input#search-text {
 }
 
 .reference_box .title {
-    font-size: 1.1em;
+    color: #666;
+    font-size: 1.2em;
     font-weight: bolder;
 }
 
 .reference_box .journal {
-    font-size: 0.8em;
-    font-weight: bolder;
-}
-
-.reference_box .year {
     font-size: 0.9em;
-    font-weight: normal;
+    font-style: italic;
 }
 
 .reference_box .authors {
     font-size: 0.9em;
     font-weight: lighter;
+}
+
+.reference_box .year {
+    font-size: 0.9em;
+    font-weight: normal;
 }
 
 .taxonomy-detail {

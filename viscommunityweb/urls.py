@@ -32,7 +32,6 @@ urlpatterns = patterns('',
 
                        url(r'^taxonomy/add/$', 'web.views.taxonomy_add', name='add_taxonomy'),
                        url(r'^taxonomy/edit/(?P<taxonomy_id>\d+)/$', 'web.views.taxonomy_edit', name='edit_taxonomy'),
-
                        url(r'^taxonomy/add/action/$', 'web.views.taxonomy_add_action', name='add_taxonomy_action'),
                        url(r'^taxonomy/edit/action/$', 'web.views.taxonomy_edit_action', name='edit_taxonomy_action'),
 
@@ -54,6 +53,7 @@ urlpatterns = patterns('',
                        url(r'^taxonomy/download/(\d+)/$', 'web.views.taxonomy_download', name='taxonomy_download'),
                        url(r'^taxonomy/delete/(\d+)/$', 'web.views.taxonomy_delete', name='taxonomy_download'),
                        url(r'^taxonomy/split/(\d+)/$', 'web.views.taxonomy_split', name='taxonomy_download'),
+                       url(r'^taxonomy/add_child/(\d+)/$', 'web.views.taxonomy_add_child', name='taxonomy_add_child'),
                        url(r'^taxonomy/move/(\d+)/$', 'web.views.moveTaxonomyItem', name='taxonomy_move'),
                        url(r'^taxonomy/move-references/$', 'web.views.moveReferences', name='taxonomy_move'),
 
@@ -67,7 +67,7 @@ urlpatterns = patterns('',
                            name='revoke_ownership'),
 
                        url(r'^enquiry/(?P<taxonomy_id>\d+)/$', 'web.views.handleTaxonomyEnquiry', name='enquiry'),
-                       url(r'^enquiry/(?P<taxonomy_id>\d+)/(?P<reference_id>\d+)/$', 'web.views.handleReferenceEnquiry',
+                       url(r'^enquiry/(?P<taxonomy_id>\d+)/(?P<reference_id>\w+)/$', 'web.views.handleReferenceEnquiry',
                            name='enquiry_reference'),
                        url(r'^enquiry/(?P<decision>\w+)/(?P<enquiry_id>\d+)/$', 'web.views.respondToTaxonomyEnquiry',
                            name='enquiry_decision'),

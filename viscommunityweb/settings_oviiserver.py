@@ -5,7 +5,8 @@ TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
     ('Simon Walton', 'simon.walton@oerc.ox.ac.uk'),
-    ('Eamonn Maguire', 'eamonn.maguire@st-annes.ox.ac.uk')
+    ('Eamonn Maguire', 'eamonn.maguire@st-annes.ox.ac.uk'),
+    ('Alfie','alfie.abdulrahman@gmail.com')
 )
 
 AUTH_PROFILE_MODULE = 'web.UserProfile'

@@ -2,20 +2,20 @@
 
     {% if references %}
 
-        <div class="row-fluid">
-            <div class="span2">
+        <div class="row">
+            <div class="col-md-3">
                 <div id="controls">
 
                     <div class="well well-small">
                         <!-- sort -->
                         <div>
-                            <p><h4>Search &amp; Filter</h4></p>
+							<p><h4><span class="glyphicon glyphicon-filter glyphicon-pad"></span>Search &amp; Filter</h4></p>
                             <div class="btn-group">
-                                <a class="btn dropdown-toggle span12" data-toggle="dropdown" href="#" align="right">
+                                <a class="btn btn-yellow dropdown-toggle" data-toggle="dropdown" href="#" align="right">
                                     Sort by
                                     <span class="caret"></span>
                                 </a>
-                                <ul class="dropdown-menu">
+                                <ul class="dropdown-menu" role="menu">
                                     <li><a href="{{ request.path }}?sort=authors">Author list</a></li>
                                     <li><a href="{{ request.path }}?sort=year">Year</a></li>
                                     <li><a href="{{ request.path }}?sort=journal">Journal</a></li>
@@ -23,9 +23,7 @@
                                 </ul>
                             </div>
                             <!-- filter -->
-                            <div style="padding-top:5px">
-                                <br/><br/>
-
+                            <div style="padding-top:10px">
                                 <form id="search" action="{{ URL_PREPENDER }}/search">
                                     <input id="referencefilter" style="width:90%;" type="text" name="q"
                                            placeholder="Type to filter...">
@@ -44,48 +42,45 @@
                     {% endif %}
 
 
-                    <div style="padding-top:5px">
+                    <div style="padding-top:5px; text-align:center">
 
-                        <a href="{{ URL_PREPENDER }}/taxonomy/download/{{ taxonomy.id }}" class="btn btn-blue"
-                           style="width: 82%">Download
-                            BibTeX</a>
+                        <a href="{{ URL_PREPENDER }}/taxonomy/download/{{ taxonomy.id }}" class="btn btn-blue" style="width: 82%">Download all as BibTeX</a>
                     </div>
                 <div class="clearfix"></div><br/>
                 <p>Reference list last updated on {{ taxonomy.last_updated }}</p>
                 </div>
             </div>
 
-            <div class="span10">
+            <div class="col-md-9">
+				<ul class="list-group">
 
                 {% for reference in references %}
-                    <div class="well taxonomy-well reference_box">
+					<li class="list-group-item reference_box">
+						 {% if owners != 0 %}
+                            <a onclick="showSuggestBox('reference', '{{ URL_PREPENDER }}/enquiry/{{ taxonomy.id }}/{{ reference.0 }}/')"
+                               class="btn pull-left btn-small" style="margin-right:10px;"><i class="glyphicon glyphicon-exclamation-sign"></i> </a>{% endif %}
+                        {% if user.is_superuser or ownerLoggedIn %}
+                            <a onclick="showDeleteWindow('{{ reference.0 }}')" class="pull-left btn btn-small btn-danger" style="margin-right:10px"><span class="glyphicon-trash glyphicon"></span></a>
+                        {% endif %}
 
-                        <a href="{{ URL_PREPENDER }}/reference/{{ reference.id }}?currentPage={{ request.path }}"><p class="title">{{ reference.title }}</p></a>
+						{% if reference.1.year > 0 %}
+							<span class="badge">{{ reference.1.year }}</span>
+						{% endif %}
 
-                        <p class="authors">{{ reference.authorsAsText }}</p>
+						<a href="{{ URL_PREPENDER }}/reference/{{taxonomy.id}}/{{ reference.0 }}?currentPage={{ request.path }}"><h4 class="list-group-item-heading title">{{ reference.1.title }}</h4></a>
+                        <p class="list-group-item-text">{{ reference.1.authorsAsText }}</p>
 
-                        <p><span class="journal">{{ reference.journal }}</span>{% if reference.year > 0 %}
-                            <span class="year">{% if reference.journal %} {% endif %}{{ reference.year }}</span>{% endif %}
+                        <p><span class="journal">{{ reference.1.journal }}</span>{% if reference.1.year > 0 %}
+							<span class="year">{% if reference.1.journal %} {% endif %}</span>{% endif %}
                         </p>
 
-
                         {% if reference.url %}
-                            <a href="{{ reference.url }}" target="_blank" class="btn btn-small">View Paper</a>
+                            <a href="{{ reference.1.url }}" target="_blank" class="btn btn-small">View Paper</a>
                         {% endif %}
 
-
-
-
-
-                        {% if owners != 0 %}
-                            <a onclick="showSuggestBox('reference', '{{ URL_PREPENDER }}/enquiry/{{ taxonomy.id }}/{{ reference.id }}/')"
-                               class="btn btn-small"><i class="icon-exclamation-sign"></i> </a>{% endif %}
-                        {% if user.is_superuser or ownerLoggedIn %}
-                            <a onclick="showDeleteWindow({{ reference.id }})" class="btn btn-small btn-danger"><i
-                                    class="icon-remove-sign icon-white"></i></a>
-                        {% endif %}
-                    </div>
+					</li>
                 {% endfor %}
+				</ul>				
             </div>
         </div>
 

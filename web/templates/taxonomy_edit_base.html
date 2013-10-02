@@ -25,13 +25,17 @@
 {% endblock %}
 
 {% block content %}
-    <br/>
-    <div class="hero-unit">
-        <h4>{% if taxonomy %}Edit{% else %}New{% endif %} taxonomy item</h4>
+	<div class="page-header">
+        <h1>
+	        <small>{% if taxonomy %}Edit{% else %}New{% endif %} taxonomy item</small>
+		</h1>
+	</div>
+
+
 
         <form action="{% if taxonomy %}{{ URL_PREPENDER }}/taxonomy/edit/action/
             {% else %}{{ URL_PREPENDER }}/taxonomy/add/action/{% endif %}"
-              class="formbody" method="post" onsubmit="return validate()" id="taxonomy_detail_form">
+              class="form-horizontal" method="post" onsubmit="return validate()" id="taxonomy_detail_form">
             {% csrf_token %}
 
             <input id="taxonomy_id" class="text form-text span6" name="taxonomy_id" size="20" type="hidden"
@@ -40,29 +44,39 @@
             <input name="utf8" type="hidden" class="text" value="✓"><input
                 name="_method" type="hidden" value="put"><input name="authenticity_token" type="hidden">
 
-            <div id="name_group"><label for="taxonomy_name">Name</label>
-                <input id="taxonomy_name" class="text form-text span6" name="taxonomy_name" size="20" type="text"
-                       value="{{ taxonomy.name }}">
-                <span id="name_help" class="help-inline hide">Please enter a name</span>
+            <div id="name_group" class="form-group">
+				<label for="taxonomy_name" class="col-lg-4">Name</label>
+                <div class="col-lg-8">
+					<input id="taxonomy_name" class="form-control" name="taxonomy_name" size="20" type="text"
+						   value="{{ taxonomy.name }}">
+					<span id="name_help" class="help-inline hide">Please enter a name</span>
+				</div>
             </div>
 
-            <div ><label for="category_name">Parent Category</label>
-                <select id="category_name" name="category_name" class="span6">
-                    {% for category in categories %}
-                        <option {% ifequal taxonomy.category.name category.name %}selected {% endifequal %}>{{ category.name }} </option>
-                    {% endfor %}
-                </select>
+            <div class="form-group">
+				<label for="category_name" class="col-lg-4">Parent Category</label>
+                <div class="col-lg-8">
+					<select id="category_name" name="category_name" class="form-control">
+						{% for category in categories %}
+							<option {% ifequal taxonomy.category.name category.name %}selected {% endifequal %}>{{ category.name }} </option>
+						{% endfor %}
+					</select>
+				</div>
+			</div>
+            <div id="description_group" class="form-group">
+				<label for="description" class="col-lg-4">Description</label>
+                <div class="col-lg-8">
+					<textarea id="description" name="description" class="form-control" rows="5">{{ taxonomy.detail }}</textarea>
+	                <span id="description_help" class="help-inline hide" style="vertical-align: top">Please enter a description</span>
+				</div>
             </div>
 
-            <div id="description_group"><label for="description">Description</label>
-                <textarea id="description" name="description" class="span6" rows="5">{{ taxonomy.detail }}</textarea>
-                <span id="description_help" class="help-inline hide" style="vertical-align: top">Please enter a description</span>
-            </div>
-
-            <div>
-                <a href="{{ URL_PREPENDER }}/taxonomy/" class="btn btn-inverse">Cancel</a>
-                <input name="commit" type="submit" class="btn btn-yellow"
-                        value="{% if taxonomy %}Update{% else %}Add{% endif %} Taxonomy Item"></div>
+            <div class="form-group">
+				<div class="col-lg-8 col-lg-offset-4">
+					<input name="commit" type="submit" class="btn btn-yellow"
+							value="{% if taxonomy %}Update{% else %}Add{% endif %} Taxonomy Item">
+					<a href="{{ URL_PREPENDER }}/taxonomy/" class="btn btn-inverse">Cancel</a>
+				</div>
+			</div>
         </form>
-    </div>
 {% endblock %}

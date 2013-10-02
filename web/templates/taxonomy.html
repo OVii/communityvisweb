@@ -34,9 +34,8 @@
         <div class="row pull-right">
 
             {% if user.is_authenticated %}
-                <a href="{{ URL_PREPENDER }}/contact" class="btn" type="button">I have a suggestion</a>
-                <a href="{{ URL_PREPENDER }}/taxonomy/add" class="btn btn-yellow" type="button">Add a new
-                    taxonomy</a>
+				<a href="{{ URL_PREPENDER }}/contact" class="btn btn-yellow" type="button"><span class="glyphicon glyphicon-bullhorn glyphicon-pad"></span>I have a suggestion</a>
+				<a href="{{ URL_PREPENDER }}/taxonomy/add" class="btn btn-yellow" type="button"><span class="glyphicon glyphicon-plus-sign glyphicon-pad"></span>Add a new taxonomy</a>
             {% endif %}
         </div>
 
@@ -44,32 +43,36 @@
 
     </div>
 
-    <div class="clearfix"></div>
     <br/>
 
-    <div class="row-fluid">
+    <div class="row">
 
-        <div class="span4 well">
+        <div class="col-md-4 well">
 
             <input type="text" name="search_field" id="search_tree" onchange="searchTree()"
                    placeholder="Search Taxonomy"/>
 
-            <div id="taxonomyTree">
+            <div id="taxonomyTree" style="margin-top:10px">
             </div>
         </div>
 
-        <div id="taxonomyInfo" class="span8">
-            <p style="font-size: 1.3em; font-weight: lighter">Select an item in the taxonomy tree to view its
-                details.</p>
+        <div id="taxonomyInfo" class="col-md-8">
+			<h3><span class="glyphicon glyphicon-hand-left" style="padding-right:10px"></span>Welcome! Please select an item in the taxonomy tree.</h3>
         </div>
 
     </div>
+
+	<script type="text/javascript">
+		// used in taxonomy_tree API for correct, machine-agnostic URLs
+		var apiURLPrefix = ".." + globalURLPrefix;
+	</script>
 
     {% include 'fragments/deleteModal.html' %}
     {% include 'fragments/renameModal.html' %}
     {% include 'fragments/splitModal.html' %}
     {% include 'fragments/moveTaxonomyItemModal.html' %}
     {% include 'fragments/moveReferencesModal.html' %}
+    {% include 'fragments/createChildModal.html' %}
 
 {% endblock %}
 
@@ -82,7 +85,7 @@
     <script type="text/javascript">
         var showTreeMenu = false;
         {% if user.is_superuser %}
-            showTreeMenu = true;
+			showTreeMenu = true;
         {% endif %}
 
     </script>
@@ -114,11 +117,10 @@
                 {{#each references}}
                 <div class="reference_box">
 
-                    <p class="title"><a href="{{ this.url }}">{{ this.title }}</a></p>
+                    <p class="title"><a href="{{ this.url }}">{{ this.guid }}</a></p>
 
-                    <p class="authors">{{ this.authors }}</p>
+                    <p class="authors">{{ this.bibtex }}</p>
 
-                    <p><span class="journal">{{ this.journal }}</span></p>
                     <hr/>
                 </div>
                 {{/each}}
@@ -291,8 +293,7 @@
             border: #f1f2f1 solid 1px;
             border-radius: 3px;
             list-style-type: none;
-            min-width: 220px;
-            max-width: 220px;
+            width: 250px;
 
             padding: 5px;
             float: left;

@@ -9,7 +9,7 @@
 
 {% block content %}
     <br/>
-    <div class="hero-unit">
+    <div class="well">
         <h3>Hello {{ user.username }}</h3>
 
         <p>Edit your profile here...</p>
@@ -27,8 +27,9 @@
             Exising email: {{ profile.email }}<br><br>
         {% endif %}
         {% csrf_token %}
-        <input type="submit" class="btn btn-yellow" value="Save"/>
+        <input type="submit" class="btn btn-warning" value="Save"/>
         </form>
     </div>
+    <div class="clearfix"></div><br/>
 {% endblock %}
 
