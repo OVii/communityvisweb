@@ -14,15 +14,22 @@
         <div>
             {% include "taxonomy-header.html" %}
 
-            <div class="well">
-                <p>
-                   This is an indexed view of the taxonomy items in our database. If you have a suggestion for another item, please let us know.
+            <div class="">
+                <p style="font-size: 1.3em; font-weight: lighter">
+                    This is an indexed view of the taxonomy items in our database. If you have a suggestion for another
+                    item, please let us know.
                 </p>
 
-                <p>
-                    <button class="btn btn-large btn-warning pull-right" type="button">I have a suggestion</button>
-                </p>
-                <br/><br/>
+                {% if user.is_authenticated %}
+                    <p class="pull-right">
+                        <a href="{{ URL_PREPENDER }}/contact" class="btn btn-warning" type="button"><span
+                                class="glyphicon glyphicon-bullhorn glyphicon-pad"></span>I have a suggestion</a>
+                        <a href="{{ URL_PREPENDER }}/taxonomy/add" class="btn btn-warning" type="button"><span
+                                class="glyphicon glyphicon-plus-sign glyphicon-pad"></span>Add a new taxonomy</a>
+                    </p>
+                    <br/><br/><br/>
+                {% endif %}
+
             </div>
             {% if index %}
                 {% for letter, items in index.items %}
@@ -33,13 +40,6 @@
                             <h1>{{ letter }}</h1>
                             {% for item in items %}
                                 <p>
-
-                                    {% if item.4 > 0 %}
-                                        <span class="badge badge-yellow">
-                                    {% else %}
-                                        <span class="badge">
-                                    {% endif %}
-                                    <i class="icon-white icon-chevron-right"></i></span>
                                     <a href="{{ URL_PREPENDER }}/taxonomy/{{ item.0 }}">{{ item.1 }}</a> <span
                                         class="label" style="color: #414241">in {{ item.2 }}</span>
                                 </p>
