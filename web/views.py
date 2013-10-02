@@ -9,6 +9,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.models import User
 from django.contrib.sites.models import Site
 from django.db.models import Q
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext
@@ -483,7 +484,6 @@ def getTaxonomyCategoryInformationJSON(request, category_id):
 	response = {"id": category.id, "name": category.name, "taxonomyItems": taxonomyItemList}
 
 	return HttpResponse(simplejson.dumps(response), mimetype="application/json")
-
 
 def moveTaxonomyItem(request, taxonomy_id):
 	taxonomyItem = TaxonomyItem.objects.filter(pk=taxonomy_id).get(pk=taxonomy_id)
