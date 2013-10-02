@@ -23,7 +23,6 @@ from django.core.mail import send_mail, EmailMessage
 import os
 from django.conf import settings
 import taxonomy_backend
-import json
 
 # couple of globals
 from web.reference_import_couch import bibtex_import
@@ -707,7 +706,7 @@ def taxonomy_add_action(request):
 
     taxonomy.save()
 
-    return HttpResponseRedirect(URL_PREPENDER + "/taxonomy/" + str(taxonomy.id))
+    return HttpResponseRedirect(URL_PREPENDER + "/taxonomy/" + str(taxonomy.id) + "/")
 
 
 def trimURL(urlRequestedFrom, find):

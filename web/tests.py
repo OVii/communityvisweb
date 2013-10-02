@@ -1,6 +1,8 @@
 from django.contrib.auth.models import User
 from django.test import TestCase, Client
+from taxonomy_init import taxonomy_init
 from viscommunityweb.settings import URL_PREPENDER
+from web.models import TaxonomyItem
 
 
 class URLTests(TestCase):
@@ -13,6 +15,8 @@ class URLTests(TestCase):
         self.adminuser.is_staff = True
         self.adminuser.save()
 
+        taxonomy_init()
+
 
     def testHome(self):
         response = self.client.get(URL_PREPENDER + '/')
@@ -22,25 +26,50 @@ class URLTests(TestCase):
 
 
     def testLogin(self):
-        response = self.client.get(URL_PREPENDER + '/accounts/login')
+        response = self.client.post(URL_PREPENDER + '/accounts/login/', {'username': 'test', 'password': 'secret'})
+        self.assertRedirects(response, URL_PREPENDER + '/accounts/profile/', status_code=302, target_status_code=200)
 
-        self.client.login(username='test', password='secret')
+
+    def testLoginAndCheckProfile(self):
+        self.testLogin()
+
+        response = self.client.get(URL_PREPENDER + '/accounts/profile/')
+
+        #test we actually have an ok response
+        self.assertEqual(response.status_code, 200)
+
+
+    def testTaxonomyPageWithNoLogin(self):
+        response = self.client.get(URL_PREPENDER + '/taxonomy/')
 
         #test we actually have an ok response
         self.assertEqual(response.status_code, 200)
 
 
-    def testProfile(self):
-        self.client.login(username='test', password='secret')
-
-        response = self.client.get(URL_PREPENDER + '/accounts/profile')
+    def testTaxonomyItemPageWithNoLogin(self):
+        response = self.client.get(URL_PREPENDER + '/taxonomy/1/')
 
         #test we actually have an ok response
         self.assertEqual(response.status_code, 200)
+
+
+    def testTaxonomyAdd(self):
+        self.testLogin()
+
+        response = self.client.post(URL_PREPENDER + '/taxonomy/add/action/',
+                                    {'taxonomy_name': 'Eamonn Taxonomy', 'category_name': 'Eamonn Category',
+                                     'description': 'New description'})
+
+        taxonomy = TaxonomyItem.objects.filter(name='Eamonn Taxonomy').__getitem__(0)
+
+        #test we actually have an ok response
+        redirectURL = URL_PREPENDER + '/taxonomy/' + str(taxonomy.id) + '/'
+        self.assertRedirects(response, redirectURL, status_code=302,
+                             target_status_code=200)
 
 
     def testVolunteer(self):
-        self.client.login(username='test', password='secret')
+        self.testLogin()
 
         response = self.client.get(URL_PREPENDER + '/volunteer')
 
@@ -49,9 +78,9 @@ class URLTests(TestCase):
 
 
     def testContact(self):
-        self.client.login(username='test', password='secret')
+        self.testLogin()
 
-        response = self.client.get(URL_PREPENDER + '/contact')
+        response = self.client.get(URL_PREPENDER + '/contact/')
 
         #test we actually have an ok response
         self.assertEqual(response.status_code, 200)
@@ -60,9 +89,12 @@ class URLTests(TestCase):
     def testLogout(self):
         self.client.login(username='test', password='secret')
 
-        response = self.client.get(URL_PREPENDER + '/accounts/logout')
-
+        response = self.client.get(URL_PREPENDER + '/accounts/logout/')
         #test we actually have an ok response
         self.assertEqual(response.status_code, 200)
+
+        response = self.client.get(URL_PREPENDER + '/accounts/profile/')
+        self.assertRedirects(response, URL_PREPENDER + '/accounts/login/?next=/accounts/profile/', status_code=302,
+                             target_status_code=200)
 
 
