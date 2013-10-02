@@ -37,7 +37,7 @@ logger = logging.getLogger(__name__)
 # index page
 def index(request):
 	recent_items = TaxonomyItem.objects.order_by('-last_updated')[:3]
-	recent_reference_items = recent_references.get_references()#Reference.objects.order_by('-date_added')[:3]
+	recent_reference_items = recent_references.get_references()
 	return render_to_response("templates/index.html",
 							  {'recent_taxonomy_items': recent_items, 'recent_reference_items': recent_reference_items},
 							  context_instance=RequestContext(request))
@@ -53,7 +53,6 @@ def taxonomy(request):
 	return render_to_response("templates/taxonomy.html",
 			{'taxonomies': taxonomies, 'message': message, 'success': success,'ajax_url_prefix' :ajax_url_prefix},
 							  context_instance=RequestContext(request))
-
 
 def taxonomy_alpha(request):
 	index = taxonomy_backend.alphabetic_index()
@@ -93,7 +92,7 @@ def taxonomy_download(request, taxonomy_id):
 	bibtex = ""
 
 	for reference in references:
-		bibtex += reference[1]['bibtex']+ "\n"
+		bibtex += reference[1]['bibtex'] + "\n"
 
 	response = HttpResponse(bibtex, mimetype='application/text')
 
@@ -127,15 +126,15 @@ def request_ownership_send(request, taxonomy_id):
 	except Exception, e:
 		return render_to_response("templates/infopage.html",
 								  {
-									  'messageTitle': 'Problem encountered sending the request.',
-									  'messageBody': "There was a problem sending the email. Please ensure all fields "
-													 "are filled in correctly. Please contact " +
-													 settings.ADMINS[0][1] + " if the problem continues."},
+								  'messageTitle': 'Problem encountered sending the request.',
+								  'messageBody': "There was a problem sending the email. Please ensure all fields "
+												 "are filled in correctly. Please contact " +
+												 settings.ADMINS[0][1] + " if the problem continues."},
 								  context_instance=RequestContext(request))
 	else:
 		return render_to_response("templates/infopage.html", {
-			'messageTitle': 'Request sent successfully!',
-			'messageBody': 'Your request was sent successfully! We will get back to you soon!'},
+		'messageTitle': 'Request sent successfully!',
+		'messageBody': 'Your request was sent successfully! We will get back to you soon!'},
 								  context_instance=RequestContext(request))
 
 
@@ -170,13 +169,14 @@ def request_ownership_response(request, approval_id):
 	except Exception, e:
 		return render_to_response("templates/infopage.html",
 								  {
-									  'messageTitle': 'Problem encountered sending the message to ' + ownershipRequest.requester.email + '/',
-									  'messageBody': "Here are the details\n." + e.message},
+								  'messageTitle': 'Problem encountered sending the message to ' + ownershipRequest.requester.email + '/',
+								  'messageBody': "Here are the details\n." + e.message},
 								  context_instance=RequestContext(request))
 	finally:
 		ownershipRequest.delete()
 
 	return HttpResponseRedirect(urlRequestedFrom)
+
 
 @login_required
 def revoke_ownership(request, taxonomy_id):
@@ -195,12 +195,12 @@ def revoke_ownership(request, taxonomy_id):
 	except Exception, e:
 		return render_to_response("templates/infopage.html",
 								  {
-									  'messageTitle': 'Problem encountered sending the request.',
-									  'messageBody': "There was a problem sending the email. Please ensure all fields "
-													 "are filled in correctly. Please contact " +
-													 settings.ADMINS[0][1]
-													 + " if the problem continues.\n\nDetailed reason is below: \n\n"
-													 + e.message},
+								  'messageTitle': 'Problem encountered sending the request.',
+								  'messageBody': "There was a problem sending the email. Please ensure all fields "
+												 "are filled in correctly. Please contact " +
+												 settings.ADMINS[0][1]
+												 + " if the problem continues.\n\nDetailed reason is below: \n\n"
+												 + e.message},
 								  context_instance=RequestContext(request))
 	else:
 		return render_to_response("templates/infopage.html",
@@ -369,12 +369,12 @@ def sendEmailForEnquiry(message, request, taxonomyItem):
 	except Exception, e:
 		return render_to_response("templates/infopage.html",
 								  {
-									  'messageTitle': 'Problem encountered sending the request.',
-									  'messageBody': "There was a problem sending the email. Please ensure all fields "
-													 "are filled in correctly. Please contact " +
-													 settings.ADMINS[0][1]
-													 + " if the problem continues.\n\nDetailed reason is below: \n\n"
-													 + e.message},
+								  'messageTitle': 'Problem encountered sending the request.',
+								  'messageBody': "There was a problem sending the email. Please ensure all fields "
+												 "are filled in correctly. Please contact " +
+												 settings.ADMINS[0][1]
+												 + " if the problem continues.\n\nDetailed reason is below: \n\n"
+												 + e.message},
 								  context_instance=RequestContext(request))
 	else:
 		return render_to_response("templates/infopage.html",
@@ -402,9 +402,13 @@ def getTaxonomyTree(request, formatting):
 						sub_items.append({"data": item.name + " (" + str(len(item.references())) + " refs)",
 							"attr": {"itemId": item.id, "type": "taxonomyItem", "level":1}})
 
-					items.append({"data": subCategory.name, "attr": {"itemId": subCategory.id, "type": "taxonomyCategory"}, "children": sub_items, "state": "closed"})
+					items.append(
+						{"data": subCategory.name, "attr": {"itemId": subCategory.id, "type": "taxonomyCategory"},
+						 "children": sub_items, "state": "closed"})
 
-			taxonomy.append({"data": category.name, "attr": {"itemId": category.id, "type": "taxonomyCategory"}, "children": items, "state": "closed"})
+			taxonomy.append(
+				{"data": category.name, "attr": {"itemId": category.id, "type": "taxonomyCategory"}, "children": items,
+				 "state": "closed"})
 
 		response = [{"data": "Taxonomy", "children": taxonomy, "state": "open"}]
 
@@ -412,16 +416,16 @@ def getTaxonomyTree(request, formatting):
 		for category in categories:
 			items = []
 			for item in category.taxonomyitem_set.all():
-				items.append({"data": item.name + " (" + str(len(item.references()))+ " refs)", "id": item.id})
+				items.append({"data": item.name + " (" + str(len(item.references())) + " refs)", "id": item.id})
 
 			if category.taxonomycategory_set:
 				sub_items = []
 				for subCategory in category.taxonomycategory_set.all():
 					for item in subCategory.taxonomyitem_set.all():
-						sub_items.append({"data": item.name + " (" + str(len(item.references())) + " refs)", "id": item.id})
+						sub_items.append(
+							{"data": item.name + " (" + str(len(item.references())) + " refs)", "id": item.id})
 
 					items.append({"data": subCategory.name, "children": sub_items})
-
 
 			taxonomy.append({"data": category.name, "children": items})
 
@@ -480,7 +484,8 @@ def getTaxonomyCategoryInformationJSON(request, category_id):
 
 	for taxonomyItem in taxonomyItems:
 		taxonomyItemList.append({"id": taxonomyItem.id, "title": taxonomyItem.name, "description": taxonomyItem.detail,
-								 "url": URL_PREPENDER + "/taxonomy/" + str(taxonomyItem.id), "referenceCount": len(taxonomyItem.references())})
+								 "url": URL_PREPENDER + "/taxonomy/" + str(taxonomyItem.id),
+								 "referenceCount": len(taxonomyItem.references())})
 
 	response = {"id": category.id, "name": category.name, "taxonomyItems": taxonomyItemList}
 
@@ -566,16 +571,16 @@ def respondToTaxonomyEnquiry(request, decision, enquiry_id):
 	except Exception, e:
 		return render_to_response("templates/infopage.html",
 								  {
-									  'messageTitle': 'Problem encountered sending the message to ' + enquiryItem.requester.email + '.',
-									  'messageBody': "Here are the details\n." + e.message},
+								  'messageTitle': 'Problem encountered sending the message to ' + enquiryItem.requester.email + '.',
+								  'messageBody': "Here are the details\n." + e.message},
 								  context_instance=RequestContext(request))
 	finally:
 		enquiryItem.delete()
 
 	return render_to_response("templates/infopage.html",
 							  {
-								  'messageTitle': 'Response lodged.',
-								  'messageBody': 'Response lodged and suggester has been emailed at ' + enquiryItem.requester.email + '.'},
+							  'messageTitle': 'Response lodged.',
+							  'messageBody': 'Response lodged and suggester has been emailed at ' + enquiryItem.requester.email + '.'},
 							  context_instance=RequestContext(request))
 
 
@@ -598,6 +603,7 @@ def taxonomy_delete(request, taxonomy_id):
 	# for now, any attached references are left dangling
 	return HttpResponseRedirect(URL_PREPENDER + "/taxonomy/")
 
+
 def taxonomy_split(request, taxonomy_id):
 	taxonomyItemToSplit = TaxonomyItem.objects.filter(pk=taxonomy_id).get(pk=taxonomy_id)
 
@@ -611,7 +617,8 @@ def taxonomy_split(request, taxonomy_id):
 		if newTaxonomyItem is None or len(newTaxonomyItem) == 0 or taxonomyItemToSplit is None:
 			raise Exception
 
-		ref_lists = [ request.POST.get('originalTaxonomyReferences', '').split(','), request.POST.get('newTaxonomyReferences', '').split(',') ]
+		ref_lists = [request.POST.get('originalTaxonomyReferences', '').split(','),
+					 request.POST.get('newTaxonomyReferences', '').split(',')]
 
 		# create new taxonomy item
 		newTaxonomyItem = TaxonomyItem(name=newTaxonomyItem, category=taxonomyItemToSplit.category)
@@ -622,16 +629,17 @@ def taxonomy_split(request, taxonomy_id):
 		# go through each ref and move over to new family if necessary
 		for ref_id, ref_doc in curr_refs:
 			if ref_id in ref_lists[1]:
-				taxonomyItemToSplit.reference_family().move_reference(ref_id,newTaxonomyItem.reference_family())
+				taxonomyItemToSplit.reference_family().move_reference(ref_id, newTaxonomyItem.reference_family())
 	except Exception, e:
 		success = False
 		message = 'The splitting of ' + taxonomyItemToSplit.name + ' was unsuccessful. Please try again.'
 
 	return HttpResponseRedirect(URL_PREPENDER + "/taxonomy/?success=" + str(success) + "&message=" + str(message))
 
+
 def taxonomy_add_child(request, taxonomy_id):
 	taxItem = TaxonomyItem.objects.filter(pk=taxonomy_id).get(pk=taxonomy_id)
-	newChildName = request.POST.get("newChildName","")
+	newChildName = request.POST.get("newChildName", "")
 	parentName = taxItem.name
 
 	try:
@@ -657,7 +665,7 @@ def taxonomy_add_child(request, taxonomy_id):
 		# finally kill the existing child
 		taxItem.delete()
 
-		message =  "Created new taxonomy item named %s of parent %s" %(newChildName,parentName)
+		message = "Created new taxonomy item named %s of parent %s" % (newChildName, parentName)
 		success = True
 	except Exception, e:
 		success = False
@@ -670,7 +678,8 @@ def taxonomy_add_child(request, taxonomy_id):
 @user_passes_test(lambda u: u.is_superuser)
 def moveReferences(request):
 	tax_ids = [request.POST.get('moveRefFromTaxonomy', ''), request.POST.get('moveRefToTaxonomy', '')]
-	new_ref_list = [request.POST.get('moveFromTaxonomyReferences', '').split(","), request.POST.get('moveToTaxonomyReferences', '').split(",")]
+	new_ref_list = [request.POST.get('moveFromTaxonomyReferences', '').split(","),
+					request.POST.get('moveToTaxonomyReferences', '').split(",")]
 
 	try:
 		if tax_ids[0] == tax_ids[1]:
@@ -679,25 +688,26 @@ def moveReferences(request):
 		taxonomy = []
 		families = []
 		old_refs = []
-		for tax in range(0,2):
+		for tax in range(0, 2):
 			taxonomy.append(TaxonomyItem.objects.filter(pk=tax_ids[tax]).get(pk=tax_ids[tax]))
 			families.append(taxonomy[tax].reference_family())
 			old_refs.append(families[tax].get_references_as_dict())
 
 		refs_moved = 0
-		for tax in range(0,2):
+		for tax in range(0, 2):
 			source = tax
 			dest = (tax + 1) % 2
 			for ref_id, ref_doc in old_refs[source]:
 				# the old ref from this family is in t'other list, then move it move it move it
 				if ref_id in new_ref_list[dest]:
-					print "Moving source %i dest %i" % (source,dest)
+					print "Moving source %i dest %i" % (source, dest)
 					print "Ref id " + ref_id
-					families[source].move_reference(ref_id,families[dest])
+					families[source].move_reference(ref_id, families[dest])
 					refs_moved += 1
 
 		success = True
-		message = 'The moving of %i references between %s and %s was successful!' % (refs_moved,taxonomy[0].name,taxonomy[1].name)
+		message = 'The moving of %i references between %s and %s was successful!' % (
+		refs_moved, taxonomy[0].name, taxonomy[1].name)
 	except Exception, e:
 		success = False
 		message = 'The moving of references between the taxonomies was unsuccessful. Please try again.'
@@ -767,8 +777,8 @@ def reference_add_upload_file(request):
 	except Exception, e:
 		return render_to_response("templates/infopage.html",
 								  {
-									  'messageTitle': 'Error in bibtex import.',
-									  'messageBody': 'We\'ve not been able to import the file you selected. Please ensure it\'s valid BibTeX.\n\n' + e.message},
+								  'messageTitle': 'Error in bibtex import.',
+								  'messageBody': 'We\'ve not been able to import the file you selected. Please ensure it\'s valid BibTeX.\n\n' + e.message},
 								  context_instance=RequestContext(request))
 
 
@@ -791,8 +801,8 @@ def reference_add_upload_text(request):
 	except Exception, e:
 		return render_to_response("templates/infopage.html",
 								  {
-									  'messageTitle': 'Error in bibtex import.',
-									  'messageBody': 'We\'ve not been able to import the text you entered. Please ensure it\'s valid bibtex.\n\n' + e.message},
+								  'messageTitle': 'Error in bibtex import.',
+								  'messageBody': 'We\'ve not been able to import the text you entered. Please ensure it\'s valid bibtex.\n\n' + e.message},
 								  context_instance=RequestContext(request))
 
 
@@ -805,7 +815,7 @@ def contact_send(request):
 	if email_body == '':
 		return render_to_response("templates/contact.html",
 								  {
-									  'error_message': "No message was given. This is required, as I'm sure you'll understand. "},
+								  'error_message': "No message was given. This is required, as I'm sure you'll understand. "},
 								  context_instance=RequestContext(request))
 
 	try:
@@ -818,12 +828,13 @@ def contact_send(request):
 	except Exception, e:
 		return render_to_response("templates/contact.html",
 								  {
-									  'error_message': "There was a problem sending the email. Please ensure all fields are filled in correctly. Please contact " +
-													   settings.ADMINS[0][1] + " if the problem continues."},
+								  'error_message': "There was a problem sending the email. Please ensure all fields are filled in correctly. Please contact " +
+												   settings.ADMINS[0][1] + " if the problem continues."},
 								  context_instance=RequestContext(request))
 	else:
 		return render_to_response("templates/contact.html", {'success_message': 'Your request was sent successfully!'},
 								  context_instance=RequestContext(request))
+
 
 @login_required
 def reference_remove(request, taxonomy_id, reference_id):
@@ -834,6 +845,7 @@ def reference_remove(request, taxonomy_id, reference_id):
 
 	return HttpResponseRedirect(urlRequestedFrom)
 
+
 @login_required
 def reference_delete(request, taxonomy_id, reference_id):
 	print "Deleting"
@@ -841,8 +853,8 @@ def reference_delete(request, taxonomy_id, reference_id):
 
 	return render_to_response("templates/infopage.html",
 							  {
-								  'messageTitle': 'Reference deleted successfully.',
-								  'messageBody': 'We\'ve deleted that reference for you.'},
+							  'messageTitle': 'Reference deleted successfully.',
+							  'messageBody': 'We\'ve deleted that reference for you.'},
 							  context_instance=RequestContext(request))
 
 
@@ -853,7 +865,7 @@ def reference_detail(request, taxonomy_id, reference_id):
 	assignedTaxonomyItem = {}
 
 	try:
-		referenceItem = ReferenceGlobal().get_reference(taxonomy_id,reference_id)
+		referenceItem = ReferenceGlobal().get_reference(taxonomy_id, reference_id)
 		assignedTaxonomyItem = TaxonomyItem.objects.get(pk=taxonomy_id)
 		print assignedTaxonomyItem
 	except Exception, e:

@@ -78,7 +78,7 @@ body {
 }
 
 .user-account {
-    margin-top: 18px;
+    margin-top: 12px;
 }
 
 .menu {
@@ -100,7 +100,7 @@ body {
     border: none;
     color: #042F4B;
     text-decoration: none;
-    padding-bottom: 23px;
+    padding-bottom: 22px;
     font-weight: bold;
     border-bottom: thin solid #ccc;
     margin-left: 5px;
@@ -157,13 +157,15 @@ body {
     filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#fafafa',endColorstr='#eaeaea')";
     width: 100%;
     height: 30px;
+    padding:5px;
     /*text-indent: -9999px;*/
 }
 
 .header-text {
     display: inline-block;
-    font-weight: bold;
-    padding-top: 8px;
+
+
+
 }
 
 .content-section {
@@ -214,7 +216,7 @@ input#search-text {
 }
 
 .glyphicon-pad {
-	padding-right:10px;
+    padding-right: 10px;
 }
 
 .search-wrapper #search {
@@ -587,7 +589,7 @@ input#search-text {
 }
 
 .modal {
-	margin-top:70px;
+    margin-top: 70px;
 }
 
 .profile-unit h1 {
@@ -611,14 +613,14 @@ input#search-text {
 }
 
 .reference_box .title {
-	color:#666;
+    color: #666;
     font-size: 1.2em;
     font-weight: bolder;
 }
 
 .reference_box .journal {
     font-size: 0.9em;
-	font-style:italic;
+    font-style: italic;
 }
 
 .reference_box .authors {
@@ -627,8 +629,8 @@ input#search-text {
 }
 
 .reference_box .year {
-	font-size: 0.9em;
-	font-weight: normal;
+    font-size: 0.9em;
+    font-weight: normal;
 }
 
 .taxonomy-detail {

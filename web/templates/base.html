@@ -48,15 +48,15 @@
 
         <div class="user-account">
             {% if user.is_authenticated %}
-                {{ user.username }}
-                <a href="{{ URL_PREPENDER }}/accounts/profile" class="btn btn-mini account-button"><i
+
+                <a href="{{ URL_PREPENDER }}/accounts/profile" alt="{{ user.username }}'s Profile"  class="btn btn-mini btn-warning"><i
                         class="glyphicon-user glyphicon"></i></a>
-                <a href="{{ URL_PREPENDER }}/accounts/logout" class="btn btn-mini account-button btn-yellow"><i
+                <a href="{{ URL_PREPENDER }}/accounts/logout" alt="Log out" class="btn btn-mini btn-warning"><i
                         class="glyphicon-off glyphicon"></i></a>
             {% else %}
-                <a href="{{ URL_PREPENDER }}/accounts/register" class="btn btn account-button"><i
+                <a href="{{ URL_PREPENDER }}/accounts/register" class="btn btn-default"><i
                         class="glyphicon glyphicon-check"></i> Register</a>
-                <a href="{{ URL_PREPENDER }}/accounts/login" class="btn btn account-button"><i class="glyphicon glyphicon-user"></i>
+                <a href="{{ URL_PREPENDER }}/accounts/login" class="btn btn-default"><i class="glyphicon glyphicon-user"></i>
                     Sign In</a>
             {% endif %}
 

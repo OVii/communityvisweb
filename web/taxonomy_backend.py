@@ -1,8 +1,4 @@
 from web.models import TaxonomyArea, TaxonomyCategory, TaxonomyItem, Reference
-from cassandra import ConsistencyLevel
-from cassandra.cluster import Cluster
-from cassandra.query import SimpleStatement
-
 
 """
  Builds a dictionary (letter[char]) => { item, item } representing the taxonomy in the system

@@ -18,3 +18,4 @@ zope.interface==3.5.1
 django-registration
 django-profiles
 django-evolution
+couchdb

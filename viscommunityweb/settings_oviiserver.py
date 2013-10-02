@@ -24,7 +24,7 @@ ACCOUNT_ACTIVATION_DAYS = 7
 
 # Change below for your own machine. This is the only per-machine def. 
 TEMPLATE_DIRS = (
-    #"/Users/eamonnmaguire/git/ovii/communityvisweb/web/",
+    "/Users/eamonnmaguire/git/ovii/communityvisweb/web/",
     #"/Users/sim/Documents/VisWeb/viscommunityweb/web/"
     "/var/www/community/web/",
 )
@@ -32,15 +32,27 @@ TEMPLATE_DIRS = (
 URL_PREPENDER = '/community'
 
 MANAGERS = ADMINS
+#
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2', #i 'mysql', 'sqlite3' or 'oracle'.
+#         # The following settings are not used with sqlite3:
+#         'USER': 'postgres',
+#         'PASSWORD': 'oerc60971',
+#         'NAME': 'viscommunityweb',
+#         'HOST': 'localhost', # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
+#         'PORT': '', # Set to empty string for default.
+#     }
+# }
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2', #i 'mysql', 'sqlite3' or 'oracle'.
+        'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+        'NAME': 'visweb.db', # Or path to database file if using sqlite3.
         # The following settings are not used with sqlite3:
-        'USER': 'postgres',
-        'PASSWORD': 'oerc60971',
-        'NAME': 'viscommunityweb',
-        'HOST': 'localhost', # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
+        'USER': '',
+        'PASSWORD': '',
+        'HOST': '', # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
         'PORT': '', # Set to empty string for default.
     }
 }
@@ -91,7 +103,7 @@ STATIC_ROOT = ''
 
 # URL prefix for static files.
 # Example: "http://example.com/static/", "http://static.example.com/"
-STATIC_URL = '/communitystatic/'
+STATIC_URL = '/static/'
 
 # Additional locations of static files
 STATICFILES_DIRS = (
@@ -116,16 +128,6 @@ TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
     'django.template.loaders.app_directories.Loader',
     #     'django.template.loaders.eggs.Loader',
-)
-
-TEMPLATE_CONTEXT_PROCESSORS = (
-    'django.core.context_processors.debug',
-    'django.core.context_processors.i18n',
-    'django.core.context_processors.media',
-    'django.core.context_processors.static',
-    'django.core.context_processors.request',
-    'django.contrib.auth.context_processors.auth',
-    'django.contrib.messages.context_processors.messages',
 )
 
 MIDDLEWARE_CLASSES = (

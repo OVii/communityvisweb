@@ -10,15 +10,16 @@ ADMINS = (
 	('Simon Walton', 'simonwalton@gmail.com')
 )
 
-AJAX_URL_PREFIX = 'http://localhost:8000/'
 AUTH_PROFILE_MODULE = 'web.UserProfile'
 
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'eamonnmag@gmail.com'
-EMAIL_HOST_PASSWORD = 'c67WFmlu'
+EMAIL_HOST_USER = 'communityvis@gmail.com'
+EMAIL_HOST_PASSWORD = 'community_vis'
 EMAIL_PORT = 587
 EMAIL_SUBJECT_PREFIX = "[OXVIS]"
+
+AJAX_URL_PREFIX = "http://localhost:8000/"
 
 ACCOUNT_ACTIVATION_DAYS = 7
 

@@ -26,14 +26,23 @@
             <input name="utf8" type="hidden" class="text" value="✓"><input
                 name="_method" type="hidden" value="put"><input name="authenticity_token" type="hidden">
 
-            <div><label for="username">Username</label>
-                <input id="username" class="text form-text span5" name="username" size="20" type="text" value="">
+            <div class="row">
+                <div class="col-lg-4"><label for="username">Username</label><br/>
+                    <input id="username" class="text form-text" name="username" size="20" type="text" value="">
+                </div>
             </div>
 
-            <div><label for="password">Password</label>
-                <input id="password" class="text form-text span5" name="password" size="20" type="password">
+            <div class="row">
+                <div class="col-lg-4"><label for="password">Password</label><br/>
+                    <input id="password" class="text form-text " name="password" size="20" type="password">
+                </div>
             </div>
-            <div><input name="commit" type="submit" class="btn btn-inverse" value="Sign in"></div>
+
+            <div class="row pull-right">
+
+
+                <div><input name="commit" type="submit" class="btn btn-inverse" value="Sign in"></div>
+            </div>
         </form>
 
         <div class="login-additional">
