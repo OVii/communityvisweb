@@ -2,7 +2,7 @@
 
 {% block head_additional %}
     <style>
-        .nav-pills>.active>a, .nav-pills>.active>a:hover, .nav-pills>.active>a:focus {
+        .nav-pills > .active > a, .nav-pills > .active > a:hover, .nav-pills > .active > a:focus {
             color: #fff;
             background-color: #EBB77B;
         }
@@ -18,109 +18,110 @@
 
 
     </style>
-	<script src="{{ STATIC_URL }}js/ZeroClipboard.min.js"></script>
-	
+    <script src="{{ STATIC_URL }}js/ZeroClipboard.min.js"></script>
+
     <script>
         function showDeleteWindow(taxonomyId, referenceId) {
             $('#deleteModal').modal('show');
             $("#deleteModalForm").attr("action", '{{ URL_PREPENDER }}/reference/delete/' + taxonomyId + "/" + referenceId + '/');
         }
 
-		$(document).ready(function() {
-			var clip = new ZeroClipboard(document.getElementById("btnCopyToClipboard"), {
-				moviePath: "{{ STATIC_URL }}ZeroClipboard.swf"
-			});
+        $(document).ready(function () {
+            var clip = new ZeroClipboard(document.getElementById("btnCopyToClipboard"), {
+                moviePath: "{{ STATIC_URL }}ZeroClipboard.swf"
+            });
 
-			clip.on( 'dataRequested', function (client, args) {
-				client.setText($("#divBibtexText").text());
-		});
-		});
+            clip.on('dataRequested', function (client, args) {
+                client.setText($("#divBibtexText").text());
+            });
+        });
     </script>
 
-	
+
 {% endblock %}
 {% block content %}
 
     <div class="clearfix"></div>
     <div class="row-fluid">
 
-        <ul class="nav nav-pills">
-            <br/>
-            <li class="active">
-                <a href="{{ previousPage }}">← Back</a>
-            </li>
+    <br/>
+    <div class="row">
+
+
+        <a href="{{ previousPage }}" class="btn btn-warning pull-left">← Back</a>
+
+
+        {% if user.is_superuser %}
+            <a onclick="showDeleteWindow({{ taxonomy_item.id }},'{{ reference.id }}')"
+               class="btn btn-danger pull-right"><span
+                    class="glyphicon-trash glyphicon glyphicon-pad"></span>Delete Reference</a>
+        {% endif %}
+
         </ul>
     </div>
 
 
     <div class="profile-content">
-        <div class="profile-blocks">
-            <div class="pull-right">
-                {% if user.is_superuser %}
-				<a onclick="showDeleteWindow({{ taxonomy_item.id }},'{{ reference.id }}')" class="btn btn-danger"><span
-                        class="glyphicon-trash glyphicon glyphicon-pad"></span>Delete Reference</a>
-                {% endif %}
-            </div>
-            <div class="clearfix"></div>
-            <div style="font-weight: lighter; color: #414241; padding:10px 40px; font-size:1.4em; line-height: 26px; text-rendering: optimizelegibility;">
-				{% if reference %}
-					{{ reference.title }}
-				{% else %}
-				<span class="glyphicon glyphicon-exclamation-sign glyphicon-pad"></span>Opps! Looks like that reference has been removed. 
-				{% endif %}
-			</div>
-            <br/>
-            {% if reference.abstract %}
-                <div style="font-weight: lighter; color: #666666; padding:10px 40px; font-size:1.1em; line-height: 20px; text-rendering: optimizelegibility;">{{ reference.abstract }}</div>
+    <div class="profile-blocks">
+
+
+        <h1>
+            <small>Reference</small>
+        </h1>
+
+
+        <div style="font-weight: lighter; color: #414241; padding:10px 40px; font-size:1.4em; line-height: 26px; text-rendering: optimizelegibility;">
+            {% if reference %}
+                {{ reference.title }}
+            {% else %}
+                <span class="glyphicon glyphicon-exclamation-sign glyphicon-pad"></span>Opps! Looks like that reference
+                has been removed.
             {% endif %}
+        </div>
+        <br/>
+        {% if reference.abstract %}
+            <div style="font-weight: lighter; color: #666666; padding:10px 40px; font-size:1.1em; line-height: 20px; text-rendering: optimizelegibility;">{{ reference.abstract }}</div>
+        {% endif %}
 
-			<div class="">
-				<div class="reference-block" style="width:45%" id="about">
-					<div class="block-head">
-						Reference information
-						<hr/>
-					</div>
-					<div class="profile-unit">
+        <div class="">
+            <div class="reference-block" style="width:45%" id="about">
+                <div class="block-head">
+                    Reference information
+                    <hr/>
+                </div>
+                <div class="profile-unit">
 
-						<p style="font-size: 1em">
-							{{ reference.authorsAsText }}
-						</p>
+                    <p style="font-size: 1em">
+                        {{ reference.authorsAsText }}
+                    </p>
 
-						<p style="font-size: 1em; color:#efa700">{{ reference.journal }}</p>
-						
-						{% if reference.year %}
-							<p style="font-size: 1em; font-weight:bold">Year: {{ reference.year }}</p>
-						{% endif %}
+                    <p style="font-size: 1em; color:#efa700">{{ reference.journal }}</p>
 
-						{% if reference.url %}
-							<a href="{{ reference.url }}" target="_blank" class="btn btn-yellow"><span class="glyphicon glyphicon-new-window glyphicon-pad"></span>Read the paper</a>
-						{% endif %}
+                    {% if reference.year %}
+                        <p style="font-size: 1em; font-weight:bold">{{ reference.year }}</p>
+                    {% endif %}
 
-						<hr/>
+                    {% if reference.url %}
+                        <a href="{{ reference.url }}" target="_blank" class="btn btn-warning"><span
+                                class="glyphicon glyphicon-new-window glyphicon-pad"></span>Read the paper</a>
+                    {% endif %}
 
-					   {% comment %}
-						<p>Associated with the following categories</p>
-						{% for taxonomyItem in taxonomy_items.all %}
-							<div>
-								<i class="icon-arrow-up"></i><a
-									href="{{ URL_PREPENDER }}/taxonomy/{{ taxonomyItem.0 }}/">{{ taxonomyItem.name }}</a>
-							</div>
-						{% endfor %}
-						{% endcomment %}
-					</div>
-				</div>
 
-				<div class="reference-block" style="width:45%" id="about">
-					<div class="block-head">
-						BibTeX
-						<a class="pull-right btn btn-yellow" id="btnCopyToClipboard"><span class="glyphicon glyphicon-paperclip glyphicon-pad"></span>Copy to Clipboard</a>
-						<hr/>
-					</div>
-					<div class="profile-unit">
-						<p style="font-size: 0.8em; font-family:monospace" id="divBibtexText">
-							{{ reference.bibtex }}
-						</p>
-					</div>
+                </div>
+            </div>
+
+            <div class="reference-block" style="width:45%" id="about">
+                <div class="block-head">
+                    BibTeX
+                    <a class="pull-right btn btn-warning" id="btnCopyToClipboard"><span
+                            class="glyphicon glyphicon-paperclip glyphicon-pad"></span>Copy bib to Clipboard</a>
+                    <hr/>
+                </div>
+                <div class="profile-unit">
+                    <p style="font-size: 0.8em; font-family:monospace; overflow:hidden" id="divBibtexText">
+                        {{ reference.bibtex }}
+                    </p>
+                </div>
             </div>
         </div>
     </div>

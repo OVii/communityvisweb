@@ -1,4 +1,3 @@
-
 {% extends "base.html" %}
 {% block title %}Visualization Taxonomy{% endblock %}
 
@@ -9,45 +8,51 @@
 {% block content %}
 
 
-<div class="row-fluid">
+    <div class="row-fluid">
 
-	<div>
-        {% include "taxonomy-header.html" %}
 
-        {% if index %}
-			{% for letter, items in index.items %}
-				<section id="{{ letter }}">
-					<div class="well taxonomy-well">
-						<a name="{{ letter }}" style="padding-top:-150px"></a>
-						<h1>{{ letter }}</h1>
-						{% for item in items %}
-							<p>
+        <div>
+            {% include "taxonomy-header.html" %}
 
-							{% if item.4 > 0 %}
-								<span class="badge badge-yellow">
-							{% else %}
-								<span class="badge">
-							{% endif %}
-							<i class="icon-white icon-chevron-right"></i></span>
-							<a href="{{ URL_PREPENDER }}/taxonomy/{{ item.0 }}">{{ item.1 }}</a> <span class="label">{{ item.2 }}</span>
-							</p>
-						{% endfor %}
-					</div>
-				</section>
-			{% endfor %}
-		{% else %}
-			No taxonomy found.
-		{% endif %} 
-	</div>
-</div>
+            <div class="well">
+                <p>
+                   This is an indexed view of the taxonomy items in our database. If you have a suggestion for another item, please let us know.
+                </p>
 
-<div class="well">
-	<p>
-	This taxonomy is based on the subject categories used by the submission and review processes for IEEE VisWeek conferences (SciVis, InfoVis and VAST) and European Conference on Visualization (EuroVis). We understand that almost all taxonomies will undergo an evolutionary development by the community concerned. We will review this taxonomy on a regular basis. Please let us know if you have any suggestions.
-	</p>
-	<p>
-		<button class="btn btn-large btn-primary" type="button">I have a suggestion</button>
-	</p>
-</div>
+                <p>
+                    <button class="btn btn-large btn-warning pull-right" type="button">I have a suggestion</button>
+                </p>
+                <br/><br/>
+            </div>
+            {% if index %}
+                {% for letter, items in index.items %}
+                    <section id="{{ letter }}">
+                        <div class="well taxonomy-well">
+                            <a name="{{ letter }}" style="padding-top:-150px"></a>
+
+                            <h1>{{ letter }}</h1>
+                            {% for item in items %}
+                                <p>
+
+                                    {% if item.4 > 0 %}
+                                        <span class="badge badge-yellow">
+                                    {% else %}
+                                        <span class="badge">
+                                    {% endif %}
+                                    <i class="icon-white icon-chevron-right"></i></span>
+                                    <a href="{{ URL_PREPENDER }}/taxonomy/{{ item.0 }}">{{ item.1 }}</a> <span
+                                        class="label" style="color: #414241">in {{ item.2 }}</span>
+                                </p>
+                            {% endfor %}
+                        </div>
+                    </section>
+                {% endfor %}
+            {% else %}
+                No taxonomy found.
+            {% endif %}
+        </div>
+    </div>
+
+
 
 {% endblock %}
