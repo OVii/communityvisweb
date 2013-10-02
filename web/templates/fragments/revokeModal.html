@@ -1,43 +1,50 @@
-<div id="confirmRemoveModal" class="modal hide fade" tabindex="-1" role="dialog"
+<div id="confirmRevokeModal" class="modal fade" tabindex="-1" role="dialog"
      aria-labelledby="confirmRemoveRequest"
      aria-hidden="true">
-    <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-        <h3>Are you sure?</h3>
-    </div>
-    <form accept-charset="UTF-8" action="{{ URL_PREPENDER }}/revoke_ownership/{{ taxonomy.id }}" class="formbody" id="confirmRemove"
-          method="post" onclick="return validateRevokeForm()">
-        <div class="modal-body">
-            <div class="modal-body" id="booking">
-                {% csrf_token %}
-                <div id="revoke_errors"></div>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h3>Are you sure?</h3>
+            </div>
+            <form accept-charset="UTF-8" action="{{ URL_PREPENDER }}/revoke_ownership/{{ taxonomy.id }}"
+                  class="formbody"
+                  id="confirmRevoke"
+                  method="post" onclick="return validateRevokeForm()">
+                <div class="modal-body">
+                    <div class="modal-body" id="booking">
+                        {% csrf_token %}
+                        <div id="revoke_errors"></div>
 
-                <div id="removal_detail_group" class="control-group">
-                    <label for="comments" class="control-label">Please tell us why you're leaving?</label>
-                    <div class="controls">
-                        <textarea name="comments" maxlength="5000" rows=10 class="span6"></textarea>
+                        <div id="removal_detail_group" class="control-group">
+                            <label for="comments" class="control-label">Please tell us why you're leaving?</label>
+
+                            <div class="controls col-lg-8">
+                                <textarea name="comments" maxlength="5000" rows=10 class="form-control"></textarea>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
+                <div class="modal-footer" id="button">
+                    <input name="commit" type="submit" class="btn btn-danger" value="Revoke Ownership">
+                </div>
+            </form>
         </div>
-        <div class="modal-footer" id="button">
-            <input name="commit" type="submit" class="btn btn-danger" value="Revoke Ownership">
-        </div>
-    </form>
+    </div>
 </div>
 
 <script type="text/javascript">
     function validateRevokeForm() {
-            var message = document.forms["confirmRemove"]["comments"].value;
-            blankMessage = (message === "");
-            var errorHTML = "";
-            if (blankMessage) {
-                errorHTML += '<div class="alert alert-error">Please enter a message!</div>'
-            }
-
-            $("#revoke_errors").html(errorHTML);
-
-            $("#removal_detail_group").toggleClass("control-group error", blankMessage);
-            return !(blankMessage);
+        var message = document.forms["confirmRemove"]["comments"].value;
+        blankMessage = (message === "");
+        var errorHTML = "";
+        if (blankMessage) {
+            errorHTML += '<div class="alert alert-error">Please enter a message!</div>'
         }
+
+        $("#revoke_errors").html(errorHTML);
+
+        $("#removal_detail_group").toggleClass("control-group error", blankMessage);
+        return !(blankMessage);
+    }
 </script>

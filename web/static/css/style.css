@@ -472,7 +472,6 @@ input#search-text {
 
 .bottom_footer {
     position: relative;
-    background-color: white;
     overflow: hidden;
     clear: both;
     min-height: 60px;

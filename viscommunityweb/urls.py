@@ -86,7 +86,6 @@ urlpatterns = patterns('',
                        url(r'^api/category/info/(?P<category_id>\d+)/$', 'web.views.getTaxonomyCategoryInformationJSON',
                            name='api_taxonomy_category_details'),
 
-                       url(r'^search/$', 'web.views.search', name='search'),
                        url(r'^account/$', 'web.views.account', name='account'),
                        url(r'^orcid$', 'web.views.orcid_profile', name='orcid'),
 
