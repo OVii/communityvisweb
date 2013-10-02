@@ -1,11 +1,8 @@
 # Django settings for viscommunityweb project.
-import dj_database_url
-
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
-    ('Eamonn Maguire 2', 'eamonn.maguire@oerc.ox.ac.uk'),
     ('Eamonn Maguire', 'eamonn.maguire@st-annes.ox.ac.uk')
 )
 
