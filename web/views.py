@@ -365,19 +365,19 @@ def sendEmailForEnquiry(message, request, taxonomyItem):
 def getTaxonomyTree(request, formatting):
 	taxonomy = []
 	taxonomyArea = TaxonomyArea.objects.filter(name="Visualisation").get(name="Visualisation")
-	categories = taxonomyArea.taxonomycategory_set.all()
+	categories = taxonomyArea.taxonomycategory_set.order_by('name').all()
 
 	if formatting == "jsTree":
 		for category in categories:
 			items = []
-			for item in category.taxonomyitem_set.all():
+			for item in category.taxonomyitem_set.order_by('name').all():
 				items.append({"data": item.name + " (" + str(len(item.references())) + " refs)",
 							  "attr": {"itemId": item.id, "type": "taxonomyItem", "level": 0}})
 
 			if category.taxonomycategory_set:
-				for subCategory in category.taxonomycategory_set.all():
+				for subCategory in category.taxonomycategory_set.order_by('name').all():
 					sub_items = []
-					for item in subCategory.taxonomyitem_set.all():
+					for item in subCategory.taxonomyitem_set.order_by('name').all():
 						sub_items.append({"data": item.name + " (" + str(len(item.references())) + " refs)",
 										  "attr": {"itemId": item.id, "type": "taxonomyItem", "level": 1}})
 
