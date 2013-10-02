@@ -649,7 +649,7 @@ def taxonomy_add_child(request, taxonomy_id):
 
 		# create category with same name as this item
 		cat = TaxonomyCategory(name=taxItem.name,parent=taxItem.category)
-		cat.save();
+		cat.save()
 
 		# create new child item (weird method but seems to be how you to copy model instances in Django)
 		new_child = TaxonomyItem.objects.filter(pk=taxonomy_id).get(pk=taxonomy_id)
@@ -659,9 +659,13 @@ def taxonomy_add_child(request, taxonomy_id):
 		new_child.category = cat
 		new_child.save()
 
-		# shift references old -> new item
+		# create 'general' child in which to shove the existing references (issue 79)
+		general = TaxonomyItem(name='General',category = cat)
+		general.save()
+
+		# shift references old -> new general item
 		taxItem = TaxonomyItem.objects.filter(pk=taxonomy_id).get(pk=taxonomy_id)
-		taxItem.reference_family().move_all_references(new_child.reference_family())
+		taxItem.reference_family().move_all_references(general.reference_family())
 
 		# finally kill the existing child
 		taxItem.delete()
