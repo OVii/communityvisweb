@@ -29,12 +29,12 @@
 
         ga('create', 'UA-41812283-1', 'ox.ac.uk');
         ga('send', 'pageview');
-		
-		// for use in javascript files
-		var globalURLPrefix = "{{ URL_PREPENDER }}";
-		if(globalURLPrefix.charAt(globalURLPrefix.length-1) != '/')
-			globalURLPrefix += '/';
-		console.log("Global URL prefix " + globalURLPrefix);
+
+        // for use in javascript files
+        var globalURLPrefix = "{{ URL_PREPENDER }}";
+        if (globalURLPrefix.charAt(globalURLPrefix.length - 1) != '/')
+            globalURLPrefix += '/';
+        console.log("Global URL prefix " + globalURLPrefix);
     </script>
     <script type="text/javascript" src="{{ STATIC_URL }}js/validation.js"></script>
 </head>
@@ -49,20 +49,22 @@
         <div class="user-account">
             {% if user.is_authenticated %}
 
-                <a href="{{ URL_PREPENDER }}/accounts/profile" alt="{{ user.username }}'s Profile"  class="btn btn-mini btn-warning"><i
+                <a href="{{ URL_PREPENDER }}/accounts/profile" alt="{{ user.username }}'s Profile"
+                   class="btn btn-mini btn-warning"><i
                         class="glyphicon-user glyphicon"></i></a>
                 <a href="{{ URL_PREPENDER }}/accounts/logout" alt="Log out" class="btn btn-mini btn-warning"><i
                         class="glyphicon-off glyphicon"></i></a>
             {% else %}
                 <a href="{{ URL_PREPENDER }}/accounts/register" class="btn btn-default"><i
                         class="glyphicon glyphicon-check"></i> Register</a>
-                <a href="{{ URL_PREPENDER }}/accounts/login" class="btn btn-default"><i class="glyphicon glyphicon-user"></i>
+                <a href="{{ URL_PREPENDER }}/accounts/login" class="btn btn-default"><i
+                        class="glyphicon glyphicon-user"></i>
                     Sign In</a>
             {% endif %}
 
         </div>
 
-		{% comment %}
+        {% comment %}
 		<div class="search" style="margin-right:20px"> #}
             <form id="search" action="{{ URL_PREPENDER }}/search" onsubmit="return validateSearchInput('search')">
 			  <input id="search-text" style="width:80%" type="text" name="q" placeholder="Search References">
@@ -76,7 +78,7 @@
 
             </a>
 
-             <a href="{{ URL_PREPENDER }}/taxonomy_alpha" class="menu-item">
+            <a href="{{ URL_PREPENDER }}/taxonomy_alpha" class="menu-item">
                 <img src="{{ STATIC_URL }}img/static_img/home/index-menu-item.png"/>
 
             </a>
@@ -102,42 +104,35 @@
         <div class="footer_container">
             <h4 id="additionalLinks">Additional BioSharing Links</h4>
 
-            <ul class="footer_links">
+            <ul class="footer_links" style="width:200px">
             </ul>
-
-            <ul class="footer_links">
-                <h4>Developed by</h4>
-                <li><a href="http://www.oerc.ox.ac.uk" target="_blank">Oxford e-Research Center</a></li>
-                <li><a href="http://ovii.oerc.ox.ac.uk" target="_blank">OVii</a></li>
-            </ul>
-
-
-            {% if user.is_authenticated %}
-                <ul class="footer_links">
-                    <h4>Contribute</h4>
-                    <li><a href="{{ URL_PREPENDER }}/volunteer">Volunteer to maintain</a></li>
-                </ul>
-            {% endif %}
-
-            <ul class="footer_links">
-                <h4>Contact Us</h4>
-                <li><a href="{{ URL_PREPENDER }}/contact" target="_blank">Email</a></li>
-                <li><a href="mailto:support@communityvis.org?subject=Community Vis issue">Report an issue</a>
+            <ul class="footer_links" style="width:200px">
+                <h4>Contribute</h4>
+                <li><a href="{{ URL_PREPENDER }}/about" target="_blank">About us</a></li>
+                <li><a href="{{ URL_PREPENDER }}/contact" target="_blank">Contact us</a></li>
+                {% if user.is_authenticated %}
+                    <li><a href="{{ URL_PREPENDER }}/volunteer" target="_blank">Volunteer</a></li>
+                {% endif %}
+                <li><a href="https://github.com/OVii/communityvisweb/issues?state=open" target="_blank">Report an issue</a>
                 </li>
-                <li><a href="https://www.github.com/ovii" target="_blank">GitHub</a></li>
+            </ul>
+
+
+            <ul class="footer_links" style="width: 200px">
+                <h4>Infrasructure Information</h4>
+                <li><a href="http://www.oerc.ox.ac.uk" target="_blank">Oxford e-Research Centre</a></li>
+                <li><a href="http://www.ovii.org" target="_blank">OVii</a></li>
+
+                <li><a href="https://www.github.com/ovii/communityvisweb" target="_blank">GitHub Repository</a></li>
             </ul>
         </div>
     </div>
 
     <div class="bottom_footer">
         <div class="footer_container">
+            <br/>
             <div class="additional-information" align="center">
-                {% block social_network %}
-                    <span class='st_facebook_hcount' displayText='Facebook'></span>
-                    <span class='st_twitter_hcount' displayText='Tweet'></span>
-                    <span class='st_linkedin_hcount' displayText='LinkedIn'></span>
-                    <br/><br/>
-                {% endblock %}
+
                 © Community Resource: Visualization 2013-Present | Licensed under <a
                     href="http://creativecommons.org/licenses/by/3.0/" alt="View License" target="_blank">Creative
                 Commons by 3.0 Unported</a> | Designed by <a href="http://www.antarctic-design.co.uk" target="_blank">Antarctic
