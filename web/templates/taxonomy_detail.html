@@ -17,8 +17,8 @@
         }
 
         function showReferenceAdditionWindow() {
-			console.log("Trying to show");
-			$('#addReferenceModal').modal({show:true});
+            console.log("Trying to show");
+            $('#addReferenceModal').modal({show: true});
         }
 
 
@@ -36,7 +36,8 @@
 
     <div class="page-header">
         <h1>
-            <small><a href="{{ URL_PREPENDER }}/taxonomy">Taxonomy</a> - {{ taxonomy.category.name }} - {{ taxonomy.name }} ({{ references|length }}
+            <small><a href="{{ URL_PREPENDER }}/taxonomy">Taxonomy</a> - {{ taxonomy.category.name }}
+                - {{ taxonomy.name }} ({{ references|length }}
                 References)
             </small>
         </h1>
@@ -46,16 +47,19 @@
         <div class="taxonomy-detail">
             {{ taxonomy.detail }}
         </div>
-    <div class="clearfix"></div>
-    <br/>
+        <div class="clearfix"></div>
+        <br/>
+
         <div class="btn-group pull-right">
 
-            {% if user.is_superuser or ownerLoggedIn %}
-				<a class="btn btn-default" href="{{ URL_PREPENDER }}/taxonomy/edit/{{ taxonomy.id }}"><span class="glyphicon glyphicon-edit glyphicon-pad"></span>Edit Record</a>
-				<a class="btn btn-default" onclick="showReferenceAdditionWindow()"><span class="glyphicon glyphicon-plus glyphicon-pad"></span>Add References</a>
+            {% if user.is_superuser %}
+                <a class="btn btn-default" href="{{ URL_PREPENDER }}/taxonomy/edit/{{ taxonomy.id }}"><span
+                        class="glyphicon glyphicon-edit glyphicon-pad"></span>Edit Record</a>
             {% endif %}
 
-            {% if ownerLoggedIn %}
+            {% if user.is_superuser or ownerLoggedIn %}
+                <a class="btn btn-default" onclick="showReferenceAdditionWindow()"><span
+                        class="glyphicon glyphicon-plus glyphicon-pad"></span>Add References</a>
                 <a class="btn btn-danger" onclick="showConfirmWindow()">Revoke Ownership</a>
             {% endif %}
 
@@ -64,9 +68,11 @@
                     <a class="btn disabled btn-warning">Volunteer request lodged</a>
                 {% else %}
                     {% if user.is_authenticated %}
-					<a onclick="showRequestWindow()" class="btn btn-warning"><span class="glyphicon glyphicon-thumbs-up glyphicon-pad"></span>Volunteer to maintain</a>
+                        <a onclick="showRequestWindow()" class="btn btn-warning"><span
+                                class="glyphicon glyphicon-thumbs-up glyphicon-pad"></span>Volunteer to maintain</a>
                     {% else %}
-                        <a href="{{ URL_PREPENDER }}/accounts/login" class="btn btn-warning">Login to Volunteer to Maintain</a>
+                        <a href="{{ URL_PREPENDER }}/accounts/login" class="btn btn-warning">Login to Volunteer to
+                            Maintain</a>
                     {% endif %}
                 {% endif %}
             {% else %}
@@ -103,7 +109,7 @@
 
     <script type="text/javascript">
         window.onload = function () {
-			console.log($('.fileupload'));
+            console.log($('.fileupload'));
             $('.fileupload').fileupload();
 
         }

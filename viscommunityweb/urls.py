@@ -5,7 +5,7 @@ from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from registration.forms import RegistrationFormUniqueEmail
 
-handler500 = 'biosharing_web.views.server_error'
+handler500 = 'web.views.server_error'
 
 admin.autodiscover()
 urlpatterns = patterns('',
