@@ -22,6 +22,7 @@ urlpatterns = patterns('',
                             'backend': 'registration.backends.default.DefaultBackend'},
                            name='registration_register'),
                        url(r'^accounts/', include('registration.backends.default.urls')),
+                       url(r'^about/', 'web.views.about', name='about'),
 
                        url(r'^profiles/', include('profiles.urls'), name='profiles'),
 
