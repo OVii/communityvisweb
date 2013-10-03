@@ -1,4 +1,5 @@
 $(function () {
+
     $("#taxonomyTree")
         .bind("before.jstree", function (e, data) {
             $("#alog").append(data.func + "<br />");
@@ -17,6 +18,7 @@ $(function () {
 
             "contextmenu": {items: customMenu},
 
+
             // I usually configure the plugin that handles the data first
             // This example uses JSON as it is most common
             "json_data": {
@@ -24,7 +26,7 @@ $(function () {
                 // All the options are almost the same as jQuery's AJAX (read the docs)
                 "ajax": {
                     // the URL to fetch the data
-                    "url": apiURLPrefix + "api/taxonomyTree/jsTree",
+                    "url": window.apiURLPrefix + "api/taxonomyTree/jsTree",
                     // the `data` function is executed in the instance's scope
                     // the parameter is the node being loaded
                     // (may be -1, 0, or undefined when loading the root nodes)
@@ -76,7 +78,8 @@ function customMenu(node) {
                 var itemType = data.attr("type");
 
                 if (itemType == "taxonomyCategory") {
-                    $("#oldName").html(data.context.innerText);
+
+                    $("#oldName").html(data.context.innerText || data.context.textContent);
                     $("#renameForm").attr("action", apiURLPrefix + 'category/rename/' + data.attr("itemid") + '/');
                     $('#renameModal').modal('show');
                 } else {
@@ -87,7 +90,9 @@ function customMenu(node) {
         deleteItem: { // The "rename" menu item
             label: "Delete",
             action: function (data) {
-                $("#itemToDeleteName").html(data.context.innerText.split("(")[0].trim());
+                var textContent =  data.context.innerText || data.context.textContent;
+
+                $("#itemToDeleteName").html(textContent.split("(")[0].trim());
                 $("#confirmRemove").attr("action", apiURLPrefix + 'taxonomy/delete/' + data.attr("itemid") + '/');
                 $('#confirmRemoveModal').modal('show');
 
@@ -109,7 +114,9 @@ function customMenu(node) {
                 $("#newTaxonomyItemCount").text('');
                 $("#newTaxonomy").html('');
 
-                $('#originalTaxonomyItem').text(data.context.innerText.split("(")[0].trim());
+                var textContent =  data.context.innerText || data.context.textContent;
+
+                $('#originalTaxonomyItem').text(textContent.split("(")[0].trim());
                 $("#splitForm").attr("action", apiURLPrefix + 'taxonomy/split/' + data.attr("itemid") + '/');
                 $('#splitModal').modal('show');
 
@@ -129,24 +136,26 @@ function customMenu(node) {
                     });
             }
         },
-		addChild: {
-			label: "Add Child",
-			action: function(data) {
-                $("#parentName").html(data.context.innerText.split("(")[0].trim());
+        addChild: {
+            label: "Add Child",
+            action: function (data) {
+                var textContent =  data.context.innerText || data.context.textContent;
+
+                $("#parentName").html(textContent.split("(")[0].trim());
                 $("#addChildForm").attr("action", apiURLPrefix + 'taxonomy/add_child/' + data.attr("itemid") + '/');
                 $('#createChildModal').modal('show');
-			}
-		},
+            }
+        },
         moveItem: { // The "moveItem" menu item
             label: "Move Taxonomy",
             action: function (data) {
-                console.log("I've got to move it, move it.")
+
                 $.ajax({
                     type: 'GET',
                     url: apiURLPrefix + "api/taxonomyCategories",
                     dataType: 'json'
                 }).done(function (categories) {
-						var sourceId = data.attr("itemid");
+                        var sourceId = data.attr("itemid");
                         $('#taxonomyItemToMove').text(sourceId);
                         $("#moveCategoryForm").attr("action", apiURLPrefix + 'taxonomy/move/' + data.attr("itemid") + '/');
                         $('#moveCategoryModal').modal('show');
@@ -182,9 +191,6 @@ function customMenu(node) {
                         $("#moveRefFromTaxonomy").html(html);
                         $("#moveRefToTaxonomy").html(html);
 
-                        console.log('Setting selected value to ' + data.attr("itemId"));
-
-
                         $("#moveRefFromTaxonomy").val(data.attr("itemId"));
                         countItems();
                         updateReferenceList('#moveRefFromTaxonomy', '#moveFromTaxonomyReferenceList', '#moveFromName');
@@ -199,20 +205,20 @@ function customMenu(node) {
         delete items.deleteItem;
         delete items.moveItem;
         delete items.moveReferences;
-		delete items.addChild;
+        delete items.addChild;
     }
 
     if (node.attr("type") != "taxonomyCategory" && node.attr("type") != "taxonomyItem") {
         delete items.editItem;
         delete items.splitItem;
         delete items.deleteItem;
-		delete items.addChild;
+        delete items.addChild;
     }
 
-	// limit stuff that can be done to items not at recursion level 0
-	//if(node.attr("level") > 0) {
-	//	delete items.addChild;
-	//}
+    // limit stuff that can be done to items not at recursion level 0
+    //if(node.attr("level") > 0) {
+    //	delete items.addChild;
+    //}
 
     if (!showTreeMenu) {
         delete items.editItem;
@@ -220,7 +226,7 @@ function customMenu(node) {
         delete items.deleteItem;
         delete items.moveItem;
         delete items.moveReferences;
-		delete items.addChild;
+        delete items.addChild;
     }
 
     return items;
