@@ -137,7 +137,7 @@ function customMenu(node) {
                 $('#createChildModal').modal('show');
 			}
 		},
-        moveItem: { // The "delete" menu item
+        moveItem: { // The "moveItem" menu item
             label: "Move Taxonomy",
             action: function (data) {
                 console.log("I've got to move it, move it.")
@@ -146,7 +146,8 @@ function customMenu(node) {
                     url: apiURLPrefix + "api/taxonomyCategories",
                     dataType: 'json'
                 }).done(function (categories) {
-                        $('#taxonomyItemToMove').text(data.context.innerText.split("(")[0].trim());
+						var sourceId = data.attr("itemid");
+                        $('#taxonomyItemToMove').text(sourceId);
                         $("#moveCategoryForm").attr("action", apiURLPrefix + 'taxonomy/move/' + data.attr("itemid") + '/');
                         $('#moveCategoryModal').modal('show');
 
@@ -157,7 +158,7 @@ function customMenu(node) {
                     });
             }
         },
-        moveReferences: { // The "delete" menu item
+        moveReferences: { // The "moveReferences" menu item
             label: "Move References",
             action: function (data) {
                 $.ajax({
@@ -209,9 +210,9 @@ function customMenu(node) {
     }
 
 	// limit stuff that can be done to items not at recursion level 0
-	if(node.attr("level") > 0) {
-		delete items.addChild;
-	}
+	//if(node.attr("level") > 0) {
+	//	delete items.addChild;
+	//}
 
     if (!showTreeMenu) {
         delete items.editItem;

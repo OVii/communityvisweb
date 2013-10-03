@@ -403,7 +403,7 @@ def getTaxonomyTree(request, formatting):
 
 
 def getTaxonomyCategories(request):
-	categories = TaxonomyCategory.objects.all()
+	categories = TaxonomyCategory.objects.order_by('name').all()
 	categoryArray = []
 
 	for category in categories:
@@ -465,17 +465,19 @@ def moveTaxonomyItem(request, taxonomy_id):
 
 	newCategory = request.POST.get('newCategory', '')
 
-	print 'New category is ' + newCategory
+	print "Taxon id " + str(taxonomy_id)
+	print 'New category id is ' + newCategory
 
-	success = True
-	message = 'The parent for ' + taxonomyItem.name + ' has been changed from ' + taxonomyItem.category.name + ' to ' + newCategory
-
-	if newCategory:
-		categoryQuery = TaxonomyCategory.objects.filter(name=newCategory)
-		if len(categoryQuery) > 0:
-			taxonomyItem.category = categoryQuery.get(name=newCategory)
-			taxonomyItem.save()
-	else:
+	try:
+		assert newCategory is not None
+		categoryQuery = TaxonomyCategory.objects.get(pk=newCategory)
+		assert categoryQuery is not None
+		old = taxonomyItem.category.name
+		taxonomyItem.category = categoryQuery
+		taxonomyItem.save()
+		success = True
+		message = 'The parent for ' + taxonomyItem.name + ' has been changed from '	+ old + ' to ' + categoryQuery.name
+	except:
 		success = False
 		message = 'An error occurred changing the taxonomy parent. Please select a taxonomy category.'
 
@@ -612,10 +614,10 @@ def taxonomy_add_child(request, taxonomy_id):
 	try:
 		if len(newChildName) == 0 or taxItem is None:
 			raise Exception
-
+		
 		# create category with same name as this item
-		cat = TaxonomyCategory(name=taxItem.name, parent=taxItem.category)
-		cat.save();
+		cat = TaxonomyCategory(name=taxItem.name,parent=taxItem.category)
+		cat.save()
 
 		# create new child item (weird method but seems to be how you to copy model instances in Django)
 		new_child = TaxonomyItem.objects.filter(pk=taxonomy_id).get(pk=taxonomy_id)
@@ -625,9 +627,13 @@ def taxonomy_add_child(request, taxonomy_id):
 		new_child.category = cat
 		new_child.save()
 
-		# shift references old -> new item
+		# create 'general' child in which to shove the existing references (issue 79)
+		general = TaxonomyItem(name='General',category = cat)
+		general.save()
+
+		# shift references old -> new general item
 		taxItem = TaxonomyItem.objects.filter(pk=taxonomy_id).get(pk=taxonomy_id)
-		taxItem.reference_family().move_all_references(new_child.reference_family())
+		taxItem.reference_family().move_all_references(general.reference_family())
 
 		# finally kill the existing child
 		taxItem.delete()
