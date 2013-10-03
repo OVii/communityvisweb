@@ -24,6 +24,7 @@ import os
 from django.conf import settings
 import taxonomy_backend
 import json
+from django.contrib.sites.models import Site
 
 # couple of globals
 from web.reference_import_couch import bibtex_import
@@ -42,12 +43,11 @@ def index(request):
 							  {'recent_taxonomy_items': recent_items, 'recent_reference_items': recent_reference_items},
 							  context_instance=RequestContext(request))
 
-
 # taxonomy list
 def taxonomy(request):
 	message = request.GET.get('message', '')
 	success = request.GET.get('success', True)
-	ajax_url_prefix = settings.AJAX_URL_PREFIX
+	ajax_url_prefix = "http://" + request.META['HTTP_HOST'] + "/"
 
 	taxonomies = TaxonomyCategory.objects.all()
 	return render_to_response("templates/taxonomy.html",
@@ -568,10 +568,8 @@ def taxonomy_edit(request, taxonomy_id):
 
 def taxonomy_delete(request, taxonomy_id):
 	taxonomyItem = TaxonomyItem.objects.filter(pk=taxonomy_id).get(pk=taxonomy_id)
-	taxonomyItem.delete()
-	# for now, any attached references are left dangling
+	taxonomyItem.reference_family().remove_all_references()
 	return HttpResponseRedirect(URL_PREPENDER + "/taxonomy/")
-
 
 def taxonomy_split(request, taxonomy_id):
 	taxonomyItemToSplit = TaxonomyItem.objects.filter(pk=taxonomy_id).get(pk=taxonomy_id)
