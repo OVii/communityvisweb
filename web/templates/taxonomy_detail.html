@@ -2,6 +2,9 @@
 {% block title %}View Taxonomy Item{% endblock %}
 
 {% block head_additional %}
+    <script type="text/javascript" src="{{ STATIC_URL }}bootstrap/js/bootstrap-fileupload.min.js"></script>
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/bootstrap-fileupload.min.css"/>
+
     <script>
         function showRequestWindow() {
             $('#taxonomyRequestModal').modal('show');
@@ -23,6 +26,8 @@
 
 
     </script>
+
+
 
     <style type="text/css">
         .hidden {
@@ -113,7 +118,7 @@
 
     <script type="text/javascript">
         window.onload = function () {
-            console.log($('.fileupload'));
+
             $('.fileupload').fileupload();
 
         }

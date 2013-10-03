@@ -252,7 +252,37 @@
                         {% endfor %}
                     </div>
                 </div>
-                {#            end approvals section#}
+
+
+                <div class="block col-md-5" id="approvals">
+                    <div class="block-head">
+                        Approval History
+                        <hr/>
+                    </div>
+
+                    <div class="profile-unit">
+                        {% for approval in historic_approvals %}
+                            <div class="well">
+
+                                <p><strong>{{ approval.taxonomyItem.name }}</strong></p>
+
+                                <p style="font-size:1em; font-weight: bolder">Request by <a
+                                        href="{{ URL_PREPENDER }}/profiles/{{ approval.requester.username }}">{{ approval.requester.username }}</a>
+                                </p>
+
+                                <p style="font-size:0.8em; font-weight: lighter">{{ approval.additionalNotes }}</p>
+
+                                <a href="{{ URL_PREPENDER }}/taxonomy/{{ approval.taxonomyItem.id }}" target="_blank"
+                                   class="btn btn-default">View
+                                    Taxonomy Item</a>
+
+                                <a onclick="showResponseWindow('{{ URL_PREPENDER }}/request_ownership/response/{{ approval.id }}')"
+                                   class="btn btn-success">Respond</a>
+                            </div>
+                            <div class="clearfix"></div>
+                        {% endfor %}
+                    </div>
+                </div>
 
             {% endif %}
 
