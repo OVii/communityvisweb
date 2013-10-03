@@ -361,54 +361,40 @@ def sendEmailForEnquiry(message, request, taxonomyItem):
 								   'messageBody': "The maintainer will get back to you soon!"},
 								  context_instance=RequestContext(request))
 
-
 def getTaxonomyTree(request, formatting):
-	taxonomy = []
 	taxonomyArea = TaxonomyArea.objects.filter(name="Visualisation").get(name="Visualisation")
 	categories = taxonomyArea.taxonomycategory_set.order_by('name').all()
 
-	if formatting == "jsTree":
-		for category in categories:
-			items = []
-			for item in category.taxonomyitem_set.order_by('name').all():
-				items.append({"data": item.name + " (" + str(len(item.references())) + " refs)",
-							  "attr": {"itemId": item.id, "type": "taxonomyItem", "level": 0}})
+	# builds up the tree dictionary according to item and category formatting functions
+	def recurseCategory(cat, item_fmt, cat_fmt):
+		items = []
+		# first, grab this category's items
+		for item in cat.taxonomyitem_set.order_by('name').all():
+			items.append(item_fmt(item))
 
-			if category.taxonomycategory_set:
-				for subCategory in category.taxonomycategory_set.order_by('name').all():
-					sub_items = []
-					for item in subCategory.taxonomyitem_set.order_by('name').all():
-						sub_items.append({"data": item.name + " (" + str(len(item.references())) + " refs)",
-										  "attr": {"itemId": item.id, "type": "taxonomyItem", "level": 1}})
+		# now go into the children
+		if cat.taxonomycategory_set:
+			for subCat in cat.taxonomycategory_set.order_by('name').all():
+				items.append(recurseCategory(subCat, item_fmt, cat_fmt))
+		
+		# finally return category appended with children
+		return cat_fmt(cat,items)
 
-					items.append(
-						{"data": subCategory.name, "attr": {"itemId": subCategory.id, "type": "taxonomyCategory"},
-						 "children": sub_items, "state": "closed"})
-
-			taxonomy.append(
-				{"data": category.name, "attr": {"itemId": category.id, "type": "taxonomyCategory"}, "children": items,
-				 "state": "closed"})
-
-		response = [{"data": "Taxonomy", "children": taxonomy, "state": "open"}]
-
+	# figure out which formatting functions to use
+	if formatting == 'jsTree':
+		item_fmt = lambda item: {"data": item.name + " (" + str(len(item.references())) + " refs)",
+			"attr": {"itemId": item.id, "type": "taxonomyItem", "level": 0}}
+		cat_fmt = lambda cat,items: {"data": cat.name, "attr": {"itemId": cat.id, "type": "taxonomyCategory"}, "children": items}
 	else:
-		for category in categories:
-			items = []
-			for item in category.taxonomyitem_set.all():
-				items.append({"data": item.name + " (" + str(len(item.references())) + " refs)", "id": item.id})
+		item_fmt = lambda item: {"data": item.name + " (" + str(len(item.references())) + " refs)", "id": item.id}
+		cat_fmt = lambda cat,items: {"data": cat.name, "children": items}
 
-			if category.taxonomycategory_set:
-				sub_items = []
-				for subCategory in category.taxonomycategory_set.all():
-					for item in subCategory.taxonomyitem_set.all():
-						sub_items.append(
-							{"data": item.name + " (" + str(len(item.references())) + " refs)", "id": item.id})
+	# go through each top-level category and build the dictionary
+	tax = []
+	for category in categories:
+		tax.append(recurseCategory(category,item_fmt, cat_fmt))
 
-					items.append({"data": subCategory.name, "children": sub_items})
-
-			taxonomy.append({"data": category.name, "children": items})
-
-		response = {"taxonomy": taxonomy}
+	response = [{"data": "Taxonomy", "children": tax, "state": "open"}]
 
 	return HttpResponse(simplejson.dumps(response), mimetype="application/json")
 
