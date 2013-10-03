@@ -394,7 +394,10 @@ def getTaxonomyTree(request, formatting):
 	for category in categories:
 		tax.append(recurseCategory(category,item_fmt, cat_fmt))
 
-	response = [{"data": "Taxonomy", "children": tax, "state": "open"}]
+	if formatting == 'jsTree':
+		response = [{"data": "Taxonomy", "children": tax, "state": "open"}]
+	else:
+		response = {"taxonomy":tax}
 
 	return HttpResponse(simplejson.dumps(response), mimetype="application/json")
 
