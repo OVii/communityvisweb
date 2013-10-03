@@ -34,8 +34,13 @@
         <div class="row pull-right">
 
             {% if user.is_authenticated %}
-				<a href="{{ URL_PREPENDER }}/contact" class="btn btn-warning" type="button"><span class="glyphicon glyphicon-bullhorn glyphicon-pad"></span>I have a suggestion</a>
-				<a href="{{ URL_PREPENDER }}/taxonomy/add" class="btn btn-warning" type="button"><span class="glyphicon glyphicon-plus-sign glyphicon-pad"></span>Add a new taxon</a>
+                <a href="{{ URL_PREPENDER }}/contact" class="btn btn-warning" type="button"><span
+                        class="glyphicon glyphicon-bullhorn glyphicon-pad"></span>I have a suggestion</a>
+
+            {% endif %}
+            {% if user.is_superuser %}
+                <a href="{{ URL_PREPENDER }}/taxonomy/add" class="btn btn-warning" type="button"><span
+                        class="glyphicon glyphicon-plus-sign glyphicon-pad"></span>Add a new taxon</a>
             {% endif %}
         </div>
 
@@ -57,17 +62,18 @@
         </div>
 
         <div id="taxonomyInfo" class="col-md-8">
-			<h3><span class="glyphicon glyphicon-hand-left" style="padding-right:10px"></span>Welcome! Please select an item in the taxonomy tree.</h3>
+            <h3><span class="glyphicon glyphicon-hand-left" style="padding-right:10px"></span>Welcome! Please select an
+                item in the taxonomy tree.</h3>
         </div>
 
     </div>
 
-	{{ AJAX_URL_PREFIX }}
+    {{ AJAX_URL_PREFIX }}
 
-	<script type="text/javascript">
-		// used in taxonomy_tree API for correct, machine-agnostic URLs
-		var apiURLPrefix = "{{ ajax_url_prefix }}";
-	</script>
+    <script type="text/javascript">
+        // used in taxonomy_tree API for correct, machine-agnostic URLs
+        var apiURLPrefix = "{{ ajax_url_prefix }}";
+    </script>
 
     {% include 'fragments/deleteModal.html' %}
     {% include 'fragments/deleteCategoryModal.html' %}
@@ -88,7 +94,7 @@
     <script type="text/javascript">
         var showTreeMenu = false;
         {% if user.is_superuser %}
-			showTreeMenu = true;
+            showTreeMenu = true;
         {% endif %}
 
     </script>

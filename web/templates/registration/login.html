@@ -2,6 +2,15 @@
 
 {% block title %}Log in{% endblock %}
 
+{% block head_additional %}
+    <style type="text/css">
+        #login p {
+            font-size: 1.1em;
+            font-weight: lighter;
+        }
+    </style>
+{% endblock %}
+
 {% block content %}
 
     {% if form.errors %}
@@ -46,8 +55,9 @@
         </form>
 
         <div class="login-additional">
-            <p><a href="{{ URL_PREPENDER }}/accounts/password/reset/">Forgot</a> your password? <a
-                    href="{{ URL_PREPENDER }}/accounts/register/">Need an account</a>?</p>
+            <p><a href="{{ URL_PREPENDER }}/accounts/password/reset/">Forgot</a> your password? <br/>If you haven't got
+                an account, please create one <a
+                        href="{{ URL_PREPENDER }}/accounts/register/">here</a>.</p>
         </div>
 
     </div>
