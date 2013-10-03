@@ -6,6 +6,11 @@
 {% block head_additional %}
     <link rel="stylesheet" href="{{ STATIC_URL }}/css/overridden.css"/>
 
+    <style type="text/css">
+    #login p {
+        font-size: 1.1em; font-weight: lighter;
+    }
+    </style>
 {% endblock %}
 
 {% block content %}
@@ -33,13 +38,13 @@
     {% endif %}
 
 
-    <div id="info">
-    <p>In order to become a curator or be involved in system development, it is necessary to register first. Registration is not required if you only wish to browse the <strong>Community Resources</strong>.</p>
-    </div>
+
     <div id="login" class="login_form" xmlns="http://www.w3.org/1999/html">
 
         {% block alert %}
         {% endblock %}
+
+     <p>In order to become a curator or be involved in system development, it is necessary to register first. <br/><br/>Registration is not required if you only wish to browse the <strong>Community Resources</strong>.</p>
 
         <div class="section-header"><span class="content-section login-section"><span
                 class="header-text"><i class="icon-check"></i> Register</span></span>
@@ -85,7 +90,7 @@
         </form>
 
         <div class="login-additional span12">
-            <p><a href="{{ URL_PREPENDER }}/accounts/login/"">Have</a> an account?
+            <p><a href="{{ URL_PREPENDER }}/accounts/login/"">Have</a> an account?</p>
         </div>
 
     </div>
