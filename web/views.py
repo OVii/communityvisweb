@@ -503,6 +503,22 @@ def renameTaxonomyCategoryAPI(request, category_id):
 
 	return HttpResponseRedirect(URL_PREPENDER + "/taxonomy/?success=" + str(success) + "&message=" + str(message))
 
+def deleteTaxonomyCategory(request, category_id):
+	category = TaxonomyCategory.objects.filter(pk=category_id).get(pk=category_id)
+	name = category.name
+
+	success = False
+
+	try:
+		assert len(category.taxonomycategory_set.all()) + len(category.taxonomyitem_set.all()) == 0
+		category.delete()
+		success = True
+		message = 'Successfully deleted ' + name 
+	except:
+		message = 'Problem deleting category - ensure it has no children first.'
+
+	return HttpResponseRedirect(URL_PREPENDER + "/taxonomy/?success=" + str(success) + "&message=" + str(message))
+
 
 def handleTaxonomyEnquiry(request, taxonomy_id):
 	type = request.POST['type']
@@ -574,11 +590,19 @@ def taxonomy_edit(request, taxonomy_id):
 	return render_to_response("templates/taxonomy_edit_base.html", {'taxonomy': taxonomyItem, 'categories': categories},
 							  context_instance=RequestContext(request))
 
-
 def taxonomy_delete(request, taxonomy_id):
-	taxonomyItem = TaxonomyItem.objects.filter(pk=taxonomy_id).get(pk=taxonomy_id)
-	taxonomyItem.reference_family().remove_all_references()
-	return HttpResponseRedirect(URL_PREPENDER + "/taxonomy/")
+	success = True
+
+	try:
+		taxonomyItem = TaxonomyItem.objects.filter(pk=taxonomy_id).get(pk=taxonomy_id)
+		taxonomyItem.reference_family().remove_all_references()
+		message = "Deleted " + taxonomyItem.name + " successfully"
+		taxonomyItem.delete();
+	except:
+		success = False
+		messsage = "There was a problem deleting that item. Please try again."
+
+	return HttpResponseRedirect(URL_PREPENDER + "/taxonomy/?success=" + str(success) + "&message=" + message)
 
 def taxonomy_split(request, taxonomy_id):
 	taxonomyItemToSplit = TaxonomyItem.objects.filter(pk=taxonomy_id).get(pk=taxonomy_id)

@@ -84,7 +84,7 @@ function customMenu(node) {
                 }
             }
         },
-        deleteItem: { // The "rename" menu item
+        deleteItem: { 
             label: "Delete",
             action: function (data) {
                 $("#itemToDeleteName").html(data.context.innerText.split("(")[0].trim());
@@ -93,7 +93,14 @@ function customMenu(node) {
 
             }
         },
-
+        deleteCategory: { 
+            label: "Delete Category",
+            action: function (data) {
+                $("#categoryToDeleteName").html(data.context.innerText.split("(")[0].trim());
+                $("#confirmRemoveCategory").attr("action", apiURLPrefix + 'category/delete/' + data.attr("itemid") + '/');
+                $('#confirmRemoveCategoryModal').modal('show');
+            }
+		},
         splitItem: { // The "split" menu item
             label: "Split",
             action: function (data) {
@@ -201,6 +208,9 @@ function customMenu(node) {
         delete items.moveReferences;
 		delete items.addChild;
     }
+	if(node.attr("type") == "taxonomyItem") {
+		delete items.deleteCategory;
+	}
 
     if (node.attr("type") != "taxonomyCategory" && node.attr("type") != "taxonomyItem") {
         delete items.editItem;
@@ -221,6 +231,7 @@ function customMenu(node) {
         delete items.moveItem;
         delete items.moveReferences;
 		delete items.addChild;
+		delete items.deleteCategory;
     }
 
     return items;
