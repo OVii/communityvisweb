@@ -210,7 +210,6 @@ class UserProfile(models.Model):
 
     get_absolute_url = models.permalink(get_absolute_url)
 
-
 class OwnershipRequest(models.Model):
     requester = models.ForeignKey(User)
     taxonomyItem = models.ForeignKey(TaxonomyItem)
