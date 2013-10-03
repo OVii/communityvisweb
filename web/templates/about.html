@@ -1,0 +1,160 @@
+{% extends "base.html" %}
+{% block title %}About Us{% endblock %}
+{% block head_additional %}
+    <style>
+        .person-item {
+            float: left;
+            width: 200px;
+            max-width: 200px;
+            height: 160px;
+            padding: 8px;
+            background-color: #f8f8f8;
+            color: #414241;
+            overflow: hidden;
+            margin: 5px;
+            font-size: 1em;
+            text-align: center;
+        }
+
+        .person-item img {
+
+            height: 70px;
+            border-radius: 50%;
+            border: 1px #ddd solid;
+            overflow: hidden;
+
+        }
+
+        .person-item .position {
+            font-size: 1.0em;
+            font-weight: bolder;
+        }
+
+        .person-item .name {
+            font-size: 1.1em;
+        }
+
+        .person-item .organisation {
+            font-size: 0.7em;
+            font-weight: bolder;
+            color: #ED9C28;
+        }
+
+        #about-us p {
+            font-size: 1.3em;
+            font-weight: lighter;
+        }
+
+        #about-us h2 {
+            background-color: #f1f2f1;
+            height: 60px;
+            width: 100%;
+            padding: 10px;
+            font-weight: normal;
+        }
+
+
+    </style>
+{% endblock %}
+{% block content %}
+
+    <br/>
+    <div id="about-us">
+        <p>The idea of
+            <strong>Community Resources</strong> was first initiated in EuroRVVV 2012
+            in Vienna. The first meeting of the Steering Committee was held in
+            VisWeek 2012 in Seattle. The idea was formally presented to the VIS
+            community in EuroRVVV 2013 in Leipzig.
+        </p>
+
+        <h2>Steering Committee</h2>
+
+
+        <div class="person-item">
+            <img alt="" src="http://www.oerc.ox.ac.uk/personal-pages/min/MinChenWeb.jpg"/><br/>
+            <span class="name">Min Chen</span><br/>
+            <span class="position">Coordinator</span><br/>
+            <span class="organisation">University of Oxford, UK</span>
+        </div>
+
+        <div class="person-item">
+            <img alt="" src="http://vis.uni-kl.de/people/garth/garth.jpg"/><br/>
+            <span class="name">Christoph Garth</span><br/>
+            <span class="position">Curation</span><br/>
+            <span class="organisation">University of Kaiserslautern, Germany</span>
+        </div>
+
+        <div class="person-item">
+            <img alt="" src="http://www.cs.utah.edu/~kirby/kirby.jpg"/><br/>
+            <span class="name">Mike Kirby</span><br/>
+            <span class="position">Taxonomy</span><br/>
+            <span class="organisation">University of Utah, USA</span>
+        </div>
+
+        <div class="person-item"><span class="position"></span>
+            <img alt=""
+                 src="http://doi.ieeecomputersociety.org/cms/Computer.org/dl/trans/tg/2012/02/figures/figthmnl/ttg2012020283a3.gif"/><br/>
+            <span class="name">Robert S Laramee</span><br/>
+            <span class="position"> </span><br/>
+            <span class="organisation">Swansea University, UK</span><br/>
+        </div>
+
+        <div class="person-item">
+            <img alt="" src="http://b.vimeocdn.com/ps/500/257/5002578_300.jpg"/><br/>
+            <span class="name">Eamonn Maguire</span><br/>
+            <span class="position">Development</span><br/>
+            <span class="organisation">University of Oxford, UK</span>
+        </div>
+
+
+        <div class="person-item">
+            <img alt="" src="http://0.academia-photos.com/14579/857558/1069993/s200_paul.rosenthal.png"/><br/>
+            <span class="name">Paul Rosenthal</span><br/>
+            <span class="position">Curation</span><br/>
+            <span class="organisation">Chemnitz University of Technology, Germany</span>
+        </div>
+
+        <div class="person-item">
+            <img alt=""
+                 src="https://lh5.googleusercontent.com/-cGex6bc8EQ8/AAAAAAAAAAI/AAAAAAAAAD8/5GDMTEQHCFg/photo.jpg"/><br/>
+            <span class="name">Melanie Tory</span><br/>
+            <span class="position">Taxonomy</span><br/>
+            <span class="organisation">University of Victoria, Canada</span>
+        </div>
+
+        <div class="clearfix"></div>
+
+        <h2>Software/Server Team</h2>
+
+
+        <div class="person-item">
+            <img alt="" src="http://m.c.lnkd.licdn.com/mpr/pub/image-58UIXuFi5UnmRqKC1dSq1OYPKPpz4g885kS8x4z1K4EI4f0h58U8xBEiKBlQpXKV3dVb/eamonn-maguire.jpg"/><br/>
+            <span class="name">Eamonn Maguire</span><br/>
+            <span class="position">Development</span><br/>
+            <span class="organisation">University of Oxford, UK</span>
+        </div>
+
+
+        <div class="person-item">
+            <img alt=""
+                 src="https://si0.twimg.com/profile_images/378800000436036707/bad3d3c9337918e7e8500bf499697461.jpeg"/><br/>
+            <span class="name">Simon Walton</span><br/>
+            <span class="position">Development</span><br/>
+            <span class="organisation">University of Oxford, UK</span>
+        </div>
+
+        <div class="person-item">
+            <img alt="" src="http://www.thisisalfie.com/img/my-photo.jpg"/><br/>
+            <span class="name">Alfie Abdul Rahman</span><br/>
+            <span class="position">Testing and Admin</span><br/>
+            <span class="organisation">University of Oxford, UK</span>
+        </div>
+
+        <div class="clearfix"></div>
+        <h2>Infrastructure Provider</h2>
+
+        <p>The
+            <strong>Community Resources</strong> is hosted by Oxford e-Research Centre
+            (OeRC), University of Oxford.</p>
+    </div>
+{% endblock %}

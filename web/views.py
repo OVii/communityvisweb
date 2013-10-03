@@ -43,6 +43,13 @@ def index(request):
 							  {'recent_taxonomy_items': recent_items, 'recent_reference_items': recent_reference_items},
 							  context_instance=RequestContext(request))
 
+def about(request):
+    return render_to_response("templates/about.html",
+                              {'curators': []},
+                              context_instance=RequestContext(request))
+
+
+
 # taxonomy list
 def taxonomy(request):
 	message = request.GET.get('message', '')

@@ -12,8 +12,8 @@
             $("#deleteModalForm").attr("action", '{{ URL_PREPENDER }}/reference/remove/{{ taxonomy.id }}/' + referenceId + '/');
         }
 
-        function showConfirmWindow() {
-            $('#confirmRemoveModal').modal('show');
+        function showRevokeWindow() {
+            $('#confirmRevokeModal').modal('show');
         }
 
         function showReferenceAdditionWindow() {
@@ -60,7 +60,11 @@
             {% if user.is_superuser or ownerLoggedIn %}
                 <a class="btn btn-default" onclick="showReferenceAdditionWindow()"><span
                         class="glyphicon glyphicon-plus glyphicon-pad"></span>Add References</a>
-                <a class="btn btn-danger" onclick="showConfirmWindow()">Revoke Ownership</a>
+
+            {% endif %}
+
+            {% if ownerLoggedIn %}
+                <a class="btn btn-danger" onclick="showRevokeWindow()">Revoke Ownership</a>
             {% endif %}
 
             {% if owners == 0 %}
