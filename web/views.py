@@ -47,7 +47,7 @@ def index(request):
 def taxonomy(request):
 	message = request.GET.get('message', '')
 	success = request.GET.get('success', True)
-	ajax_url_prefix = "http://" + request.META['HTTP_HOST'] + "/"
+	ajax_url_prefix = "http://" + request.META['HTTP_HOST'] + settings.URL_PREPENDER + "/"
 
 	taxonomies = TaxonomyCategory.objects.all()
 	return render_to_response("templates/taxonomy.html",
