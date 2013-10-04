@@ -57,17 +57,17 @@
                 {% for reference in references %}
 					<li class="list-group-item reference_box">
 						 {% if owners != 0 %}
-                            <a onclick="showSuggestBox('reference', '{{ URL_PREPENDER }}/enquiry/{{ taxonomy.id }}/{{ reference.0 }}/')"
+                            <a onclick="showSuggestBox('reference', '{{ URL_PREPENDER }}/enquiry/{{ taxonomy.id }}/{{ reference.1.id }}/')"
                                class="btn pull-left btn-small btn-warning" style="margin-right:10px;"><i class="glyphicon glyphicon-exclamation-sign"></i> </a>{% endif %}
                         {% if user.is_superuser or ownerLoggedIn %}
-                            <a onclick="showDeleteWindow('{{ reference.0 }}')" class="pull-left btn btn-small btn-danger" style="margin-right:10px"><span class="glyphicon-trash glyphicon"></span></a>
+                            <a onclick="showDeleteWindow('{{ reference.1.id }}')" class="pull-left btn btn-small btn-danger" style="margin-right:10px"><span class="glyphicon-trash glyphicon"></span></a>
                         {% endif %}
 
 						{% if reference.1.year > 0 %}
 							<span class="badge">{{ reference.1.year }}</span>
 						{% endif %}
 
-						<a href="{{ URL_PREPENDER }}/reference/{{taxonomy.id}}/{{ reference.0 }}?currentPage={{ request.path }}"><h4 class="list-group-item-heading title">{{ reference.1.title }}</h4></a>
+						<a href="{{ URL_PREPENDER }}/reference/{{taxonomy.id}}/{{ reference.1.id }}?currentPage={{ request.path }}"><h4 class="list-group-item-heading title">{{ reference.1.title }}</h4></a>
                         <p class="list-group-item-text">{{ reference.1.authorsAsText }}</p>
 
                         <p><span class="journal">{{ reference.1.journal }}</span>{% if reference.1.year > 0 %}
