@@ -56,6 +56,7 @@ urlpatterns = patterns('',
                        url(r'^taxonomy/delete/(\d+)/$', 'web.views.taxonomy_delete', name='taxonomy_delete'),
                        url(r'^taxonomy/split/(\d+)/$', 'web.views.taxonomy_split', name='taxonomy_download'),
                        url(r'^taxonomy/add_child/(\d+)/$', 'web.views.taxonomy_add_child', name='taxonomy_add_child'),
+                       url(r'^taxonomy/add_leaf/(\d+)/$', 'web.views.taxonomy_add_leaf', name='taxonomy_add_leaf'),
                        url(r'^taxonomy/move/(\d+)/$', 'web.views.moveTaxonomyItem', name='taxonomy_move'),
                        url(r'^taxonomy/move-references/$', 'web.views.moveReferences', name='taxonomy_move'),
 

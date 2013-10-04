@@ -148,12 +148,21 @@ function customMenu(node) {
             label: "Add Child",
             action: function (data) {
                 var textContent =  data.context.innerText || data.context.textContent;
-
                 $("#parentName").html(textContent.split("(")[0].trim());
                 $("#addChildForm").attr("action", apiURLPrefix + 'taxonomy/add_child/' + data.attr("itemid") + '/');
                 $('#createChildModal').modal('show');
             }
         },
+        addItem: {
+            label: "Add Item",
+            action: function (data) {
+                var textContent =  data.context.innerText || data.context.textContent;
+                var itemId = data.attr("itemid");
+				$("#createItem_parentName").html(textContent.split("(")[0].trim());
+                $("#addItemForm").attr("action", apiURLPrefix + 'taxonomy/add_leaf/' + data.attr("itemid") + '/');
+                $('#createItemModal').modal('show');
+			}
+		},
         moveItem: { // The "moveItem" menu item
             label: "Move Taxonomy",
             action: function (data) {
@@ -217,6 +226,7 @@ function customMenu(node) {
     }
 	if(node.attr("type") == "taxonomyItem") {
 		delete items.deleteCategory;
+		delete items.addItem;
 	}
 
     if (node.attr("type") != "taxonomyCategory" && node.attr("type") != "taxonomyItem") {
@@ -224,6 +234,7 @@ function customMenu(node) {
         delete items.splitItem;
         delete items.deleteItem;
         delete items.addChild;
+		delete items.addItem;
     }
 
     // limit stuff that can be done to items not at recursion level 0
@@ -237,7 +248,7 @@ function customMenu(node) {
         delete items.deleteItem;
         delete items.moveItem;
         delete items.moveReferences;
-
+		delete items.addItem;
 		delete items.addChild;
 		delete items.deleteCategory;
     }

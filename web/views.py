@@ -636,6 +636,23 @@ def taxonomy_split(request, taxonomy_id):
 
 	return HttpResponseRedirect(URL_PREPENDER + "/taxonomy/?success=" + str(success) + "&message=" + str(message))
 
+def taxonomy_add_leaf(request, category_id):
+	category = TaxonomyCategory.objects.filter(pk=category_id).get(pk=category_id)
+	itemName = request.POST.get("newItemName",'')
+	success = False
+
+	try:
+		assert itemName is not None and len(itemName) > 0 and category is not None
+
+		newItem = TaxonomyItem(name=itemName, category=category)
+		newItem.save()
+		
+		message = "Successfully added the new leaf node " + itemName + " under category " + category.name
+		success = True
+	except Exception, e:
+		message = "There was a problem creating the taxon item. Please try again later."
+
+	return HttpResponseRedirect(URL_PREPENDER + "/taxonomy/?success=" + str(success) + "&message=" + str(message))
 
 def taxonomy_add_child(request, taxonomy_id):
 	taxItem = TaxonomyItem.objects.filter(pk=taxonomy_id).get(pk=taxonomy_id)
