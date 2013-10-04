@@ -59,16 +59,16 @@
     {% else %}
 
         <div class="home-page">
-            <div class="col-md-5">
+            <div class="col-md-4">
 
                 <img src="{{ STATIC_URL }}/img/static_img/home/volunteer.png" align="center"/><br/>
                 <p style="font-weight: lighter; color: #414241; font-size:1.2em; line-height: 22px; text-rendering: optimizelegibility;">The development and maintenance of this resource requires the selfless contributions from many
                 volunteers in the field. If you wish to help manage a sub-collection of references on a specific subject
-                of which you have considerable knowledge of, please let us know. You can fill in the form below to
-                request ownership of one of our taxonomy items.</p>
+                of which you have considerable knowledge of, please let us know. You can fill in the form on the right to
+                become a curator of a taxon.</p>
             </div>
 
-            <div id="login" class="login_form col-md-7">
+            <div id="login" class="col-md-8" style="width:500px">
 
                 <form action="" method="post" id="volunteer-form" class="form-horizontal" style="margin-top:20px; margin-bottom:100px;"
                       onsubmit="return validate();">
@@ -78,16 +78,16 @@
                     {% csrf_token %}
 
                     <div id="name_group" class="form-group">
-                        <label for="name" class="control-label col-lg-4">Name</label>
-                        <div class="controls col-lg-8">
+                        <label for="name" class="control-label col-lg-5">Name</label>
+                        <div class="controls col-lg-7">
                             <input id="name" type="text" name="name" class="form-control">
                         </div>
                     </div>
 
 
 					<div class="form-group">
-						<label for="availableItems" class="control-label col-lg-4">Select a Taxonomy Item</label>
-						<div class="col-lg-8">
+						<label for="availableItems" class="control-label col-lg-5">Select a leaf taxon</label>
+						<div class="col-lg-7">
 						<select name="availableItems" id="taxonomyItem" class="form-control" onchange="updateAction()">
 
 							{% for category, taxonomyItems in available.items %}
@@ -102,16 +102,16 @@
 					</div>
 
                     <div id="comments_group" class="form-group">
-                        <label for="comments" class="control-label col-lg-4">Tell us why you should maintain this item.</label>
-                        <div class="col-lg-8">
+                        <label for="comments" class="control-label col-lg-5">Briefly explain why you are suitable for maintaining this taxon (e.g., your expertise, publications, PhD program).</label>
+                        <div class="col-lg-7">
                             <textarea id="message" name="message" maxlength="5000" rows=10 class="form-control"
                                       placeholder="I wish to take ownership of the above taxonomy item. I include relevant details of my expertise in the area."></textarea>
                         </div>
                     </div>
 
 					<div class="form-group">
-						<div class="col-lg-4"></div>
-	                    <div class="col-lg-8">
+						<div class="col-lg-5"></div>
+	                    <div class="col-lg-7">
 	                        <input type="submit" class="btn btn-warning pull-right" value="Submit Volunteer Request">
 						</div>
                     </div>
