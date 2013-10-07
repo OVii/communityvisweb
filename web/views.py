@@ -440,7 +440,6 @@ def getTaxonomyCategoryJSON(request, taxonomy_id):
 
 	for (ref_id, reference) in references:
 		reference['url'] = URL_PREPENDER + "/reference/" + str(ref_id)
-		print reference
 		refjsonlist.append(reference);
 
 	response = {"id": taxonomy.id, "name": taxonomy.name, "description": taxonomy.detail,

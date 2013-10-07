@@ -120,18 +120,29 @@
             <div>
 
                 <h4>
-                    {{ references.length }} References
+					{{ references.length }} References
                 </h4>
+				<ul>
                 {{#each references}}
-                <div class="reference_box">
+					<li class="list-group-item reference_box">
+						{{#if this.year  }}
+							<span class="badge">{{ this.year }}</span>
+						{{/if }}
 
-                    <p class="title"><a href="{{ this.url }}">{{ this.guid }}</a></p>
+						<a href="{{ URL_PREPENDER }}/reference/{{ ../id }}/{{ this.id }}?currentPage={{ request.path }}">
+							<h4 class="list-group-item-heading title">{{ this.title }}</h4></a>
+						<p class="list-group-item-text">{{ this.authorsAsText }}</p>
 
-                    <p class="authors">{{ this.bibtex }}</p>
+						<p><span class="journal">{{ this.journal }}</span>{{#if this.year }}
+							<span class="year">{{#if this.journal }} {{/if }}</span>{{/if }}
+						</p>
 
-                    <hr/>
-                </div>
+						{{#if reference.url }}
+							<a href="{{ this.url }}" target="_blank" class="btn btn-small">View Paper</a>
+						{{/if }}
+					</li>
                 {{/each}}
+				</ul>
             </div>
         </script>
 
