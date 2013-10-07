@@ -1,0 +1,45 @@
+<div id="createItemModal" class="modal fade" tabindex="-1" role="dialog"
+     aria-labelledby="confirmRemoveRequest"
+     aria-hidden="true" xmlns="http://www.w3.org/1999/html">
+	 <div class="modal-dialog">
+		 <div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4>Create Taxon Leaf</h4>
+			</div>
+			<form accept-charset="UTF-8" action="" class="form-horizontal" id="addItemForm"
+				  method="post" onsubmit="return validateRenameForm()">
+			<div class="modal-body">
+				{% csrf_token %}
+				<p>This operation will create a new taxon item as a parent of <span id="createItem_parentName"></span>.
+				<div id="create_item_errors"></div>
+				<br/>
+				<div id="add_item_detail_group" class="form-group">
+					<label for="comments" class="col-lg-4 control-label">Name of new item:</label>
+					<div class="col-lg-8">
+						<input name="newItemName" type="text" class="form-control"/>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<input name="create" type="submit" class="btn btn-warning pull-right" value="Add Item">
+			</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+	function validateRenameForm() {
+		var message = document.forms["addItemForm"]["newItemName"].value;
+		blankMessage = (message === "");
+		var errorHTML = "";
+		if (blankMessage) {
+			errorHTML += '<div class="alert alert-error">Please enter a name!</div>'
+		}
+
+		$("#add_item_errors").html(errorHTML);
+		$("#add_item_detail_group").toggleClass("control-group error", blankMessage);
+		return !(blankMessage);
+	}
+</script>

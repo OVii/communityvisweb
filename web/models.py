@@ -48,8 +48,8 @@ class TaxonomyItem(models.Model):
     def reference_family(self):
         return ReferenceFamily(self.int_pk())
 
-    def references(self, sort=None):
-        return ReferenceFamily(self.int_pk()).get_references(sort)
+    def references(self, sort=None, reverse=False):
+        return ReferenceFamily(self.int_pk()).get_references(sort,reverse)
 
     def remove_reference(self, ref_id):
         ReferenceFamily(self.int_pk()).remove_reference(ref_id)
@@ -122,12 +122,12 @@ class ReferenceFamily(object):
         return self.db.delete(self.db[ref_id])
 
     # get all references
-    def get_references(self, sort=None):
+    def get_references(self, sort=None, reverse=False):
         emit = "emit(d._id,d)"
         if sort is not None:
             emit = "emit(d.%s,d)" % sort
 
-        return [(x.key, x.value) for x in self.db.query("function(d) { " + emit + "; }")]
+        return [(x.key, x.value) for x in self.db.query("function(d) { " + emit + "; }",descending=reverse)]
 
     def get_references_as_dict(self, sort=None):
         refs = self.get_references()

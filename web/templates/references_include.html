@@ -16,11 +16,42 @@
                                     <span class="caret"></span>
                                 </a>
                                 <ul class="dropdown-menu" role="menu">
-                                    <li><a href="{{ request.path }}?sort=authors">Author list</a></li>
-                                    <li><a href="{{ request.path }}?sort=year">Year</a></li>
-                                    <li><a href="{{ request.path }}?sort=journal">Journal</a></li>
-                                    <li><a href="{{ request.path }}?sort=title">Title</a></li>
+                                    <li><a href="javascript:sortParams['sortAttr'] = 'authors'; saveSortParams();">Author list</a></li>
+									<li><a href="javascript:sortParams['sortAttr'] = 'year'; saveSortParams();">Year</a></li>
+                                    <li><a href="javascript:sortParams['sortAttr'] = 'journal'; saveSortParams();">Journal</a></li>
+                                    <li><a href="javascript:sortParams['sortAttr'] = 'title'; saveSortParams();">Title</a></li>
                                 </ul>
+								<script language="javascript">
+									var sortParams;
+
+									$(document).ready(function() {
+										$('#refsortorder').button();
+										$('#refsortorder').children().click(function () { sortParams['sortOrder'] = $(this).attr('order'); saveSortParams(); });
+										restoreSortParams();
+									});
+
+									function restoreSortParams() {
+										sortParams = $.parseQuerystring();
+										if(sortParams['sortOrder'] == 'za')
+											$('#refsortza').toggleClass('active');
+										else
+											$('#refsortaz').toggleClass('active');
+									}
+
+									function saveSortParams() {
+										window.location = "{{ request.path }}?" + $.param(sortParams);
+									}
+
+								</script>
+								<div class="btn-group" id="refsortorder" data-toggle="buttons" style="padding-left:5px">
+									<label class="btn btn-warning glyphicon glyphicon-sort-by-alphabet" id="refsortaz" order="az">
+										<input type="radio" name="refsortorder" class="refsortorder" id="" order="az">
+									</label>
+									<label class="btn btn-warning glyphicon glyphicon-sort-by-alphabet-alt" id="refsortza" order="za">
+										<input type="radio" name="refsortorder" class="refsortorder" id="" order="za">
+									</label>
+								</div>
+								<a class=""></a>
                             </div>
                             <!-- filter -->
                             <div style="padding-top:10px">

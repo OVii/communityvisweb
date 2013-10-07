@@ -72,8 +72,10 @@ def taxonomy_alpha(request):
 # taxonomy detail page
 def taxonomy_detail(request, taxonomy_id):
 	taxonomy = get_object_or_404(TaxonomyItem, pk=taxonomy_id)
-	sort_order = request.GET.get('sort')
-	references = taxonomy.references(sort_order)
+	sort_attr = request.GET.get('sortAttr')
+	sort_order = request.GET.get('sortOrder')
+
+	references = taxonomy.references(sort_attr,reverse=sort_order=='za')
 	refer = references
 
 	ownershipRequested = False
