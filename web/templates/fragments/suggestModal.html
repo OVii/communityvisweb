@@ -13,8 +13,8 @@
         return !(blankMessage);
     }
 
-    function showSuggestBox(type, url) {
-
+    function showSuggestBox(type, url, desc) {
+		$('#suggestionsForName').html(desc);
         if (type === 'taxonomy') {
             $('#options').html('<div class="controls">' +
                     '<select name="type" class="form-control">' +
@@ -48,30 +48,30 @@
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                 <h3>Suggestions</h3>
+				<p>For: <span id="suggestionsForName"></span></p>
             </div>
             <form accept-charset="UTF-8" action="{{ URL_PREPENDER }}/enquiry/{{ taxonomy.id }}/" class="formbody"
                   id="suggestForm" onsubmit="return validateSuggestionForm()" method="post">
-                <div class="modal-body">
-                    <div class="modal-body" id="booking">
+				  <div class="modal-body" id="booking" style="height:350px;">
                         {% csrf_token %}
                         <div id="suggest_errors"></div>
 
-                        <label for="type" class="control-label">What do you want to suggest?</label>
+						<div class="controls col-lg-8">
+	                        <label for="type" class="control-label">What do you want to suggest?</label>
+                        	<div id="options">
+                            	{#Options will be inserted here#}
+	                        </div>
+						</div>
 
-                        <div id="options">
-                            {#Options will be inserted here#}
-                        </div>
                         <br/>
 
                         <div id="suggest_message_group" class="control-group">
-
                             <div class="controls col-lg-8">
                                 <label for="message" class="control-label">What do you want to say?</label>
                                 <textarea name="message" maxlength="5000" rows=10 class="form-control"></textarea>
                             </div>
                         </div>
                     </div>
-                </div>
                 <div class="modal-footer" id="button">
                     <input name="commit" type="submit" class="btn btn-warning" value="Submit Suggestion">
                 </div>
