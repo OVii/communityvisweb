@@ -58,7 +58,7 @@
 
             {% if user.is_superuser %}
                 <a class="btn btn-default" href="{{ URL_PREPENDER }}/taxonomy/edit/{{ taxonomy.id }}"><span
-                        class="glyphicon glyphicon-edit glyphicon-pad"></span>Edit Record</a>
+                        class="glyphicon glyphicon-edit glyphicon-pad"></span>Edit Metadata</a>
             {% endif %}
 
             {% if user.is_superuser or ownerLoggedIn %}
