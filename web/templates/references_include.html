@@ -105,7 +105,11 @@
 							<span class="year">{% if reference.1.journal %} {% endif %}</span>{% endif %}
                         </p>
 
-                        {% if reference.url %}
+						{% if reference.1.booktitle %}
+							<p><span class="booktitle">Appears in: {{ reference.1.booktitle }}</span></p>
+						{% endif %}
+
+                        {% if reference.1.url %}
                             <a href="{{ reference.1.url }}" target="_blank" class="btn btn-small">View Paper</a>
                         {% endif %}
 

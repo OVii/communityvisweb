@@ -634,6 +634,11 @@ input#search-text {
     font-weight: normal;
 }
 
+.reference_box .booktitle {
+    font-size: 0.9em;
+    font-style: italic;
+}
+
 .taxonomy-detail {
     font-size: 1.2em;
     font-weight: lighter;

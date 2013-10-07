@@ -136,9 +136,11 @@
 						<p><span class="journal">{{ this.journal }}</span>{{#if this.year }}
 							<span class="year">{{#if this.journal }} {{/if }}</span>{{/if }}
 						</p>
-
+						{{#if booktitle }}
+							<p><span class="booktitle">Appears in: {{ this.booktitle }}</span></p>
+						{{/if}}
 						{{#if reference.url }}
-							<a href="{{ this.url }}" target="_blank" class="btn btn-small">View Paper</a>
+							<p><a href="{{ this.url }}" target="_blank" class="btn btn-small">View Paper</a></p>
 						{{/if }}
 					</li>
                 {{/each}}
