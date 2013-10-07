@@ -424,9 +424,7 @@ def getTaxonomyCategories(request):
 
 def getTaxonomyCategoryJSON(request, taxonomy_id):
 	taxonomy = get_object_or_404(TaxonomyItem, pk=taxonomy_id)
-
-	referenceQuery = taxonomy.references()
-	references = taxonomy.references()
+	references = taxonomy.references(sort='title')
 
 	hasOwner = False
 
