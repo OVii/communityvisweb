@@ -1,4 +1,4 @@
-from web.models import TaxonomyArea, TaxonomyCategory, TaxonomyItem, Reference
+from web.models import TaxonomyArea, TaxonomyCategory, TaxonomyItem
 
 """
  Builds a dictionary (letter[char]) => { item, item } representing the taxonomy in the system

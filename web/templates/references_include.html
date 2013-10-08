@@ -84,15 +84,23 @@
 
             <div class="col-md-9">
 				<ul class="list-group">
+				{% if user in taxonomy.owners.all %}
+    				{% include 'fragments/editReferenceModal.html' %}
+				{% endif %}
 
                 {% for reference in references %}
 					<li class="list-group-item reference_box">
-						 {% if owners != 0 %}
-						 <a onclick="showSuggestBox('reference', '{{ URL_PREPENDER }}/enquiry/{{ taxonomy.id }}/{{ reference.1.id }}/','{{reference.1.title}}')"
-                               class="btn pull-left btn-small btn-warning" style="margin-right:10px;"><i class="glyphicon glyphicon-exclamation-sign"></i> </a>{% endif %}
                         {% if user.is_superuser or ownerLoggedIn %}
                             <a onclick="showDeleteWindow('{{ reference.1.id }}')" class="pull-left btn btn-small btn-danger" style="margin-right:10px"><span class="glyphicon-trash glyphicon"></span></a>
                         {% endif %}
+
+						{% if user in taxonomy.owners.all %}
+						<a onclick="showEditReferenceModal({{taxonomy.id}},'{{ reference.1.id }}')" class="pull-left btn btn-small btn-warning" style="margin-right:10px"><span class="glyphicon-edit glyphicon"></span></a>
+						{% else %}
+						 {% if owners != 0 %}
+						 <a onclick="showSuggestBox('reference', '{{ URL_PREPENDER }}/enquiry/{{ taxonomy.id }}/{{ reference.1.id }}/','{{reference.1.title}}')"
+                               class="btn pull-left btn-small btn-warning" style="margin-right:10px;"><i class="glyphicon glyphicon-exclamation-sign"></i> </a>{% endif %}
+						{% endif %}
 
 						{% if reference.1.year > 0 %}
 							<span class="badge">{{ reference.1.year }}</span>

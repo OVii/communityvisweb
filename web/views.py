@@ -11,7 +11,7 @@ from django.contrib.sites.models import Site
 from django.db.models import Q
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, HttpResponseServerError
 from django.template import RequestContext
 import logging
 from django.utils import simplejson
@@ -27,7 +27,7 @@ import json
 from django.contrib.sites.models import Site
 
 # couple of globals
-from web.reference_import_couch import bibtex_import
+from web.reference_import_couch import bibtex_import, bibtex_edit
 
 os.environ['DJANGO_SETTINGS_MODULE'] = "viscommunityweb.settings"
 email_prefix = "[OXVIS] "
@@ -536,10 +536,8 @@ def handleReferenceEnquiry(request, taxonomy_id, reference_id):
 	message = request.POST['message']
 
 	taxonomyItem = TaxonomyItem.objects.filter(pk=taxonomy_id).get(pk=taxonomy_id)
-	referenceItem = Reference.objects.filter(pk=reference_id).get(pk=reference_id)
 
-	enquiry = Enquiry(taxonomyItem=taxonomyItem, requester=request.user, additionalNotes=message, enquiry_type=type,
-					  reference=referenceItem)
+	enquiry = Enquiry(taxonomyItem=taxonomyItem, requester=request.user, additionalNotes=message, enquiry_type=type)
 	enquiry.save()
 
 	return sendEmailForEnquiry(message, request, taxonomyItem)
@@ -777,6 +775,29 @@ def taxonomy_edit_action(request):
 
 	return HttpResponseRedirect(urlRequestedFrom)
 
+@login_required
+def reference_edit(request, taxonomy_id, reference_id):
+	try:
+		tax = TaxonomyItem.objects.filter(pk=taxonomy_id).get(pk=taxonomy_id)
+		ref = ReferenceGlobal().get_reference(taxonomy_id, reference_id)
+
+		bibtex = request.POST.get('editReferenceModal_RefBibtex', '')
+
+		bibtextFile = saveTextToFile(bibtex)
+		bibtex_edit(bibtextFile, taxonomy_id, ref)
+
+		tax.last_updated = datetime.now()
+		tax.save()
+
+		urlRequestedFrom = request.POST.get('postedFrom', '/')
+		return HttpResponseRedirect(urlRequestedFrom)
+	except Exception, e:
+		print e
+		return render_to_response("templates/infopage.html",
+								  {
+								  'messageTitle': 'Error in bibtex import.',
+								  'messageBody': 'We\'ve not been able to parse the BibTeX. Please ensure it\'s valid BibTeX.\n\n' + e.message},
+								  context_instance=RequestContext(request))
 
 @login_required
 def reference_add_upload_file(request):
@@ -868,7 +889,6 @@ def reference_remove(request, taxonomy_id, reference_id):
 
 @login_required
 def reference_delete(request, taxonomy_id, reference_id):
-	print "Deleting"
 	referenceItem = ReferenceGlobal().remove_reference(taxonomy_id, reference_id)
 
 	return render_to_response("templates/infopage.html",
@@ -896,6 +916,13 @@ def reference_detail(request, taxonomy_id, reference_id):
 							   'previousPage': currentPage},
 							  context_instance=RequestContext(request))
 
+@login_required
+def reference_json(request, taxonomy_id, reference_id):
+	try:
+		ref = ReferenceGlobal().get_reference(taxonomy_id, reference_id)
+		return HttpResponse(simplejson.dumps(ref), mimetype="application/json")
+	except Exception, e:
+		return HttpResponseServerError()
 
 @login_required
 def volunteer(request):

@@ -38,6 +38,8 @@ urlpatterns = patterns('',
 
                        url(r'^reference/add/file$', 'web.views.reference_add_upload_file', name='upload_bibtex'),
                        url(r'^reference/add/text$', 'web.views.reference_add_upload_text', name='upload_bibtex_text'),
+                       url(r'^reference/edit/(?P<taxonomy_id>\d+)/(?P<reference_id>\w+)/$', 'web.views.reference_edit', name='reference_edit'),
+                       url(r'^reference/json/(?P<taxonomy_id>\d+)/(?P<reference_id>\w+)/$', 'web.views.reference_json', name='reference_json'),
 
                        url(r'^reference/remove/(?P<taxonomy_id>\d+)/(?P<reference_id>\w+)/$',
                            'web.views.reference_remove', name='remove_reference'),

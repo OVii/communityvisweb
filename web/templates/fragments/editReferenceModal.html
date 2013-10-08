@@ -1,0 +1,45 @@
+<div id="editReferenceModal" class="modal fade" tabindex="-1" role="dialog"
+     aria-labelledby="confirmRemoveRequest"
+     aria-hidden="true" xmlns="http://www.w3.org/1999/html">
+	 <div class="modal-dialog">
+		 <div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4>Edit Reference</h4>
+			</div>
+			<form accept-charset="UTF-8" action="" class="form-horizontal" id="editReferenceModalForm"
+				method="post"> 
+				<input type="hidden" name="postedFrom" value="{{ request.path }}"/>
+			<div class="modal-body">
+				{% csrf_token %}
+				<p class="">Modify the bibtex here:</p>
+				<br/>
+				<div id="rename_detail_group" class="form-group">
+					<textarea name="editReferenceModal_RefBibtex" id="editReferenceModal_RefBibtex" maxlength="5000" rows="12" class="form-control"></textarea>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<input name="commit" type="submit" class="btn btn-warning pull-right" value="Save Reference">
+			</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+	function showEditReferenceModal(taxid,refid) {
+		$("#editReferenceModalForm").attr("action", '{{ URL_PREPENDER }}/reference/edit/{{ taxonomy.id }}/' + refid + '/');
+
+		$.ajax({
+		 	url: "{{ URL_PREPENDER }}/reference/json/" + taxid + "/" + refid,
+			context: document.body,
+			dataType: 'json'
+		}).done(function(data) {
+			$('#editReferenceModal_RefBibtex').val(data.bibtex);
+			$('#editReferenceModal').modal('show');
+		}).fail(function() {
+			alert('There was a problem obtaining the bibtex from the server. Please try again later.');		
+		});
+	}
+
+	</script>
