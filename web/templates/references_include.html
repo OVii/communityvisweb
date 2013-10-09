@@ -97,7 +97,7 @@
 						{% if user in taxonomy.owners.all %}
 						<a onclick="showEditReferenceModal({{taxonomy.id}},'{{ reference.1.id }}')" class="pull-left btn btn-small btn-warning" style="margin-right:10px"><span class="glyphicon-edit glyphicon"></span></a>
 						{% else %}
-						 {% if owners != 0 %}
+						 {% if owners != 0 and user.is_authenticated %}
 						 <a onclick="showSuggestBox('reference', '{{ URL_PREPENDER }}/enquiry/{{ taxonomy.id }}/{{ reference.1.id }}/','{{reference.1.title}}')"
                                class="btn pull-left btn-small btn-warning" style="margin-right:10px;"><i class="glyphicon glyphicon-exclamation-sign"></i> </a>{% endif %}
 						{% endif %}
