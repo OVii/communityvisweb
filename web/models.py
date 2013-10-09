@@ -13,25 +13,30 @@ import json
 
 server = Server("http://127.0.0.1:5984/")
 
-
 class TaxonomyArea(models.Model):
 	name = models.CharField(max_length=128)
-
 	def __unicode__(self):
 		return self.name
 
-
 class TaxonomyCategory(models.Model):
+	class Meta:
+		permissions = (
+			('modify_taxonomy_categories','Modify a taxonomy category'),
+		)
 	name = models.CharField(max_length=128)
 	area = models.ForeignKey(TaxonomyArea, null=True, blank=True)
-
 	parent = models.ForeignKey('self', blank=True, null=True)
 
 	def __unicode__(self):
 		return self.name
 
-
 class TaxonomyItem(models.Model):
+	class Meta:
+		permissions = (
+			('modify_taxonomy_items','Create/modify a taxonomy item, including changing its category and metadata'),
+			('revoke_ownership','Ability to revoke another user\'s taxonomy item ownership')
+		)
+
 	name = models.CharField(max_length=256)
 	category = models.ForeignKey(TaxonomyCategory)
 	detail = models.TextField(default="")
@@ -60,27 +65,6 @@ class TaxonomyItem(models.Model):
 	def __unicode__(self):
 		return self.name + " (" + self.category.name + ")"
 
-
-# represents a reference (duh)
-"""
-class Reference(object):
-	def __init__(self):
-		self.id = '' # duplicate of Couch's _id, but Django's template system doesn't like underscores
-		self.entry_key = ''
-		self.title = ''
-		self.bibtex = ''
-		self.year = ''
-		self.authorsAsText = ''
-		self.abstract = ''
-		self.journal = ''
-		self.year = 0
-		self.url = ''
-		self.booktitle = ''
-		self.date_added = str(datetime.now())
-
-	def __unicode__(self):
-		return self.entry_key + ", " + self.title + " by " + self.authorsAsText + " in year " + str(self.year)
-"""
 
 # reference Family - one per TaxonomyItem (as identified by its id)
 class ReferenceFamily(object):
@@ -197,11 +181,8 @@ class ReferenceQueue(ReferenceFamily):
 		return "ref_recent"
 
 	def add_reference(self, ref, ref_id, tax_id):
-		print "ooo"
 		ref.ref_doc_id = ref_id
 		ref.tax_id = tax_id
-		print ref
-		print "YEAH"
 		super(ReferenceQueue, self).add_reference(ref)
 		self.limit_queue()
 
@@ -226,6 +207,13 @@ class UserProfile(models.Model):
 	get_absolute_url = models.permalink(get_absolute_url)
 
 class OwnershipRequest(models.Model):
+	class Meta:
+		permissions = (
+			('respond_to_ownership_requests','Can authorise/deny ownership requests'),
+			('view_ownership_requests','Can view existing ownership requests'),
+			('view_historical_ownership_requests','Can view all ownership requests, current and historical'),
+		)
+
 	requester = models.ForeignKey(User)
 	taxonomyItem = models.ForeignKey(TaxonomyItem)
 	additionalNotes = models.TextField()
@@ -238,8 +226,6 @@ class Enquiry(models.Model):
 	requester = models.ForeignKey(User)
 	taxonomyItem = models.ForeignKey(TaxonomyItem)
 	enquiry_type = models.CharField(max_length=256, default="")
-	# optional
-	#reference = models.ForeignKey(Reference, null=True)
 	additionalNotes = models.TextField()
 
 # front page recent references

@@ -15,7 +15,7 @@ from django.http import HttpResponse, HttpResponseRedirect, HttpResponseServerEr
 from django.template import RequestContext
 import logging
 from django.utils import simplejson
-from viscommunityweb.settings import EMAIL_HOST_USER, SITE_ID, URL_PREPENDER
+from viscommunityweb.settings import SITE_ID, URL_PREPENDER
 from web.bibtex_utils.import_utils import saveFile, saveTextToFile
 from web.models import *
 from django.shortcuts import render_to_response, get_object_or_404
@@ -25,9 +25,12 @@ from django.conf import settings
 import taxonomy_backend
 import json
 from django.contrib.sites.models import Site
+from django.contrib.auth.decorators import permission_required
 
 # couple of globals
 from web.reference_import_couch import bibtex_import, bibtex_edit
+
+appname = 'web'
 
 os.environ['DJANGO_SETTINGS_MODULE'] = "viscommunityweb.settings"
 email_prefix = "[OXVIS] "
@@ -147,8 +150,9 @@ def request_ownership_send(request, taxonomy_id):
 		'messageBody': 'Your request was sent successfully! We will get back to you soon!'},
 								  context_instance=RequestContext(request))
 
-
+@permission_required(appname + '.respond_to_ownership_requests')
 def request_ownership_response(request, approval_id):
+	print "OK"
 	response = request.POST['type']
 	responseDetail = request.POST['responseDetail']
 	urlRequestedFrom = request.POST.get('postedFrom', '/')
@@ -173,7 +177,7 @@ def request_ownership_response(request, approval_id):
 
 	try:
 		send_mail(email_subject, email_body_prefix + " " + email_body_reason,
-				  EMAIL_HOST_USER,
+				  [item[1] for item in settings.ADMINS],
 				  [ownershipRequest.requester.email], fail_silently=False)
 
 	except Exception, e:
@@ -201,7 +205,7 @@ def revoke_ownership(request, taxonomy_id):
 		email_body += request.POST['comments']
 
 		send_mail(email_subject, email_body, email_from,
-				  [EMAIL_HOST_USER], fail_silently=False)
+				  [item[1] for item in settings.ADMINS], fail_silently=False)
 	except Exception, e:
 		return render_to_response("templates/infopage.html",
 								  {
@@ -302,7 +306,7 @@ def profile(request):
 		gravatarMD5 = hashlib.md5(profile.gravatarEmail).hexdigest()
 
 	approvals = []
-	if requestedUser.is_superuser:
+	if requestedUser.is_superuser or requestedUser.has_perm('web.view_ownership_requests'):
 		approvalsQuery = OwnershipRequest.objects.all()
 		for approvalQueryResultItem in approvalsQuery:
 			approvals.append(approvalQueryResultItem)
@@ -351,7 +355,7 @@ def sendEmailForEnquiry(message, request, taxonomyItem):
 		email_body += message
 
 		send_mail(email_subject, email_body, email_from,
-				  [EMAIL_HOST_USER], fail_silently=False)
+				  [item[1] for item in settings.ADMINS], fail_silently=False)
 	except Exception, e:
 		return render_to_response("templates/infopage.html",
 								  {
@@ -465,7 +469,7 @@ def getTaxonomyCategoryInformationJSON(request, category_id):
 
 	return HttpResponse(simplejson.dumps(response), mimetype="application/json")
 
-
+@permission_required(appname + '.modify_taxonomy_items')
 def moveTaxonomyItem(request, taxonomy_id):
 	taxonomyItem = TaxonomyItem.objects.filter(pk=taxonomy_id).get(pk=taxonomy_id)
 
@@ -489,7 +493,7 @@ def moveTaxonomyItem(request, taxonomy_id):
 
 	return HttpResponseRedirect(URL_PREPENDER + "/taxonomy/?success=" + str(success) + "&message=" + str(message))
 
-
+@permission_required(appname + '.modify_taxonomy_categories')
 def renameTaxonomyCategoryAPI(request, category_id):
 	category = TaxonomyCategory.objects.filter(pk=category_id).get(pk=category_id)
 	newName = request.POST.get('newName', category.name)
@@ -502,6 +506,7 @@ def renameTaxonomyCategoryAPI(request, category_id):
 
 	return HttpResponseRedirect(URL_PREPENDER + "/taxonomy/?success=" + str(success) + "&message=" + str(message))
 
+@permission_required(appname + '.modify_taxonomy_categories')
 def deleteTaxonomyCategory(request, category_id):
 	category = TaxonomyCategory.objects.filter(pk=category_id).get(pk=category_id)
 	name = category.name
@@ -529,7 +534,6 @@ def handleTaxonomyEnquiry(request, taxonomy_id):
 
 	return sendEmailForEnquiry(message, request, taxonomyItem)
 
-
 @login_required
 def handleReferenceEnquiry(request, taxonomy_id, reference_id):
 	type = request.POST['type']
@@ -556,7 +560,7 @@ def respondToTaxonomyEnquiry(request, decision, enquiry_id):
 
 	try:
 		send_mail(email_subject, email_body_prefix + email_body_reason,
-				  EMAIL_HOST_USER,
+				  [item[1] for item in settings.ADMINS],
 				  [enquiryItem.requester.email], fail_silently=False)
 
 	except Exception, e:
@@ -574,7 +578,6 @@ def respondToTaxonomyEnquiry(request, decision, enquiry_id):
 							  'messageBody': 'Response lodged and suggester has been emailed at ' + enquiryItem.requester.email + '.'},
 							  context_instance=RequestContext(request))
 
-
 def taxonomy_add(request):
 	categories = TaxonomyCategory.objects.all()
 	return render_to_response("templates/taxonomy_edit_base.html", {'categories': categories},
@@ -587,6 +590,7 @@ def taxonomy_edit(request, taxonomy_id):
 	return render_to_response("templates/taxonomy_edit_base.html", {'taxonomy': taxonomyItem, 'categories': categories},
 							  context_instance=RequestContext(request))
 
+@permission_required(appname + '.modify_taxonomy_items')
 def taxonomy_delete(request, taxonomy_id):
 	success = True
 
@@ -601,6 +605,7 @@ def taxonomy_delete(request, taxonomy_id):
 
 	return HttpResponseRedirect(URL_PREPENDER + "/taxonomy/?success=" + str(success) + "&message=" + message)
 
+@permission_required(appname + '.modify_taxonomy_items')
 def taxonomy_split(request, taxonomy_id):
 	taxonomyItemToSplit = TaxonomyItem.objects.filter(pk=taxonomy_id).get(pk=taxonomy_id)
 
@@ -633,6 +638,7 @@ def taxonomy_split(request, taxonomy_id):
 
 	return HttpResponseRedirect(URL_PREPENDER + "/taxonomy/?success=" + str(success) + "&message=" + str(message))
 
+@permission_required(appname + '.modify_taxonomy_items')
 def taxonomy_add_leaf(request, category_id):
 	category = TaxonomyCategory.objects.filter(pk=category_id).get(pk=category_id)
 	itemName = request.POST.get("newItemName",'')
@@ -651,6 +657,8 @@ def taxonomy_add_leaf(request, category_id):
 
 	return HttpResponseRedirect(URL_PREPENDER + "/taxonomy/?success=" + str(success) + "&message=" + str(message))
 
+@permission_required(appname + '.modify_taxonomy_categories')
+@permission_required(appname + '.modify_taxonomy_items')
 def taxonomy_add_child(request, taxonomy_id):
 	taxItem = TaxonomyItem.objects.filter(pk=taxonomy_id).get(pk=taxonomy_id)
 	newChildName = request.POST.get("newChildName", "")
@@ -693,7 +701,7 @@ def taxonomy_add_child(request, taxonomy_id):
 
 
 @login_required
-@user_passes_test(lambda u: u.is_superuser)
+@permission_required(appname + '.modify_taxonomy_items')
 def moveReferences(request):
 	tax_ids = [request.POST.get('moveRefFromTaxonomy', ''), request.POST.get('moveRefToTaxonomy', '')]
 	new_ref_list = [request.POST.get('moveFromTaxonomyReferences', '').split(","),
@@ -734,6 +742,7 @@ def moveReferences(request):
 
 
 @login_required()
+@permission_required(appname + '.modify_taxonomy_items')
 def taxonomy_add_action(request):
 	name = request.POST.get('taxonomy_name', None)
 	category = request.POST.get('category_name', None)
@@ -751,8 +760,8 @@ def taxonomy_add_action(request):
 def trimURL(urlRequestedFrom, find):
 	return urlRequestedFrom[0:urlRequestedFrom.find(find)]
 
-
 @login_required()
+@permission_required(appname + '.modify_taxonomy_items')
 def taxonomy_edit_action(request):
 	taxonomyId = request.POST.get('taxonomy_id', None)
 	name = request.POST.get('taxonomy_name', None)

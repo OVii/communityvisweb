@@ -237,18 +237,19 @@ function customMenu(node) {
 		delete items.addItem;
     }
 
-    // limit stuff that can be done to items not at recursion level 0
-    //if(node.attr("level") > 0) {
-    //	delete items.addChild;
-    //}
-
-    if (!showTreeMenu) {
+	//
+    // get rid of stuff based on permissions (perms also checked on server side)
+	//
+	if (!perm_modify_items) {
         delete items.editItem;
         delete items.splitItem;
         delete items.deleteItem;
         delete items.moveItem;
         delete items.moveReferences;
 		delete items.addItem;
+    }
+
+	if (!perm_modify_categories) {
 		delete items.addChild;
 		delete items.deleteCategory;
     }

@@ -219,8 +219,9 @@
         </div>
 
         <div class="profile-blocks" id="notification-center">
-
-            {% if user.is_superuser and approvals|length > 0 %}
+			{{ perms.web }}
+			{% if perms.web.respond_to_ownership_requests or perms.web.view_ownership_requests %}
+			{% if approvals|length > 0 %}
                 <div class="clearfix"></div>
                 {#            start notifications section#}
                 <div class="block col-md-5" id="approvals">
@@ -245,15 +246,17 @@
                                    class="btn btn-default">View
                                     Taxonomy Item</a>
 
-                                <a onclick="showResponseWindow('{{ URL_PREPENDER }}/request_ownership/response/{{ approval.id }}')"
-                                   class="btn btn-success">Respond</a>
+								{% if user.is_superuser or perms.web.respond_to_ownership_requests %}
+	                                <a onclick="showResponseWindow('{{ URL_PREPENDER }}/request_ownership/response/{{ approval.id }}')"
+    	                               class="btn btn-success">Respond</a>
+								{% endif %}
                             </div>
                             <div class="clearfix"></div>
                         {% endfor %}
                     </div>
                 </div>
 
-
+            {% endif %}
             {% endif %}
 
             {#            START taxonomy items section#}

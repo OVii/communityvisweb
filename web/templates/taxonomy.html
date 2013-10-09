@@ -65,8 +65,6 @@
 
     </div>
 
-
-
     <script type="text/javascript">
         // used in taxonomy_tree API for correct, machine-agnostic URLs
         var apiURLPrefix = "{{ ajax_url_prefix }}";
@@ -91,11 +89,8 @@
 
 
     <script type="text/javascript">
-        var showTreeMenu = false;
-        {% if user.is_superuser %}
-            showTreeMenu = true;
-        {% endif %}
-
+		var perm_modify_items = {% if perms.web.modify_taxonomy_items %} true {% else %} false {% endif %};
+		var perm_modify_categories = {% if perms.web.modify_taxonomy_categories %} true {% else %} false {% endif %};
     </script>
 
     <script type="text/javascript" src="{{ STATIC_URL }}js/taxonomy_tree.js"></script>

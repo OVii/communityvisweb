@@ -3,7 +3,7 @@
  according to TVCG definitions
 """
 
-from web.models import TaxonomyArea, TaxonomyCategory, TaxonomyItem, Reference
+from web.models import TaxonomyArea, TaxonomyCategory, TaxonomyItem
 import random
 
 

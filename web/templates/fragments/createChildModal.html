@@ -8,13 +8,13 @@
 				<h4>Create Child Item</h4>
 			</div>
 			<form accept-charset="UTF-8" action="" class="form-horizontal" id="addChildForm"
-				  method="post" onsubmit="return validateRenameForm()">
+				  method="post" onsubmit="return validateCreateChildForm()">
 			<div class="modal-body">
 				{% csrf_token %}
 				<p>This operation will create a new item as a parent of <span id="parentName"></span>. Any references will also be moved into the new child.</p>
 				<div id="create_child_errors"></div>
 				<br/>
-				<div id="add_child_detail_group" class="form-group">
+				<div id="create_child_detail_group" class="form-group">
 					<label for="comments" class="col-lg-4 control-label">Name of new child:</label>
 					<div class="col-lg-8">
 						<input name="newChildName" type="text" class="form-control"/>
@@ -30,7 +30,7 @@
 </div>
 
 <script type="text/javascript">
-	function validateRenameForm() {
+	function validateCreateChildForm() {
 		var message = document.forms["addChildForm"]["newChildName"].value;
 		blankMessage = (message === "");
 		var errorHTML = "";
@@ -38,8 +38,8 @@
 			errorHTML += '<div class="alert alert-error">Please enter a name!</div>'
 		}
 
-		$("#add_child_errors").html(errorHTML);
-		$("#add_child_detail_group").toggleClass("control-group error", blankMessage);
+		$("#create_child_errors").html(errorHTML);
+		$("#create_child_detail_group").toggleClass("control-group error", blankMessage);
 		return !(blankMessage);
 	}
 </script>
