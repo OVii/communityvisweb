@@ -309,7 +309,9 @@ def profile(request):
 	if requestedUser.is_superuser or requestedUser.has_perm('web.view_ownership_requests'):
 		approvalsQuery = OwnershipRequest.objects.all()
 		for approvalQueryResultItem in approvalsQuery:
-			approvals.append(approvalQueryResultItem)
+			# don't allow users to approve themselves
+			if approvalQueryResultItem.requester != requestedUser:
+				approvals.append(approvalQueryResultItem)
 
 	taxonomyItems = []
 

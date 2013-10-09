@@ -219,7 +219,6 @@
         </div>
 
         <div class="profile-blocks" id="notification-center">
-			{{ perms.web }}
 			{% if perms.web.respond_to_ownership_requests or perms.web.view_ownership_requests %}
 			{% if approvals|length > 0 %}
                 <div class="clearfix"></div>
