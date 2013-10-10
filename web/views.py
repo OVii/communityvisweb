@@ -133,9 +133,12 @@ def request_ownership_send(request, taxonomy_id):
 	ownershipRequest = OwnershipRequest(requester=request.user, taxonomyItem=taxonomyItem, additionalNotes=email_body)
 	ownershipRequest.save()
 
+	moderators = Group.objects.get(name="moderator").user_set.all()
+	print [item.email for user in moderator]
+
 	try:
 		send_mail(email_subject, email_body, email_from,
-				  [item[1] for item in settings.ADMINS], fail_silently=False)
+				  [item.email for user in moderator], fail_silently=False)
 	except Exception, e:
 		return render_to_response("templates/infopage.html",
 								  {
@@ -313,6 +316,7 @@ def profile(request):
 			if approvalQueryResultItem.requester != requestedUser:
 				approvals.append(approvalQueryResultItem)
 
+	print approvals
 	taxonomyItems = []
 
 	notifications = []
