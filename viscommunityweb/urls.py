@@ -98,5 +98,8 @@ urlpatterns = patterns('',
                        url(r'^volunteer$', 'web.views.volunteer', name='volunteer'),
 
                        url(r'^admin/', include(admin.site.urls), name='admin'),
+
+                       # Static pages - e.g. about
+                       url('^pages/', include('django.contrib.flatpages.urls')),
 )
 
