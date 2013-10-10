@@ -6,7 +6,7 @@ import hashlib
 import urllib2
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required, user_passes_test
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from django.contrib.sites.models import Site
 from django.db.models import Q
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
@@ -134,11 +134,11 @@ def request_ownership_send(request, taxonomy_id):
 	ownershipRequest.save()
 
 	moderators = Group.objects.get(name="moderator").user_set.all()
-	print [item.email for user in moderator]
+	print [user.email for user in moderators]
 
 	try:
 		send_mail(email_subject, email_body, email_from,
-				  [item.email for user in moderator], fail_silently=False)
+				  [user.email for user in moderators], fail_silently=False)
 	except Exception, e:
 		return render_to_response("templates/infopage.html",
 								  {
@@ -150,7 +150,7 @@ def request_ownership_send(request, taxonomy_id):
 	else:
 		return render_to_response("templates/infopage.html", {
 		'messageTitle': 'Request sent successfully!',
-		'messageBody': 'Your request was sent successfully! We will get back to you soon!'},
+		'messageBody': 'Your request was sent successfully to our moderation team. We will get back to you soon!'},
 								  context_instance=RequestContext(request))
 
 @permission_required(appname + '.respond_to_ownership_requests')
