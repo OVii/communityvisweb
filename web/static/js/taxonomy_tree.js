@@ -60,6 +60,10 @@ $(function () {
                     var html = template(data);
 
                     $("#taxonomyInfo").html(html);
+					$(".handlebars-url").each(function() {
+						$(this).attr('href',prepender_url + $(this).attr('href'));
+						$(this).attr('href',$(this).attr('href').replace("//","/"));
+					});
                 });
 
         })

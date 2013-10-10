@@ -68,7 +68,7 @@
     <script type="text/javascript">
         // used in taxonomy_tree API for correct, machine-agnostic URLs
         var apiURLPrefix = "{{ ajax_url_prefix }}";
-
+		var prepender_url = "{{ PREPENDER_URL }}";
     </script>
 
     {% include 'fragments/deleteModal.html' %}
@@ -124,7 +124,7 @@
 							<span class="badge">{{ this.year }}</span>
 						{{/if }}
 
-						<a href="{{ URL_PREPENDER }}/reference/{{ ../id }}/{{ this.id }}?currentPage={{ request.path }}">
+						<a href="/reference/{{ ../id }}/{{ this.id }}?currentPage={{ request.path }}" class="handlebars-url">
 							<h4 class="list-group-item-heading title">{{ this.title }}</h4></a>
 						<p class="list-group-item-text">{{ this.authorsAsText }}</p>
 
