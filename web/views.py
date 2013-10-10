@@ -462,7 +462,7 @@ def getTaxonomyCategoryJSON(request, taxonomy_id):
 
 def getTaxonomyCategoryInformationJSON(request, category_id):
 	category = get_object_or_404(TaxonomyCategory, pk=category_id)
-	taxonomyItems = category.taxonomyitem_set.all()
+	taxonomyItems = category.taxonomyitem_set.order_by('name');
 
 	taxonomyItemList = []
 
