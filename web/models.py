@@ -217,6 +217,7 @@ class OwnershipRequest(models.Model):
 	requester = models.ForeignKey(User)
 	taxonomyItem = models.ForeignKey(TaxonomyItem)
 	additionalNotes = models.TextField()
+	answered = models.BooleanField(default=False)
 
 	def __unicode__(self):
 		return self.requester.username + ' - ' + self.taxonomyItem.name

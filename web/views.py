@@ -190,7 +190,8 @@ def request_ownership_response(request, approval_id):
 								  'messageBody': "Here are the details\n." + e.message},
 								  context_instance=RequestContext(request))
 	finally:
-		ownershipRequest.delete()
+		ownershipRequest.answered = True
+		ownershipRequest.save()
 
 	return HttpResponseRedirect(urlRequestedFrom)
 
@@ -310,7 +311,7 @@ def profile(request):
 
 	approvals = []
 	if requestedUser.is_superuser or requestedUser.has_perm('web.view_ownership_requests'):
-		approvalsQuery = OwnershipRequest.objects.all()
+		approvalsQuery = OwnershipRequest.objects.filter(answered=False)
 		for approvalQueryResultItem in approvalsQuery:
 			# don't allow users to approve themselves
 			if approvalQueryResultItem.requester != requestedUser:
@@ -329,7 +330,7 @@ def profile(request):
 		for enquiry in enquiryQueryForTaxonomyItem:
 			notifications.append(enquiry)
 
-	requestedTaxonomyItemsForUser = OwnershipRequest.objects.filter(requester__username=requestedUser.username)
+	requestedTaxonomyItemsForUser = OwnershipRequest.objects.filter(requester__username=requestedUser.username,answered=False)
 
 	return render_to_response("profile.html",
 							  {"loggedInUser": loggedInUser, "profile": profile, "gravatar": gravatarMD5,
