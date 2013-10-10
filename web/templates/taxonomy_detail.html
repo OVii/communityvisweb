@@ -56,7 +56,7 @@
 
         <div class="btn-group pull-right">
 
-            {% if user.is_superuser %}
+            {% if perms.web.modify_taxonomy_items %}
                 <a class="btn btn-default" href="{{ URL_PREPENDER }}/taxonomy/edit/{{ taxonomy.id }}"><span
                         class="glyphicon glyphicon-edit glyphicon-pad"></span>Edit Metadata</a>
             {% endif %}
@@ -64,7 +64,6 @@
             {% if user.is_superuser or ownerLoggedIn %}
                 <a class="btn btn-default" onclick="showReferenceAdditionWindow()"><span
                         class="glyphicon glyphicon-plus glyphicon-pad"></span>Add References</a>
-
             {% endif %}
 
             {% if ownerLoggedIn %}

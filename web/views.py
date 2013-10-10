@@ -205,7 +205,7 @@ def revoke_ownership(request, taxonomy_id):
 		email_subject = email_prefix + "Ownership revoked by " + request.user.username + " for " + taxonomyItem.name
 		email_from = request.user.email
 		email_name = request.user.username
-		email_body = email_name + ' has revoked their ownership of ' + taxonomyItem.name
+		email_body = email_name + ' has revoked their ownership of ' + taxonomyItem.name + '. Reason: '
 		email_body += request.POST['comments']
 
 		send_mail(email_subject, email_body, email_from,
@@ -317,7 +317,6 @@ def profile(request):
 			if approvalQueryResultItem.requester != requestedUser:
 				approvals.append(approvalQueryResultItem)
 
-	print approvals
 	taxonomyItems = []
 
 	notifications = []
