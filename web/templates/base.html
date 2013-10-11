@@ -30,19 +30,20 @@
         ga('create', 'UA-41812283-1', 'ox.ac.uk');
         ga('send', 'pageview');
 
-		$(document).ready(function() {
-			jQuery.extend({
-				parseQuerystring: function(){
-				var nvpair = {};
-				var qs = window.location.search.replace('?', '');
-				var pairs = qs.split('&');
-				$.each(pairs, function(i, v){
-					var pair = v.split('=');
-					nvpair[pair[0]] = pair[1];
-				});
-				return nvpair;
-			}
-		}) });
+        $(document).ready(function () {
+            jQuery.extend({
+                parseQuerystring: function () {
+                    var nvpair = {};
+                    var qs = window.location.search.replace('?', '');
+                    var pairs = qs.split('&');
+                    $.each(pairs, function (i, v) {
+                        var pair = v.split('=');
+                        nvpair[pair[0]] = pair[1];
+                    });
+                    return nvpair;
+                }
+            })
+        });
 
         // for use in javascript files
         var globalURLPrefix = "{{ URL_PREPENDER }}";
@@ -123,11 +124,13 @@
             <ul class="footer_links" style="width:200px">
                 <h4>Contribute</h4>
                 <li><a href="{{ URL_PREPENDER }}/about" target="_blank">About us</a></li>
+                <li><a href="{{ URL_PREPENDER }}/pages/faq/" target="_blank">FAQ</a></li>
                 <li><a href="{{ URL_PREPENDER }}/contact" target="_blank">Contact us</a></li>
                 {% if user.is_authenticated %}
                     <li><a href="{{ URL_PREPENDER }}/volunteer" target="_blank">Volunteer</a></li>
                 {% endif %}
-                <li><a href="https://github.com/OVii/communityvisweb/issues?state=open" target="_blank">Report an issue</a>
+                <li><a href="https://github.com/OVii/communityvisweb/issues?state=open" target="_blank">Report an
+                    issue</a>
                 </li>
             </ul>
 
@@ -145,6 +148,7 @@
     <div class="bottom_footer">
         <div class="footer_container">
             <br/>
+
             <div class="additional-information" align="center">
 
                 © Community Resources: Visualization 2013-Present | Licensed under <a
