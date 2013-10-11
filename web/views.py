@@ -84,7 +84,7 @@ def taxonomy_detail(request, taxonomy_id):
 	ownershipRequested = False
 	if request.user.is_authenticated():
 		existingOwnershipRequestQuery = OwnershipRequest.objects.filter(requester=request.user).filter(
-			taxonomyItem=taxonomy)
+			taxonomyItem=taxonomy,answered=False)
 		if len(existingOwnershipRequestQuery) > 0:
 			ownershipRequested = True
 	ownerLoggedIn = False
@@ -121,6 +121,16 @@ def taxonomy_download(request, taxonomy_id):
 def contact(request):
 	return render_to_response("templates/contact.html", context_instance=RequestContext(request))
 
+def send_email_from_admin(subject, body, recipients, fail_silently=False):
+	send_mail(subject,body,settings.ADMINS[0][1],recipients,fail_silently)
+
+def send_email_to_mods(subject, body, sender, fail_silently=False):
+	moderators = Group.objects.get(name="moderator").user_set.all()
+	send_mail(subject,body,sender,[user.email for user in moderators],fail_silently)
+
+def send_email_to_taxonomers(subject, body, sender, fail_silently=False):
+	taxonomers = Group.objects.get(name="taxonomer").user_set.all()
+	send_mail(subject,body,sender,[user.email for user in taxonomers],fail_silently)
 
 # accessed through a POST to send email to the admins regarding above
 def request_ownership_send(request, taxonomy_id):
@@ -134,7 +144,6 @@ def request_ownership_send(request, taxonomy_id):
 	ownershipRequest.save()
 
 	moderators = Group.objects.get(name="moderator").user_set.all()
-	print [user.email for user in moderators]
 
 	try:
 		send_mail(email_subject, email_body, email_from,
@@ -155,7 +164,6 @@ def request_ownership_send(request, taxonomy_id):
 
 @permission_required(appname + '.respond_to_ownership_requests')
 def request_ownership_response(request, approval_id):
-	print "OK"
 	response = request.POST['type']
 	responseDetail = request.POST['responseDetail']
 	urlRequestedFrom = request.POST.get('postedFrom', '/')
@@ -179,9 +187,7 @@ def request_ownership_response(request, approval_id):
 	email_body_reason = responseDetail
 
 	try:
-		send_mail(email_subject, email_body_prefix + " " + email_body_reason,
-				  [item[1] for item in settings.ADMINS],
-				  [ownershipRequest.requester.email], fail_silently=False)
+		send_email_from_admin(email_subject, email_body_prefix + " " + email_body_reason, [ownershipRequest.requester.email])
 
 	except Exception, e:
 		return render_to_response("templates/infopage.html",
@@ -208,8 +214,8 @@ def revoke_ownership(request, taxonomy_id):
 		email_body = email_name + ' has revoked their ownership of ' + taxonomyItem.name + '. Reason: '
 		email_body += request.POST['comments']
 
-		send_mail(email_subject, email_body, email_from,
-				  [item[1] for item in settings.ADMINS], fail_silently=False)
+		send_email_to_mods(email_subject,email_body,email_from)
+
 	except Exception, e:
 		return render_to_response("templates/infopage.html",
 								  {
@@ -313,9 +319,7 @@ def profile(request):
 	if requestedUser.is_superuser or requestedUser.has_perm('web.view_ownership_requests'):
 		approvalsQuery = OwnershipRequest.objects.filter(answered=False)
 		for approvalQueryResultItem in approvalsQuery:
-			# don't allow users to approve themselves
-			if approvalQueryResultItem.requester != requestedUser:
-				approvals.append(approvalQueryResultItem)
+			approvals.append(approvalQueryResultItem)
 
 	taxonomyItems = []
 
@@ -360,8 +364,7 @@ def sendEmailForEnquiry(message, request, taxonomyItem):
 
 		email_body += message
 
-		send_mail(email_subject, email_body, email_from,
-				  [item[1] for item in settings.ADMINS], fail_silently=False)
+		send_mail(email_subject, email_body, email_from, [user.email for user in taxonomyItem.owners.all()])
 	except Exception, e:
 		return render_to_response("templates/infopage.html",
 								  {
@@ -462,7 +465,7 @@ def getTaxonomyCategoryJSON(request, taxonomy_id):
 
 def getTaxonomyCategoryInformationJSON(request, category_id):
 	category = get_object_or_404(TaxonomyCategory, pk=category_id)
-	taxonomyItems = category.taxonomyitem_set.order_by('name');
+	taxonomyItems = category.taxonomyitem_set.order_by('name')
 
 	taxonomyItemList = []
 

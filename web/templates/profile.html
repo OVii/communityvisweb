@@ -136,11 +136,20 @@
 
     <div class="profile-top">
         <div id="userprofile">
-            <img src="http://www.gravatar.com/avatar/{{ gravatar }}" class="profile-picture"/>
+			<a alt="Change your Gravitar" href='{{URL_PREPENDER}}/profiles/edit'><img src="http://www.gravatar.com/avatar/{{ gravatar }}" class="profile-picture"/></a>
         </div>
 
         <div id="username">
             {{ profile.user.username }}
+
+			{% for group in user.groups.all %}
+			    {% if group.name == 'taxonomer' %}
+				<span class="glyphicon glyphicon-certificate" style="padding-right:5px"></span>Curator
+			    {% endif %}
+			    {% if group.name == 'moderator' %}
+				<span class="glyphicon glyphicon-certificate" style="padding-right:5px"></span>Curator Manager
+			    {% endif %}
+			{% endfor %}
         </div>
 
         <div class="pull-right" id="options">
