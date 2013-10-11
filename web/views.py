@@ -547,6 +547,7 @@ def handleTaxonomyEnquiry(request, taxonomy_id):
 def handleReferenceEnquiry(request, taxonomy_id, reference_id):
 	type = request.POST['type']
 	message = request.POST['message']
+	message = "Regarding: " + request.POST['suggestion_ref'] + ": " + request.POST['message']
 
 	taxonomyItem = TaxonomyItem.objects.filter(pk=taxonomy_id).get(pk=taxonomy_id)
 

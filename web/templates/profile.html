@@ -142,7 +142,7 @@
         <div id="username">
             {{ profile.user.username }}
 
-			{% for group in user.groups.all %}
+			{% for group in profile.user.groups.all %}
 			    {% if group.name == 'taxonomer' %}
 				<span class="glyphicon glyphicon-certificate" style="padding-right:5px"></span>Curator
 			    {% endif %}
