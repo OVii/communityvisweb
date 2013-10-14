@@ -1,0 +1,153 @@
+{% extends "base.html" %}
+{% block title %}Frequently-Asked Questions{% endblock %}
+
+{% load templateutils %}
+{% load webdesign %}
+
+{% block body_attributes %}data-spy="scroll" data-target="#faq-nav"{% endblock %}
+
+{% block content %}
+
+<style>
+
+.question-fix {
+	top:3px;
+	padding-right:5px;
+}
+
+h3 {
+	color:#777;
+}
+
+.active {
+	background:#eee;
+}
+
+</style>
+
+<script language="javascript">
+
+$(document).ready(function() {
+	$('section').children("h2").each(function() {
+		$(this).prepend('<span class="glyphicon glyphicon-question-sign question-fix"></span>');
+		$('.nav li a').click(function(event) {
+			event.preventDefault();
+			$($(this).attr('href'))[0].scrollIntoView();
+			scrollBy(0, -70);
+		});
+	});
+});
+</script>
+
+<div class="page-header">
+	<h1>
+		<small>Frequently-Asked Questions</small>
+	</h1>
+</div>
+<div class="container">
+  <div class="row">
+    <div id="faq-nav" class="col-md-4">
+      <ul class="nav nav-list affix">
+        <li><a href="#one" >About the Community Resources</a></li>
+        <li><a href="#two">About the Taxonomy</a></li>
+        <li><a href="#three">About the Bibliographical References</a></li>
+        <li><a href="#four">About the Organization of the Community Resources</a></li>
+        <li><a href="#five">About Curators and How to Volunteer</a></li>
+      </ul>
+    </div>
+    <div class="col-md-8 content" style="margin-top:0px">
+      <section id="one">
+		  <h2>About the Community Resources</h2>
+<h3>What is this website for?</h3>
+The Community Resources (CR) is an organized repository of bibliographic references published in the field of visualization. A taxonomy currently serves as the primary organizational structure for these references, allowing users to browse references in a holistic manner and reference curators to work on individual topics in a collective as well as distributed manner. In order to provide a more scientific organization of these references, the web site benefits of the knowledge of researchers in the field, who have volunteered to act as curators of visualization references on individual topics, as well as to provide operational support to the web site in aspects such as infrastructure, software development and maintenance, taxonomy construction and maintenance, curator appointment and administration, and so forth.
+<h3>Why does the community need such resources, especially as there are digital libraries, search engines and social networks that provide good facilities that deal with references?</h3>
+Existing digital libraries, search engines and social networks are providing excellent support to various research activities in the visualization community. In particular, digital libraries are providing a great volume of digital contents of individual references; search engines are providing effective keyword-based search facilities; and all three mechanisms are providing different ways to connect references through their citations as well as statistical indicators such as citation and download numbers. The CR is not designed to replace these mechanisms, but to complement these facilities by offering additional information that is currently difficult to amass without human experts. Such additional information includes a semantically-rich taxonomic framework, a relatively holistic view of a topic and its relationships with other topics, and a relatively complete research provenance of a specific topic.   
+<h3>What does CR stand for?</h3>
+CR is an abbreviation for Community Resources. As CR is also widely known as the abbreviation for Carriage Return, we also encourage a metaphoric interpretation of CR as (i) Return (the volunteers give their time, knowledge and references back to the community), and (ii) Enter (please enter bibliographic data).
+ 
+<h3>Who are the users of the CR?</h3>
+Researchers who are interested in gaining a holistic view about a topic in visualization. Typically these may include researchers who are conducting on an extensive literature study in a project, authors who are working on a survey paper, or the related work section of a research paper or a grant application, reviewers who are assessing the novelty of a submission or the adequacy in referencing important works previously published on the topic, and PhD students who are mapping out areas covering their research programs.  
+ 
+<h3>Should PhD students learn to search for references themselves?</h3>
+It is absolutely important for PhD students to learn how to search references using a variety of means, how to critique previous works objectively, and how to develop a holistic mental model about a specific topic and its relationship with the subject field. It is also necessary to recognize that some traditional means for literature studies (e.g., browsing bookshelves in a library) is no longer as effective as before, while some modern means (e.g., ranking-based search) may not be desirable in all situations. We hope that this web site will help PhD students to conduct their literature studies in a structured, comprehensive and holistic manner, and to develop their ability to read broadly and critique independently.
+      </section>
+      <section id="two">
+		<h2>About the Taxonomy</h2>
+		  <h3>What is meant by taxonomy, taxon and taxa, and related terminologies?</h3>
+A taxonomy is a hierarchical organization of one or more collections of concepts. In the case of the CR, it provides a hierarchical organization of various topics in visualization and visual analytics. The hierarchical organization is also commonly referred to as a taxonomic tree, where a tree node is referred to as a taxon. The plural version of taxon is taxa. Similar to a tree data structure, we consider mainly two types of taxa, internal taxa and leaf taxa. An internal taxon is further branched (or divided into) sub-taxa, whereas a leaf node does not have any sub-taxon. The topic represented by an internal taxon is expected to be more general than the topics represented by any taxa in the subtree. All bibliographic references are placed at leaf taxa. 
+ 
+<h3>How is this taxonomy defined and modified?</h3>
+Constructing a taxonomy is a non-trivial undertaking. Given a collection of concepts, they can be divided into different classes using a variety of categorization schemes. The ordering of different categorization schemes more or less determines a taxonomic tree. The preferred ordering, which is largely a subjective matter, often causes much debate and disagreement in an academic community. Hence, the taxonomy of the CR is just one of many ways for organizing the topics in the field of visualization. The CR steering committee has a subgroup focusing on the taxonomy. The current taxonomy was defined partially based on the topic categorization system used by the major conferences in the field of visualization, such as IEEE VIS, EuroVis and PacificVis conferences. We anticipate that it will undergo some frequent updates within the next a few years before becoming a relatively stable organizational structure. Nevertheless, as the field of visualization continues to grow, changes to the taxonomy will be inevitable.
+
+<h3>Why can’t the bibliographic references in the CR be organized using an ontology?</h3>
+The topics in visualization are connected in many ways. An ontology no doubt offers a better representation as to such connections. However, introducing an ontology is technically and organizationally more challenging in comparison with a taxonomy. The steering committee is actively working on the mechanisms of introducing ontological relationships among references, and carefully examining their feasibility and impact on the usability.   
+ 
+<h3>What should do if I find that the taxonomic view is difficult to use?</h3>
+We understand that most users new to the field of visualization may be unfamiliar with many topics in visualization or their interrelationships. There are currently two other mechanisms in addition to browsing the taxonomic tree. One is the keyword search facility, which is located above the taxonomic tree. Another is the index-based view, which lists all taxa alphabetically. For each internal taxon, the index view also shows its sub-taxa.
+ 
+<h3>Why are bibliographic references placed only at leaf taxa?</h3>
+If an internal taxon were allowed to have bibliographic references, it would be slightly more difficult for a curator to determine at which taxon along the path from a more general topic at a higher level taxon to a more specific topic at a leaf taxon a reference should be placed. From the authors’ perspective, the preferred placement of a reference would also be biased towards an internal taxon at the higher level. From the users’ perspective, it would probably require reading all the references at each level along a path in order to find most relevant references to a small topic concerned. In addition, the CR would have to assign a curator for that taxon. The relationship between this curator and those who are responsible for the sub-taxa is not easy to define. Hence placing references only at leaf taxa offers several advantages over the more flexible approach. An internal taxon usually has a sub-taxon called <i>General</i> or <i>Others</i> to accommodate those references that do not belong to any of its sub-taxa.
+ 
+<h3>What should I do if I wish to suggest modification to the taxonomy?</h3>
+Please use the <i>Contact Us</i> button. We appreciate any suggestions for improvement and are actively developing CR with suggestions in mind. Thank you in advance.
+
+      </section>
+      <section id="three">
+		  <h2>About the Bibliographical References</h2>
+		  <h3>What kinds of bibliographic references are acceptable to the CR?</h3>
+The decision whether to include or exclude a reference is mostly made by the curators. Those typically included in the CR are references to published materials in reputable venues, including books, proceedings, journal papers, conference papers, chapters in a collection, PhD theses. The CR usually also includes references for online publications (e.g., papers, videos, software) in all major digital libraries and reputable online publication venues.  Curators may exercise their judgement to include or exclude some publications, such as undergraduate project dissertations, masters dissertations, magazine articles, and posters depending on whether or not they feature any original contributions to the field. Normally, the CR does not include private communications and correspondences (e.g., chats, emails) as bibliographic references. The CR does not usually include references to private web sites, but does allow non-web references to include web-links as supplementary information (e.g., software, presentation slides, and videos).
+ 
+<h3>What should I do if I wish to suggest new references to be included in a taxon or a correction to an existing reference?</h3>
+Please go to the web page associate with that specific taxon, use the <i>Suggest addition/correction</i> button. We appreciate any suggestions for improvement, and thank you in advance. Sometimes, this button may not be available, usually because there is no curator currently appointed to this taxon. If you believe that you have the right expertise and are willing to give some of your time and knowledge back to the research community, please volunteer to be a curator (see <a href="#four">Section E</a> for how to volunteer).
+ 
+<h3>Would it be useful to allow users to rank and comment on individual references?</h3>
+The CR will continue to introduce new facilities. The suggested facilities are under consideration by the Steering Committee and the development team.
+ 
+<h3>Some taxa include references for the same paper published in different venues. Should such references be removed?</h3>
+One of the ultimate goals of the CR is provide a comprehensive research provenance of each topic. Overlapping content among publications is part of a provenance record. While the CR disapproves any form of plagiarism, and supports ethic codes for responsible publications, it also recognizes that many publication venues historically have accepted, or are currently accepting published materials with novel additions. It is hence difficult for curators to differentiate what is acceptable overlapping and what is not. Perhaps most importantly the CR also has the responsibility to maintain a complete provenance record of each topic. With such factual information in the record, users of the CR can make independent judgement about any overlapped materials. We trust that most academic users are capable of determining if a publication has met the common ethics codes for responsible publications.
+ 
+      </section>
+      <section id="four">
+		<h2>About the Organization of the Community Resources</h2>
+		  <h3>What is the organizational structure of the CR?</h3>
+As a voluntary service, the organization is relatively simple and flat. The most important operational resources are curators, who are responsible for managing leaf taxa where bibliographical references are located. There is a steering committee that oversees all operational aspects of the CR, including infrastructure, software development, taxonomy, and curator appointment. In addition, there are moderators, each of whom is associated with a subtree in the taxonomy and provides independent advice for moderating any disagreements related to that subtree. Because the nature of a voluntary service, it is expected that from time to time, some aspects of the service may not have sufficient human resources. We hence encourage users to identify such aspects, report the inadequacy, and most importantly to volunteer to address the problem.
+
+      </section>
+      <section id="five">
+		  <h2>About Curators and How to Volunteer</h2>
+		  <h3>What is a curator?</h3>
+A curator is a volunteer who is responsible for maintaining a relatively complete list of bibliographical references at a specific leaf taxon. A curator can add, delete, and modify the references associated with that taxon. The users of the CR may suggest references to be added into a taxon. The decision as to accepting such a suggestion largely resides with the curator’s professional judgement.
+ 
+<h3>What qualifications/prerequisites are required for a curator?</h3>
+A curator is expected to have sufficient expertise on the subject, to which the taxon belongs. For example, the curator may have published research papers on the topic, and/or may have recently completed a PhD thesis on the subject. The curators are also expected to volunteer in the interest of science and research community, and to maintain a high-level of integrity and professionalism.
+ 
+<h3>Can a curator look after more than one taxon?</h3>
+Yes, a curator can maintain more than one taxon.
+ 
+<h3>How to volunteer to become a curator of a taxon?</h3>
+If you are not yet a registered user of the CR, please perform the following steps:
+
+<ol>
+	<li>Go to <a href="http://www.ovii.org/community/">our main site</a></li>
+	<li>Press the <i>Volunteer</i> button</li>
+	<li>Create an account</li>
+	<li>Come back to Login</li>
+	<li>View Taxonomy</li>
+	<li>Select the taxon that you are interested in curating</li>
+	<li>Select the <i>Volunteer</i> button</li>
+</ol>
+ 
+If you are a registered user of the CR, first login into your account, and then proceed to the above steps (5)-(7).
+ 
+<h3>How to resign from a curator position?</h3>
+The best way is for such a curator to go to his/her profile page, and click the <Revoke Ownership> button under the taxon concerned. In the case of any difficulties, please press the <Contact Us> button at the bottom bar, and fill in the email form accordingly.
+ 
+<h3>Why was my application to become a curator turned down?</h3>
+The most common reason is that the taxon that you wish to curate already has a curator. In some cases, the curator management team may have difficulties in find evidence to confirm that you have the right expertise for the taxon concerned. To avoid such cases, it is the best for you to supply sufficient information, such as the URL of your home page, or your thesis or publications that are relevant to this taxon. Occasionally, the part of taxonomy subtree that contains the taxon concerned is undergoing a change, and the curator management team has to wait for such a change to be completed.
+
+      </section>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

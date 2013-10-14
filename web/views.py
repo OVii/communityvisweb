@@ -52,6 +52,10 @@ def about(request):
 							  {'curators': []},
 							  context_instance=RequestContext(request))
 
+def faq(request):
+	return render_to_response("templates/faq.html",
+							  {'curators': []},
+							  context_instance=RequestContext(request))
 
 # taxonomy list
 def taxonomy(request):
