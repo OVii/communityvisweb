@@ -181,8 +181,8 @@ class ReferenceQueue(ReferenceFamily):
 		return "ref_recent"
 
 	def add_reference(self, ref, ref_id, tax_id):
-		ref.ref_doc_id = ref_id
-		ref.tax_id = tax_id
+		ref['ref_doc_id'] = ref_id
+		ref['tax_id'] = tax_id
 		super(ReferenceQueue, self).add_reference(ref)
 		self.limit_queue()
 
