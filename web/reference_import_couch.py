@@ -4,8 +4,25 @@ import StringIO
 from pybtex.bibtex.utils import bibtex_purify
 from pybtex.database.input import bibtex as bib_in
 from pybtex.database.output import bibtex as bib_out
+from web.bibtex_utils.import_utils import saveTextToFile
 
 logger = logging.getLogger(__name__)
+
+def rescan_bibtex(taxonomy_id, reference_id):
+	try:
+		tax = TaxonomyItem.objects.filter(pk=taxonomy_id).get(pk=taxonomy_id)
+		ref = ReferenceGlobal().get_reference(taxonomy_id, reference_id)
+		print ref['bibtex']
+		bibtextFile = saveTextToFile(ref['bibtex'])
+		bibtex_edit(bibtextFile, taxonomy_id, ref)
+
+		ref = ReferenceGlobal().get_reference(taxonomy_id, reference_id)
+		print ref
+	except Exception, e:
+		print str(e)
+	finally:
+		tax.last_updated = datetime.now()
+		tax.save()
 
 def set_ref_from_entry(key, bib_data, ref_doc):
 	stream = StringIO.StringIO()
@@ -18,15 +35,17 @@ def set_ref_from_entry(key, bib_data, ref_doc):
 			value = bib_data.entries[key].fields[field]
 
 			fieldname = field.strip().lower()
+			rawvalue = value
 			value = bibtex_purify(value)
-
 			if fieldname == 'year':
 				ref_doc['year'] = int(value)
 			elif fieldname == 'doi':
 				doiPrepender = 'http://dx.doi.org/'
-				if not value.startswith(doiPrepender):
-					value = doiPrepender + value
-				ref_doc['url'] = value
+				if not rawvalue.startswith("http://"):
+					rawvalue = doiPrepender + rawvalue
+					ref_doc['url'] = rawvalue
+			elif fieldname == 'url':
+				ref_doc['url'] = rawvalue
 			else:
 				ref_doc[fieldname] = value
 
