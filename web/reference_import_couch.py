@@ -8,11 +8,13 @@ from web.bibtex_utils.import_utils import saveTextToFile
 
 logger = logging.getLogger(__name__)
 
+"""
+given a reference in a taxonomy item, rescan the bibtex component into its constituent attributes in the reference object
+"""
 def rescan_bibtex(taxonomy_id, reference_id):
 	try:
 		tax = TaxonomyItem.objects.filter(pk=taxonomy_id).get(pk=taxonomy_id)
 		ref = ReferenceGlobal().get_reference(taxonomy_id, reference_id)
-		print ref['bibtex']
 		bibtextFile = saveTextToFile(ref['bibtex'])
 		bibtex_edit(bibtextFile, taxonomy_id, ref)
 
@@ -50,7 +52,7 @@ def set_ref_from_entry(key, bib_data, ref_doc):
 				ref_doc[fieldname] = value
 
 		authorsAsText = ""
-		firstAuthorSurname = ""
+		firstAuthorSortKey = ""
 		count = 0
 
 		if bib_data.entries[key].persons:
@@ -74,10 +76,10 @@ def set_ref_from_entry(key, bib_data, ref_doc):
 				count += 1
 
 			firstAuthor = bib_data.entries[key].persons['author'][0]
-			firstAuthorSurname = firstAuthor.get_part_as_text('last')
+			firstAuthorSortKey = firstAuthor.get_part_as_text('last') + firstAuthor.get_part_as_text('first')
 
 		ref_doc['authorsAsText'] = authorsAsText
-		ref_doc['firstAuthorSurname'] = firstAuthorSurname
+		ref_doc['firstAuthorSortKey'] = firstAuthorSortKey
 
 	except Exception, e:
 		print "**** BIBTEX PARSING SCREWED UP ****"
