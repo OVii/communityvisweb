@@ -50,11 +50,12 @@ def set_ref_from_entry(key, bib_data, ref_doc):
 				ref_doc[fieldname] = value
 
 		authorsAsText = ""
+		firstAuthorSurname = ""
 		count = 0
+
 		if bib_data.entries[key].persons:
 			numberOfAuthors = len(bib_data.entries[key].persons['author'])
 			for person in bib_data.entries[key].persons['author']:
-
 				first = person.get_part_as_text('first')
 				last = person.get_part_as_text('last')
 
@@ -72,7 +73,11 @@ def set_ref_from_entry(key, bib_data, ref_doc):
 
 				count += 1
 
+			firstAuthor = bib_data.entries[key].persons['author'][0]
+			firstAuthorSurname = firstAuthor.get_part_as_text('last')
+
 		ref_doc['authorsAsText'] = authorsAsText
+		ref_doc['firstAuthorSurname'] = firstAuthorSurname
 
 	except Exception, e:
 		print "**** BIBTEX PARSING SCREWED UP ****"
